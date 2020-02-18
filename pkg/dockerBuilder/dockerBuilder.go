@@ -9,7 +9,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/apenella/go-docker-builder/types"
+	"github.com/apenella/go-docker-builder/pkg/types"
+	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -45,7 +46,7 @@ func (b *DockerBuilder) Run() error {
 		return errors.New("(builder:Run) Error generating Docker building context. " + err.Error())
 	}
 
-	options := types.ImageBuildOptions{
+	options := dockertypes.ImageBuildOptions{
 		Context:        contextReader,
 		SuppressOutput: false,
 		Remove:         true,
