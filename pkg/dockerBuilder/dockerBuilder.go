@@ -18,7 +18,7 @@ type DockerBuilder struct {
 	ImageName            string
 	Writer               io.Writer
 	Context              context.Context
-	dockerBuilderContext *DockerBuilderContext
+	DockerBuilderContext *DockerBuilderContext
 	Cli                  *client.Client
 	Tags                 []string
 	BuildArgs            map[string]*string
@@ -41,7 +41,7 @@ func (b *DockerBuilder) Run() error {
 		b.Writer = os.Stdout
 	}
 
-	contextReader, err = b.dockerBuilderContext.GenerateDockerBuilderContext()
+	contextReader, err = b.DockerBuilderContext.GenerateDockerBuilderContext()
 	if err != nil {
 		return errors.New("(builder:Run) Error generating Docker building context. " + err.Error())
 	}

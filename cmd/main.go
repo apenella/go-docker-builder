@@ -24,7 +24,7 @@ func main() {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	builderContext := &builder.DockerBuilderContext{
+	dockerBuilderContext := &builder.DockerBuilderContext{
 		Path: imageDefinitionPath,
 	}
 
@@ -32,7 +32,7 @@ func main() {
 		ImageName:            imageName,
 		Writer:               os.Stdout,
 		Context:              context.TODO(),
-		dockerBuilderContext: builderContext,
+		DockerBuilderContext: dockerBuilderContext,
 		Cli:                  dockerCli,
 		Tags:                 []string{imageName},
 		Dockerfile:           "Dockerfile",
