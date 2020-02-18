@@ -18,7 +18,7 @@ import (
 )
 
 type BuildResponseBodyStreamMessage struct {
-	Status string                             `json:"status`
+	Status string                             `json:"status"`
 	Stream string                             `json:"stream"`
 	Aux    *BuildResponseBodyStreamAuxMessage `json:"aux"`
 }
