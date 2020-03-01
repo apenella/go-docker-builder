@@ -11,13 +11,14 @@ import (
 	builder "github.com/apenella/go-docker-builder/pkg/dockerBuilder"
 )
 
+// go-docker-builder example where is created a ubuntu image
 func main() {
 	var err error
 	var dockerCli *client.Client
 
 	image := "ubuntu"
-	imageDefinitionPath := filepath.Join("..", "tests", "dockerfiles", image)
-	imageName := strings.Join([]string{"gobuild", filepath.Base(imageDefinitionPath)}, "-")
+	imageDefinitionPath := filepath.Join(".", "build")
+	imageName := strings.Join([]string{"gobuild", image}, "-")
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
@@ -28,14 +29,18 @@ func main() {
 		Path: imageDefinitionPath,
 	}
 
+	dockerBuilderOptions := &builder.DockerBuilderOptions{
+		ImageName:  imageName,
+		Tags:       []string{imageName},
+		Dockerfile: "Dockerfile",
+	}
+
 	dockerBuilder := &builder.DockerBuilder{
-		ImageName:            imageName,
 		Writer:               os.Stdout,
+		Cli:                  dockerCli,
 		Context:              context.TODO(),
 		DockerBuilderContext: dockerBuilderContext,
-		Cli:                  dockerCli,
-		Tags:                 []string{imageName},
-		Dockerfile:           "Dockerfile",
+		DockerBuilderOptions: dockerBuilderOptions,
 		ExecPrefix:           imageName,
 	}
 

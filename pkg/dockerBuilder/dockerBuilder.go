@@ -14,21 +14,19 @@ import (
 	"github.com/docker/docker/client"
 )
 
-type DockerBuilder struct {
-	ImageName            string
+// DockerBuilderCmd
+type DockerBuilderCmd struct {
 	Writer               io.Writer
 	Context              context.Context
-	DockerBuilderContext *DockerBuilderContext
 	Cli                  *client.Client
-	Tags                 []string
-	BuildArgs            map[string]*string
-	Dockerfile           string
-	PushImage            bool
+	DockerBuilderContext *DockerBuilderContext
+	DockerBuilderOptions *DockerBuilderOptions
 	ExecPrefix           string
 }
 
 // Run execute the docker build
-func (b *DockerBuilder) Run() error {
+// https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
+func (b *DockerBuilderCmd) Run() error {
 
 	var err error
 	var contextReader io.Reader
@@ -52,14 +50,14 @@ func (b *DockerBuilder) Run() error {
 		Remove:         true,
 		ForceRemove:    true,
 		PullParent:     true,
-		Dockerfile:     b.Dockerfile,
-		Tags:           b.Tags,
-		BuildArgs:      b.BuildArgs,
+		Dockerfile:     b.DockerBuilderOptions.Dockerfile,
+		Tags:           b.DockerBuilderOptions.Tags,
+		BuildArgs:      b.DockerBuilderOptions.BuildArgs,
 	}
 
 	buildResponse, err := b.Cli.ImageBuild(b.Context, contextReader, options)
 	if err != nil {
-		return errors.New("(builder:Run) Error building '" + b.ImageName + "'." + err.Error())
+		return errors.New("(builder:Run) Error building '" + b.DockerBuilderOptions.ImageName + "'." + err.Error())
 	}
 	defer buildResponse.Body.Close()
 
@@ -78,21 +76,4 @@ func (b *DockerBuilder) Run() error {
 	}
 
 	return nil
-}
-
-// AddBuildArgs append new tags to DockerBuilder
-func (b *DockerBuilder) AddBuildArgs(arg string, value string) error {
-
-	_, exists := b.BuildArgs[arg]
-	if exists {
-		return errors.New("(builder::AddBuildArgs) Argument '" + arg + "' already defined")
-	}
-
-	b.BuildArgs[arg] = &value
-	return nil
-}
-
-// AddTags append new tags to DockerBuilder
-func (b *DockerBuilder) AddTags(tag string) {
-	b.Tags = append(b.Tags, tag)
 }

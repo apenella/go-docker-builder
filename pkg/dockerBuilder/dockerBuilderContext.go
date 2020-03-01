@@ -10,17 +10,21 @@ import (
 	"strings"
 )
 
-// https://docs.docker.com/engine/api/v1.39/#tag/Image
-
-// DockerBuilderContext contains where a build context could be located
+// DockerBuilderContext defines the building context
 type DockerBuilderContext struct {
+	// Path defines the path location when the contxext is placed on a local folder
 	Path string `yaml:"path"`
-	URL  string `yaml:"status"`
-	Git  string `yaml:"git"`
+	// URL defines the url when the contxext is located remotely and published via HTTP
+	URL string `yaml:"status"`
+	// Git defines git reposiotry url when the contxext is located remote repository
+	Git string `yaml:"git"`
 }
 
 // GenerateDockerBuilderContext return io Reader for a given DockerBuilderContext
-//   Build context precedence is Path, URL and finally Git
+//   Build context precedence is:
+//		1) Path
+//		2) URL
+//		3) Git
 func (c *DockerBuilderContext) GenerateDockerBuilderContext() (io.Reader, error) {
 
 	if c.Path != "" {
@@ -59,12 +63,10 @@ func (c *DockerBuilderContext) Tar() (io.Reader, error) {
 			return errors.New("(dockerBuilder::Tar::Walk) Error at the beginning of the walk. " + err.Error())
 		}
 
-		// return on non-regular files (thanks to [kumo](https://medium.com/@komuw/just-like-you-did-fbdd7df829d3) for this suggested update)
 		if !fi.Mode().IsRegular() {
 			return nil
 		}
 
-		// create a new dir/file header
 		header, err := tar.FileInfoHeader(fi, fi.Name())
 		if err != nil {
 			return errors.New("(dockerBuilder::Tar::Walk) Error creating '" + file + "' header. " + err.Error())
@@ -83,7 +85,6 @@ func (c *DockerBuilderContext) Tar() (io.Reader, error) {
 			return err
 		}
 
-		// copy file data into tar writer
 		if _, err := io.Copy(tw, f); err != nil {
 			return errors.New("(dockerBuilder::Tar::Walk) Error copying '" + file + "' into tar. " + err.Error())
 		}

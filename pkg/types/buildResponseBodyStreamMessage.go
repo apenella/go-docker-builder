@@ -4,12 +4,15 @@ import "strings"
 
 // BuildResponseBodyStreamMessage contains the ImageBuild's body data from buildResponse
 type BuildResponseBodyStreamMessage struct {
-	Status string                             `json:"status"`
-	Stream string                             `json:"stream"`
-	Aux    *BuildResponseBodyStreamAuxMessage `json:"aux"`
+	// Status represents the status value on response body stream message
+	Status string `json:"status"`
+	// Stream represents the stream value on response body stream message
+	Stream string `json:"stream"`
+	// Aux represents the aux value on response body stream message
+	Aux *BuildResponseBodyStreamAuxMessage `json:"aux"`
 }
 
-// String return an string with BuildResponseBodyStreamMessage content
+// String return BuildResponseBodyStreamMessage object as string
 func (m *BuildResponseBodyStreamMessage) String() string {
 
 	if m.Stream != "" {
