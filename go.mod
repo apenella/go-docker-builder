@@ -1,4 +1,4 @@
-module dockerbuild
+module github.com/apenella/go-docker-builder
 
 go 1.12
 
