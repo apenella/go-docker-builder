@@ -35,7 +35,7 @@ func main() {
 		Dockerfile: "Dockerfile",
 	}
 
-	dockerBuilder := &builder.DockerBuilder{
+	dockerBuilder := &builder.DockerBuilderCmd{
 		Writer:               os.Stdout,
 		Cli:                  dockerCli,
 		Context:              context.TODO(),
