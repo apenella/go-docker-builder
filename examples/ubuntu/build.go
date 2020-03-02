@@ -31,7 +31,6 @@ func main() {
 
 	dockerBuilderOptions := &builder.DockerBuilderOptions{
 		ImageName:  imageName,
-		Tags:       []string{imageName},
 		Dockerfile: "Dockerfile",
 	}
 

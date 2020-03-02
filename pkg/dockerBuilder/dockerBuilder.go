@@ -49,6 +49,16 @@ func (b *DockerBuilderCmd) Run() error {
 		return errors.New("(builder:Run) Error generating Docker building context. " + err.Error())
 	}
 
+	if b.DockerBuilderOptions.ImageName == "" {
+		return errors.New("(builder:Run) An image name is required to build an image")
+	}
+
+	if b.DockerBuilderOptions.Tags == nil {
+		b.DockerBuilderOptions.Tags = []string{b.DockerBuilderOptions.ImageName}
+	} else {
+		b.DockerBuilderOptions.Tags = append(b.DockerBuilderOptions.Tags, b.DockerBuilderOptions.ImageName)
+	}
+
 	if b.DockerBuilderOptions.Dockerfile == "" {
 		b.DockerBuilderOptions.Dockerfile = DefaultDockerfile
 	}
