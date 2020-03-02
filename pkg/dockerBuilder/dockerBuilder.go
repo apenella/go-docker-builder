@@ -50,7 +50,7 @@ func (b *DockerBuilderCmd) Run() error {
 	}
 
 	if b.DockerBuilderOptions.ImageName == "" {
-		return errors.New("(builder:Run) An image name is required to build and image")
+		return errors.New("(builder:Run) An image name is required to build an image")
 	}
 
 	if b.DockerBuilderOptions.Tags == nil {
