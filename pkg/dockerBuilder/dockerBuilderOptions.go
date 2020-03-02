@@ -19,6 +19,10 @@ type DockerBuilderOptions struct {
 // AddBuildArgs append new tags to DockerBuilder
 func (o *DockerBuilderOptions) AddBuildArgs(arg string, value string) error {
 
+	if o.BuildArgs == nil {
+		o.BuildArgs = map[string]*string{}
+	}
+
 	_, exists := o.BuildArgs[arg]
 	if exists {
 		return errors.New("(builder::AddBuildArgs) Argument '" + arg + "' already defined")
@@ -30,5 +34,10 @@ func (o *DockerBuilderOptions) AddBuildArgs(arg string, value string) error {
 
 // AddTags append new tags to DockerBuilder
 func (o *DockerBuilderOptions) AddTags(tag string) {
+
+	if o.Tags == nil {
+		o.Tags = []string{}
+	}
+
 	o.Tags = append(o.Tags, tag)
 }
