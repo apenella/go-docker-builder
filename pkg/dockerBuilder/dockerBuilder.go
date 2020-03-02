@@ -14,6 +14,11 @@ import (
 	"github.com/docker/docker/client"
 )
 
+const (
+	// DefaultDockerfile is the default filename for Dockerfile
+	DefaultDockerfile = "Dockerfile"
+)
+
 // DockerBuilderCmd
 type DockerBuilderCmd struct {
 	Writer               io.Writer
@@ -42,6 +47,10 @@ func (b *DockerBuilderCmd) Run() error {
 	contextReader, err = b.DockerBuilderContext.GenerateDockerBuilderContext()
 	if err != nil {
 		return errors.New("(builder:Run) Error generating Docker building context. " + err.Error())
+	}
+
+	if b.DockerBuilderOptions.Dockerfile == "" {
+		b.DockerBuilderOptions.Dockerfile = DefaultDockerfile
 	}
 
 	options := dockertypes.ImageBuildOptions{
