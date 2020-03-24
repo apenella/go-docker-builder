@@ -1,4 +1,4 @@
-package builder
+package build
 
 import (
 	"archive/tar"
@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-// DockerBuilderContext defines the building context
-type DockerBuilderContext struct {
+// DockerBuildContext defines the building context
+type DockerBuildContext struct {
 	// Path defines the path location when the contxext is placed on a local folder
 	Path string `yaml:"path"`
 	// URL defines the url when the contxext is located remotely and published via HTTP
@@ -20,31 +20,31 @@ type DockerBuilderContext struct {
 	Git string `yaml:"git"`
 }
 
-// GenerateDockerBuilderContext return io Reader for a given DockerBuilderContext
+// GenerateDockerBuildContext return io Reader for a given DockerBuildContext
 //   Build context precedence is:
 //		1) Path
 //		2) URL
 //		3) Git
-func (c *DockerBuilderContext) GenerateDockerBuilderContext() (io.Reader, error) {
+func (c *DockerBuildContext) GenerateDockerBuildContext() (io.Reader, error) {
 
 	if c.Path != "" {
 		return c.Tar()
 	}
 
 	if c.URL != "" {
-		return nil, errors.New("(dockerBuilder::GenerateDockerBuilderContext) URL build context not already defined")
+		return nil, errors.New("(dockerBuilder::GenerateDockerBuildContext) URL build context not already defined")
 	}
 
 	if c.Git != "" {
-		return nil, errors.New("(dockerBuilder::GenerateDockerBuilderContext) Git build context not already defined")
+		return nil, errors.New("(dockerBuilder::GenerateDockerBuildContext) Git build context not already defined")
 	}
 
-	return nil, errors.New("(dockerBuilder::GenerateDockerBuilderContext) No build context defined")
+	return nil, errors.New("(dockerBuilder::GenerateDockerBuildContext) No build context defined")
 }
 
 // Tar return a tarball io.Reader which contains the whole directory structure
 //   This method has been inspeared thanks to https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
-func (c *DockerBuilderContext) Tar() (io.Reader, error) {
+func (c *DockerBuildContext) Tar() (io.Reader, error) {
 
 	var err error
 	var tarBuff bytes.Buffer
