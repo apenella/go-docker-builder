@@ -1,9 +1,11 @@
-package builder
+package build
 
-import "errors"
+import (
+	"errors"
+)
 
-// DockerBuilderOptions has an options set to build and image
-type DockerBuilderOptions struct {
+// DockerBuildOptions has an options set to build and image
+type DockerBuildOptions struct {
 	// ImageName is the name of the image
 	ImageName string
 	// Tags is a list of the image tags
@@ -12,12 +14,10 @@ type DockerBuilderOptions struct {
 	BuildArgs map[string]*string
 	// Dockerfile is the file name for dockerfile file
 	Dockerfile string
-	// PushImage set to push or not an image
-	PushImage bool
 }
 
 // AddBuildArgs append new tags to DockerBuilder
-func (o *DockerBuilderOptions) AddBuildArgs(arg string, value string) error {
+func (o *DockerBuildOptions) AddBuildArgs(arg string, value string) error {
 
 	if o.BuildArgs == nil {
 		o.BuildArgs = map[string]*string{}
@@ -33,7 +33,7 @@ func (o *DockerBuilderOptions) AddBuildArgs(arg string, value string) error {
 }
 
 // AddTags append new tags to DockerBuilder
-func (o *DockerBuilderOptions) AddTags(tag string) {
+func (o *DockerBuildOptions) AddTags(tag string) {
 
 	if o.Tags == nil {
 		o.Tags = []string{}

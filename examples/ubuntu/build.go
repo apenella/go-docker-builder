@@ -8,7 +8,8 @@ import (
 
 	"github.com/docker/docker/client"
 
-	builder "github.com/apenella/go-docker-builder/pkg/dockerBuilder"
+	"github.com/apenella/go-docker-builder/pkg/build"
+	"github.com/apenella/go-docker-builder/pkg/response"
 )
 
 // go-docker-builder example where is created a ubuntu image
@@ -16,31 +17,39 @@ func main() {
 	var err error
 	var dockerCli *client.Client
 
-	image := "ubuntu"
 	imageDefinitionPath := filepath.Join(".", "build")
-	imageName := strings.Join([]string{"gobuild", image}, "-")
+
+	registry := "registry"
+	namespace := "namespace"
+	imageName := strings.Join([]string{registry, namespace, "ubuntu"}, "/")
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	dockerBuilderContext := &builder.DockerBuilderContext{
+	dockerBuildContext := &build.DockerBuildContext{
 		Path: imageDefinitionPath,
 	}
 
-	dockerBuilderOptions := &builder.DockerBuilderOptions{
+	dockerBuildOptions := &build.DockerBuildOptions{
 		ImageName:  imageName,
 		Dockerfile: "Dockerfile",
+		Tags:       []string{strings.Join([]string{imageName, "tag1"}, ":")},
 	}
 
-	dockerBuilder := &builder.DockerBuilderCmd{
-		Writer:               os.Stdout,
-		Cli:                  dockerCli,
-		Context:              context.TODO(),
-		DockerBuilderContext: dockerBuilderContext,
-		DockerBuilderOptions: dockerBuilderOptions,
-		ExecPrefix:           imageName,
+	response := &response.ResponseHandler{
+		Prefix: imageName,
+	}
+
+	dockerBuilder := &build.DockerBuildCmd{
+		Writer:             os.Stdout,
+		Cli:                dockerCli,
+		Context:            context.TODO(),
+		DockerBuildContext: dockerBuildContext,
+		DockerBuildOptions: dockerBuildOptions,
+		ExecPrefix:         imageName,
+		Response:           response,
 	}
 
 	err = dockerBuilder.Run()
