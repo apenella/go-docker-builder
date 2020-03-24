@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/apenella/go-docker-builder/pkg/push"
-	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/docker/docker/client"
 )
 
@@ -32,17 +31,12 @@ func main() {
 	pass := "myregistrypass"
 	dockerPushOptions.AddUserPasswordRegistryAuth(user, pass, registry)
 
-	response := &response.ResponseHandler{
-		Prefix: imageName,
-	}
-
 	dockerPusher := &push.DockerPushCmd{
 		Writer:            os.Stdout,
 		Cli:               dockerCli,
 		Context:           context.TODO(),
 		DockerPushOptions: dockerPushOptions,
 		ExecPrefix:        imageName,
-		Response:          response,
 	}
 
 	err = dockerPusher.Run()
