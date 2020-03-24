@@ -10,16 +10,14 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/types"
 )
 
-type ResponseHandler struct {
-	Reader io.ReadCloser
-	Writer io.Writer
+type DefaultResponse struct {
 	Prefix string
 }
 
 // Response
-func (r *ResponseHandler) Run() error {
-	scanner := bufio.NewScanner(r.Reader)
-	prefix := r.Prefix
+func (d *DefaultResponse) Write(w io.Writer, r io.ReadCloser) error {
+	scanner := bufio.NewScanner(r)
+	prefix := d.Prefix
 
 	for scanner.Scan() {
 		streamMessage := &types.BuildResponseBodyStreamMessage{}
@@ -29,18 +27,8 @@ func (r *ResponseHandler) Run() error {
 			return errors.New("(responser:Response) Error unmarshalling line '" + string(line) + "' " + err.Error())
 		}
 
-		fmt.Fprintf(r.Writer, "%s \u2500\u2500  %s\n", prefix, streamMessage.String())
+		fmt.Fprintf(w, "%s \u2500\u2500  %s\n", prefix, streamMessage.String())
 	}
 
 	return nil
-}
-
-// SetReader
-func (r *ResponseHandler) SetReader(reader io.ReadCloser) {
-	r.Reader = reader
-}
-
-// SetWriter
-func (r *ResponseHandler) SetWriter(writer io.Writer) {
-	r.Writer = writer
 }

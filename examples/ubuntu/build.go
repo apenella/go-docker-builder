@@ -9,7 +9,6 @@ import (
 	"github.com/docker/docker/client"
 
 	"github.com/apenella/go-docker-builder/pkg/build"
-	"github.com/apenella/go-docker-builder/pkg/response"
 )
 
 // go-docker-builder example where is created a ubuntu image
@@ -38,10 +37,6 @@ func main() {
 		Tags:       []string{strings.Join([]string{imageName, "tag1"}, ":")},
 	}
 
-	response := &response.ResponseHandler{
-		Prefix: imageName,
-	}
-
 	dockerBuilder := &build.DockerBuildCmd{
 		Writer:             os.Stdout,
 		Cli:                dockerCli,
@@ -49,7 +44,6 @@ func main() {
 		DockerBuildContext: dockerBuildContext,
 		DockerBuildOptions: dockerBuildOptions,
 		ExecPrefix:         imageName,
-		Response:           response,
 	}
 
 	err = dockerBuilder.Run()

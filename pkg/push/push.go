@@ -7,15 +7,11 @@ import (
 	"io"
 	"os"
 
+	"github.com/apenella/go-docker-builder/pkg/response"
+	"github.com/apenella/go-docker-builder/pkg/types"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
-
-type Responser interface {
-	Run() error
-	SetReader(io.ReadCloser)
-	SetWriter(io.Writer)
-}
 
 type DockerPushCmd struct {
 	Writer            io.Writer
@@ -23,7 +19,7 @@ type DockerPushCmd struct {
 	Cli               *client.Client
 	DockerPushOptions *DockerPushOptions
 	ExecPrefix        string
-	Response          Responser
+	Response          types.Responser
 }
 
 func (p *DockerPushCmd) Run() error {
@@ -34,6 +30,12 @@ func (p *DockerPushCmd) Run() error {
 
 	if p.Writer == nil {
 		p.Writer = os.Stdout
+	}
+
+	if p.Response == nil {
+		p.Response = &response.DefaultResponse{
+			Prefix: p.ExecPrefix,
+		}
 	}
 
 	pushOptions := dockertypes.ImagePushOptions{}
@@ -49,9 +51,7 @@ func (p *DockerPushCmd) Run() error {
 	//fmt.Println(pushResponse)
 	defer pushResponse.Close()
 
-	p.Response.SetReader(pushResponse)
-	p.Response.SetWriter(p.Writer)
-	err = p.Response.Run()
+	err = p.Response.Write(p.Writer, pushResponse)
 	if err != nil {
 		return errors.New("(builder:Run) " + err.Error())
 	}

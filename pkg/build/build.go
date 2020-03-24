@@ -6,6 +6,8 @@ import (
 	"io"
 	"os"
 
+	"github.com/apenella/go-docker-builder/pkg/response"
+	"github.com/apenella/go-docker-builder/pkg/types"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
@@ -15,12 +17,6 @@ const (
 	DefaultDockerfile = "Dockerfile"
 )
 
-type Responser interface {
-	Run() error
-	SetReader(io.ReadCloser)
-	SetWriter(io.Writer)
-}
-
 // DockerBuilderCmd
 type DockerBuildCmd struct {
 	Writer             io.Writer
@@ -29,7 +25,7 @@ type DockerBuildCmd struct {
 	DockerBuildContext *DockerBuildContext
 	DockerBuildOptions *DockerBuildOptions
 	ExecPrefix         string
-	Response           Responser
+	Response           types.Responser
 }
 
 // Run execute the docker build
@@ -45,6 +41,12 @@ func (b *DockerBuildCmd) Run() error {
 
 	if b.Writer == nil {
 		b.Writer = os.Stdout
+	}
+
+	if b.Response == nil {
+		b.Response = &response.DefaultResponse{
+			Prefix: b.ExecPrefix,
+		}
 	}
 
 	contextReader, err = b.DockerBuildContext.GenerateDockerBuildContext()
@@ -83,9 +85,7 @@ func (b *DockerBuildCmd) Run() error {
 	}
 	defer buildResponse.Body.Close()
 
-	b.Response.SetReader(buildResponse.Body)
-	b.Response.SetWriter(b.Writer)
-	err = b.Response.Run()
+	err = b.Response.Write(b.Writer, buildResponse.Body)
 	if err != nil {
 		return errors.New("(builder:Run) " + err.Error())
 	}
