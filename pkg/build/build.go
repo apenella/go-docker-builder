@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
 	dockertypes "github.com/docker/docker/api/types"
@@ -24,8 +25,10 @@ type DockerBuildCmd struct {
 	Cli                *client.Client
 	DockerBuildContext *DockerBuildContext
 	DockerBuildOptions *DockerBuildOptions
+	DockerPushOptions  *push.DockerPushOptions
 	ExecPrefix         string
 	Response           types.Responser
+	PushAfterBuild     bool
 }
 
 // Run execute the docker build
@@ -88,6 +91,21 @@ func (b *DockerBuildCmd) Run() error {
 	err = b.Response.Write(b.Writer, buildResponse.Body)
 	if err != nil {
 		return errors.New("(builder:Run) " + err.Error())
+	}
+
+	if b.PushAfterBuild {
+		dockerPush := &push.DockerPushCmd{
+			Writer:            b.Writer,
+			Cli:               b.Cli,
+			Context:           b.Context,
+			DockerPushOptions: b.DockerPushOptions,
+			ExecPrefix:        b.ExecPrefix,
+		}
+
+		err = dockerPush.Run()
+		if err != nil {
+			return errors.New("(builder:Run) " + err.Error())
+		}
 	}
 
 	return nil
