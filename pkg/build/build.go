@@ -28,7 +28,6 @@ type DockerBuildCmd struct {
 	DockerPushOptions  *push.DockerPushOptions
 	ExecPrefix         string
 	Response           types.Responser
-	PushAfterBuild     bool
 }
 
 // Run execute the docker build
@@ -93,7 +92,7 @@ func (b *DockerBuildCmd) Run() error {
 		return errors.New("(builder:Run) " + err.Error())
 	}
 
-	if b.PushAfterBuild {
+	if b.DockerBuildOptions.PushAfterBuild {
 		dockerPush := &push.DockerPushCmd{
 			Writer:            b.Writer,
 			Cli:               b.Cli,

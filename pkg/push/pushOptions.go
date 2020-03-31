@@ -12,7 +12,9 @@ import (
 type DockerPushOptions struct {
 	// ImageName is the name of the image
 	ImageName string
-	// // RegistryAuth is the base64 encoded credentials for the registry
+	// Tags is a list of the images to push
+	Tags []string
+	// RegistryAuth is the base64 encoded credentials for the registry
 	RegistryAuth *string
 }
 

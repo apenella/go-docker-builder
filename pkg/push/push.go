@@ -48,12 +48,23 @@ func (p *DockerPushCmd) Run() error {
 	if err != nil {
 		return errors.New("(pusher:Run) Error push '" + p.DockerPushOptions.ImageName + "'. " + err.Error())
 	}
-	//fmt.Println(pushResponse)
 	defer pushResponse.Close()
 
 	err = p.Response.Write(p.Writer, pushResponse)
 	if err != nil {
 		return errors.New("(builder:Run) " + err.Error())
+	}
+
+	for _, tag := range p.DockerPushOptions.Tags {
+		pushResponse, err = p.Cli.ImagePush(p.Context, tag, pushOptions)
+		if err != nil {
+			return errors.New("(pusher:Run) Error push '" + tag + "'. " + err.Error())
+		}
+
+		err = p.Response.Write(p.Writer, pushResponse)
+		if err != nil {
+			return errors.New("(builder:Run) " + err.Error())
+		}
 	}
 
 	return nil

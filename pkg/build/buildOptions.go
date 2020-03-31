@@ -14,6 +14,8 @@ type DockerBuildOptions struct {
 	BuildArgs map[string]*string
 	// Dockerfile is the file name for dockerfile file
 	Dockerfile string
+	// PushAfterBuild push image to registry after building
+	PushAfterBuild bool
 }
 
 // AddBuildArgs append new tags to DockerBuilder
