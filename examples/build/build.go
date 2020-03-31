@@ -16,7 +16,7 @@ func main() {
 	var err error
 	var dockerCli *client.Client
 
-	imageDefinitionPath := filepath.Join(".", "build")
+	imageDefinitionPath := filepath.Join(".", "files")
 
 	registry := "registry"
 	namespace := "namespace"
