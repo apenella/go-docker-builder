@@ -29,7 +29,7 @@ func main() {
 
 	user := "myregistryuser"
 	pass := "myregistrypass"
-	dockerPushOptions.AddUserPasswordRegistryAuth(user, pass, registry)
+	dockerPushOptions.AddAuth(user, pass)
 
 	dockerPusher := &push.DockerPushCmd{
 		Writer:            os.Stdout,

@@ -79,6 +79,7 @@ func (b *DockerBuildCmd) Run() error {
 		Dockerfile:     b.DockerBuildOptions.Dockerfile,
 		Tags:           b.DockerBuildOptions.Tags,
 		BuildArgs:      b.DockerBuildOptions.BuildArgs,
+		AuthConfigs:    b.DockerBuildOptions.Auth,
 	}
 
 	buildResponse, err := b.Cli.ImageBuild(b.Context, contextReader, buildOptions)

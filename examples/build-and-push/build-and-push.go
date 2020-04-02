@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -45,7 +46,11 @@ func main() {
 		ImageName: dockerBuildOptions.ImageName,
 		Tags:      dockerBuildOptions.Tags,
 	}
-	dockerPushOptions.AddUserPasswordRegistryAuth(username, password, registry)
+	dockerPushOptions.AddAuth(username, password)
+	err = dockerBuildOptions.AddAuth(username, password, registry)
+	if err != nil {
+		fmt.Println("Error including auth to build options: " + err.Error())
+	}
 
 	dockerBuilder := &build.DockerBuildCmd{
 		Writer:             os.Stdout,
