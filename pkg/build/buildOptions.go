@@ -2,6 +2,10 @@ package build
 
 import (
 	"errors"
+
+	"github.com/apenella/go-docker-builder/pkg/auth"
+
+	dockertypes "github.com/docker/docker/api/types"
 )
 
 // DockerBuildOptions has an options set to build and image
@@ -16,6 +20,8 @@ type DockerBuildOptions struct {
 	Dockerfile string
 	// PushAfterBuild push image to registry after building
 	PushAfterBuild bool
+	// Auth
+	Auth map[string]dockertypes.AuthConfig
 }
 
 // AddBuildArgs append new tags to DockerBuilder
@@ -42,4 +48,20 @@ func (o *DockerBuildOptions) AddTags(tag string) {
 	}
 
 	o.Tags = append(o.Tags, tag)
+}
+
+// AddAuth append new tags to DockerBuilder
+func (o *DockerBuildOptions) AddAuth(username, password, registry string) error {
+
+	if o.Auth == nil {
+		o.Auth = map[string]dockertypes.AuthConfig{}
+	}
+
+	authConfig, err := auth.GenerateUserPasswordAuthConfig(username, password)
+	if err != nil {
+		return errors.New("(build::AddAuth) " + err.Error())
+	}
+
+	o.Auth[registry] = *authConfig
+	return nil
 }

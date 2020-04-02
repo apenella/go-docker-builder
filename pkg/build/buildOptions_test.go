@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	dockertypes "github.com/docker/docker/api/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -106,7 +107,52 @@ func TestAddTags(t *testing.T) {
 			}
 
 			assert.True(t, found, "Argument does not exists")
+		})
+	}
+}
 
+func TestAddAuth(t *testing.T) {
+
+	type args struct {
+		username string
+		password string
+		registry string
+	}
+	tests := []struct {
+		name    string
+		options *DockerBuildOptions
+		args    *args
+		err     error
+		res     map[string]dockertypes.AuthConfig
+	}{
+		{
+			name: "Test add user-password auth",
+			options: &DockerBuildOptions{
+				ImageName: "test image",
+				Auth:      map[string]dockertypes.AuthConfig{},
+			},
+			args: &args{
+				username: "user",
+				password: "AqSwd3Fr",
+				registry: "registry",
+			},
+			err: nil,
+			res: map[string]dockertypes.AuthConfig{
+				"registry": dockertypes.AuthConfig{
+					Username: "user",
+					Password: "AqSwd3Fr",
+				},
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := test.options.AddAuth(test.args.username, test.args.password, test.args.registry)
+			if err != nil {
+				assert.Equal(t, test.err, err)
+			} else {
+				assert.Equal(t, test.res, test.options.Auth, "Unexpected auth result")
+			}
 		})
 	}
 }
