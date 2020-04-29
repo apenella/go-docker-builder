@@ -9,6 +9,7 @@ import (
 	"github.com/docker/docker/client"
 
 	"github.com/apenella/go-docker-builder/pkg/build"
+	contextpath "github.com/apenella/go-docker-builder/pkg/build/context/path"
 )
 
 // go-docker-builder example where is created a ubuntu image
@@ -27,21 +28,21 @@ func main() {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	dockerBuildContext := &build.DockerBuildContext{
+	dockerBuildContext := &contextpath.PathBuildContext{
 		Path: imageDefinitionPath,
 	}
 
 	dockerBuildOptions := &build.DockerBuildOptions{
-		ImageName:  imageName,
-		Dockerfile: "Dockerfile",
-		Tags:       []string{strings.Join([]string{imageName, "tag1"}, ":")},
+		ImageName:          imageName,
+		Dockerfile:         "Dockerfile",
+		Tags:               []string{strings.Join([]string{imageName, "tag1"}, ":")},
+		DockerBuildContext: dockerBuildContext,
 	}
 
 	dockerBuilder := &build.DockerBuildCmd{
 		Writer:             os.Stdout,
 		Cli:                dockerCli,
 		Context:            context.TODO(),
-		DockerBuildContext: dockerBuildContext,
 		DockerBuildOptions: dockerBuildOptions,
 		ExecPrefix:         imageName,
 	}

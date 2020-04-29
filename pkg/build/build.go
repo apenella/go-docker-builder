@@ -23,7 +23,6 @@ type DockerBuildCmd struct {
 	Writer             io.Writer
 	Context            context.Context
 	Cli                *client.Client
-	DockerBuildContext *DockerBuildContext
 	DockerBuildOptions *DockerBuildOptions
 	DockerPushOptions  *push.DockerPushOptions
 	ExecPrefix         string
@@ -51,11 +50,6 @@ func (b *DockerBuildCmd) Run() error {
 		}
 	}
 
-	contextReader, err = b.DockerBuildContext.GenerateDockerBuildContext()
-	if err != nil {
-		return errors.New("(builder:Run) Error generating Docker building context. " + err.Error())
-	}
-
 	if b.DockerBuildOptions.ImageName == "" {
 		return errors.New("(builder:Run) An image name is required to build an image")
 	}
@@ -68,6 +62,11 @@ func (b *DockerBuildCmd) Run() error {
 
 	if b.DockerBuildOptions.Dockerfile == "" {
 		b.DockerBuildOptions.Dockerfile = DefaultDockerfile
+	}
+
+	contextReader, err = b.DockerBuildOptions.DockerBuildContext.Reader()
+	if err != nil {
+		return errors.New("(builder:Run) Error generating a build context reader. " + err.Error())
 	}
 
 	buildOptions := dockertypes.ImageBuildOptions{
