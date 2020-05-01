@@ -14,16 +14,17 @@ type PathBuildContext struct {
 	Path string
 }
 
+// Reader return a context reader
 func (c *PathBuildContext) Reader() (io.Reader, error) {
 
 	context, err := os.Open(c.Path)
 	if err != nil {
-		return nil, errors.New("(context::path::Tar) Error opening '" + c.Path + "'. " + err.Error())
+		return nil, errors.New("(context::path::Reader) Error opening '" + c.Path + "'. " + err.Error())
 	}
 
 	reader, err := tar.Tar(context)
 	if err != nil {
-		return nil, errors.New("(context::path::Tar) Error archieving '" + c.Path + "'. " + err.Error())
+		return nil, errors.New("(context::path::Reader) Error archieving '" + c.Path + "'. " + err.Error())
 	}
 
 	return reader, nil

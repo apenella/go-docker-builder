@@ -10,7 +10,7 @@ require (
 	github.com/docker/docker v0.0.0-20190822180741-9552f2b2fdde
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
-	github.com/go-git/go-git v4.7.0+incompatible // indirect
+	github.com/go-git/go-git v4.7.0+incompatible
 	github.com/go-git/go-git/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/google/go-cmp v0.4.0 // indirect
