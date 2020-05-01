@@ -20,13 +20,20 @@ const (
 
 // DockerBuilderCmd
 type DockerBuildCmd struct {
-	Writer             io.Writer
-	Context            context.Context
-	Cli                *client.Client
+	// Writer to write the build output
+	Writer io.Writer
+	// Context manages the build context
+	Context context.Context
+	// Cli is the docker api client
+	Cli *client.Client
+	// DockerBuildOptions are the options to build
 	DockerBuildOptions *DockerBuildOptions
-	DockerPushOptions  *push.DockerPushOptions
-	ExecPrefix         string
-	Response           types.Responser
+	// DockerPushOptions are the option to push
+	DockerPushOptions *push.DockerPushOptions
+	// ExecPrefix defines a prefix to each output lines
+	ExecPrefix string
+	// Response manages responses from docker client
+	Response types.Responser
 }
 
 // Run execute the docker build
