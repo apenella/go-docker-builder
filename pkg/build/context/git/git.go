@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 
+	auth "github.com/apenella/go-docker-builder/pkg/auth/git"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -25,7 +26,7 @@ type GitBuildContext struct {
 	// Dockerfile is the dockerfile placement inside the repository
 	Dockerfile string
 	// Auth
-	// TODO
+	Auth auth.GitAuther
 }
 
 // Reader return a context reader
@@ -45,6 +46,15 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 		URL:           c.Repository,
 		ReferenceName: referenceName,
 		Depth:         1,
+	}
+
+	if c.Auth != nil {
+		auth, err := c.Auth.Auth()
+		if err != nil {
+			return nil, errors.New("(context::git::Reader) Error getting authorization method." + err.Error())
+		}
+
+		cloneOption.Auth = auth
 	}
 
 	repo, err := git.Clone(gitstorage, nil, cloneOption)
