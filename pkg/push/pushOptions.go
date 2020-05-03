@@ -3,7 +3,7 @@ package push
 import (
 	"errors"
 
-	"github.com/apenella/go-docker-builder/pkg/auth"
+	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 )
 
 // DockerBuilderOptions has an options set to build and image

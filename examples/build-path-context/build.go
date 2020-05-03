@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,8 +9,6 @@ import (
 	"github.com/docker/docker/client"
 
 	"github.com/apenella/go-docker-builder/pkg/build"
-	"github.com/apenella/go-docker-builder/pkg/push"
-
 	contextpath "github.com/apenella/go-docker-builder/pkg/build/context/path"
 )
 
@@ -24,9 +21,7 @@ func main() {
 
 	registry := "registry"
 	namespace := "namespace"
-	imageName := strings.Join([]string{registry, namespace, "alpine"}, "/")
-	username := "user"
-	password := "pass"
+	imageName := strings.Join([]string{registry, namespace, "ubuntu"}, "/")
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
@@ -41,18 +36,7 @@ func main() {
 		ImageName:          imageName,
 		Dockerfile:         "Dockerfile",
 		Tags:               []string{strings.Join([]string{imageName, "tag1"}, ":")},
-		PushAfterBuild:     true,
 		DockerBuildContext: dockerBuildContext,
-	}
-
-	dockerPushOptions := &push.DockerPushOptions{
-		ImageName: dockerBuildOptions.ImageName,
-		Tags:      dockerBuildOptions.Tags,
-	}
-	dockerPushOptions.AddAuth(username, password)
-	err = dockerBuildOptions.AddAuth(username, password, registry)
-	if err != nil {
-		fmt.Println("Error including auth to build options: " + err.Error())
 	}
 
 	dockerBuilder := &build.DockerBuildCmd{
@@ -60,7 +44,6 @@ func main() {
 		Cli:                dockerCli,
 		Context:            context.TODO(),
 		DockerBuildOptions: dockerBuildOptions,
-		DockerPushOptions:  dockerPushOptions,
 		ExecPrefix:         imageName,
 	}
 

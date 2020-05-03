@@ -3,7 +3,8 @@ package build
 import (
 	"errors"
 
-	"github.com/apenella/go-docker-builder/pkg/auth"
+	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
+	"github.com/apenella/go-docker-builder/pkg/build/context"
 
 	dockertypes "github.com/docker/docker/api/types"
 )
@@ -20,8 +21,10 @@ type DockerBuildOptions struct {
 	Dockerfile string
 	// PushAfterBuild push image to registry after building
 	PushAfterBuild bool
-	// Auth
+	// Auth required to be authenticated to docker registry
 	Auth map[string]dockertypes.AuthConfig
+	// BuildContext
+	DockerBuildContext context.DockerBuildContexter
 }
 
 // AddBuildArgs append new tags to DockerBuilder

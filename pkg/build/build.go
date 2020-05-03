@@ -20,14 +20,20 @@ const (
 
 // DockerBuilderCmd
 type DockerBuildCmd struct {
-	Writer             io.Writer
-	Context            context.Context
-	Cli                *client.Client
-	DockerBuildContext *DockerBuildContext
+	// Writer to write the build output
+	Writer io.Writer
+	// Context manages the build context
+	Context context.Context
+	// Cli is the docker api client
+	Cli *client.Client
+	// DockerBuildOptions are the options to build
 	DockerBuildOptions *DockerBuildOptions
-	DockerPushOptions  *push.DockerPushOptions
-	ExecPrefix         string
-	Response           types.Responser
+	// DockerPushOptions are the option to push
+	DockerPushOptions *push.DockerPushOptions
+	// ExecPrefix defines a prefix to each output lines
+	ExecPrefix string
+	// Response manages responses from docker client
+	Response types.Responser
 }
 
 // Run execute the docker build
@@ -51,11 +57,6 @@ func (b *DockerBuildCmd) Run() error {
 		}
 	}
 
-	contextReader, err = b.DockerBuildContext.GenerateDockerBuildContext()
-	if err != nil {
-		return errors.New("(builder:Run) Error generating Docker building context. " + err.Error())
-	}
-
 	if b.DockerBuildOptions.ImageName == "" {
 		return errors.New("(builder:Run) An image name is required to build an image")
 	}
@@ -68,6 +69,11 @@ func (b *DockerBuildCmd) Run() error {
 
 	if b.DockerBuildOptions.Dockerfile == "" {
 		b.DockerBuildOptions.Dockerfile = DefaultDockerfile
+	}
+
+	contextReader, err = b.DockerBuildOptions.DockerBuildContext.Reader()
+	if err != nil {
+		return errors.New("(builder:Run) Error generating a build context reader. " + err.Error())
 	}
 
 	buildOptions := dockertypes.ImageBuildOptions{

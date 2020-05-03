@@ -10,18 +10,20 @@ require (
 	github.com/docker/docker v0.0.0-20190822180741-9552f2b2fdde
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/go-git/go-git v4.7.0+incompatible
+	github.com/go-git/go-git/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/google/go-cmp v0.4.0 // indirect
-	github.com/gorilla/mux v1.7.3 // indirect
+	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/stretchr/testify v1.4.0
-	golang.org/x/lint v0.0.0-20190313153728-d0100b6bd8b3 // indirect
-	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
-	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
-	golang.org/x/tools v0.0.0-20190524140312-2c0ae7006135 // indirect
-	google.golang.org/grpc v1.27.1 // indirect
+	github.com/spf13/afero v1.2.2
+	github.com/stretchr/testify v1.5.1
+	github.com/xanzy/ssh-agent v0.2.1
+	golang.org/x/net v0.0.0-20200421231249-e086a090c8fd // indirect
+	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect
+	google.golang.org/grpc v1.29.1 // indirect
+	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 	gotest.tools v2.2.0+incompatible
-	honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc // indirect
 )
