@@ -1,14 +1,24 @@
 go-docker-builder
 =======
 
-`go-docker-builder` package simplifies the Golang's docker client SDK basic operations. It lets to write your own golang code to pull, build and push docker images in a few lines.
-The package manages the authorization operation either on pull or push images to docker any docker registries.
+`go-docker-builder` package simplifies the golang's docker client SDK basic operations usage. It lets to write your own golang code to pull, build and push docker images in a few lines. The package also manages the registy auth either on pull or push actions.
 
-The packages let you to build docker images from the docker build path and git context types.
+Another feature of the package is that it supports to build images from `path` either `git` contexts. 
+- **Path**: To build docker images from a local directory context definition.
+- **Git**: To build docker images from a git repository context definition.
+	Regarding git context, go-docker-builder also supports the auth to a git server by username/password, ssh agent or private key file.
+
+## Table of Contents
+- [Packages](#packages)
+- [Examples](#examples)
+- [References](#references)
+- [License](#license)
 
 ## Packages
 
 ### Auth
+On this folder are located the pakcages which manages auth operations. These packages simplify the docker and git auth methods.
+
 - files:
 ```
 |-- docker
@@ -24,9 +34,8 @@ The packages let you to build docker images from the docker build path and git c
         `-- sshagent_auth.go
 ```
 
-On this folder are located authorization packages. These packages simplify the docker and git authentication methods.
-
 ### Build
+On this folder is found the docker build logic.
 
 - files:
 ```
@@ -42,9 +51,7 @@ On this folder are located authorization packages. These packages simplify the d
         `-- path.go
 ```
 
-On this folder is found the docker build logic. 
-Build must be defined by `DockerBuildOption` struct, which is, mainly, a `"github.com/docker/docker/api/types"` `ImageBuildOptions`options struct subset.
-
+Build details are defined on `DockerBuildOption` struct, which is, mainly, a `"github.com/docker/docker/api/types"` `ImageBuildOptions`options struct subset.
 ```go
 type DockerBuildOptions struct {
 	// ImageName is the name of the image
@@ -64,7 +71,7 @@ type DockerBuildOptions struct {
 }
 ```
 
-`DockerBuildCmd` sturct contains all the details to run a build.
+The `DockerBuildCmd` element is the responsible to run the docker build. On this struct there is `DockerPushOptions` attribute that contains the options to push images once its build is finished.
 ```go
 type DockerBuildCmd struct {
 	// Writer to write the build output
@@ -83,9 +90,8 @@ type DockerBuildCmd struct {
 	Response           types.Responser
 }
 ```
-The `DockerBuildCmd` element is the responsible to run the docker build. On this struct there is `DockerPushOptions`, a struct containing the options to push the image once is built.
 
-The response is managed by `Responser` interface, defined on types package.
+`Response`attribute is `Responser` interface and manages docker cli responses.
 ```go
 type Responser interface {
 	Write(io.Writer, io.ReadCloser) error
@@ -93,7 +99,7 @@ type Responser interface {
 ```
 
 #### Context
-On this subfolder are also lacated the context packages definition. Any docker build context implements the interface 
+On this build's subfolder are lacated the docker build context packages. Any docker build context implements the interface 
 
 ```go
 import "github.com/go-git/go-git/v5/plumbing/transport"
@@ -103,10 +109,9 @@ type GitAuther interface {
 }
 ```
 
-- **Path**: To build docker images from a local directory context definition
-- **Git**: To build docker images from a git repository context definition
-
 ### Common
+On this folder are located common or shared packages.
+`Tar` package manages the tar object required by docker API to build images.
 
 - files:
 ```
@@ -115,10 +120,8 @@ type GitAuther interface {
     `-- tar.go
 ```
 
-On this folder are located common or shared packages.
-`Tar` package manages the tar object required by docker API to build images.
-
 ### Push
+On this folder is found the docker push logic.
 
 - files:
 ```
@@ -127,8 +130,6 @@ On this folder are located common or shared packages.
 |-- pushOptions.go
 `-- pushOptions_test.go
 ```
-
-On this folder is found the docker push logic. 
 
 When pushing a docker image to registry the struct below defines own to push the image.
 ```go
@@ -144,6 +145,7 @@ type DockerPushOptions struct {
 ```
 
 ### Response
+On this folder is defined `DefaultResponse`, a `Responser` interface interface implementation.
 
 - files:
 ```
@@ -151,9 +153,8 @@ type DockerPushOptions struct {
 `-- response.go
 ```
 
-On this folder there defined `DefaultResponse` which implements the `Responser` interface and manages the docker api responses.
-
 ### Types
+On this folder there is a set of custom types for `go-docker-builder`.
 
 - files:
 ```
@@ -164,10 +165,10 @@ On this folder there defined `DefaultResponse` which implements the `Responser` 
 `-- responser.go
 ```
 
-On this folder there is a set of custom types for `go-docker-builder`.
+## Examples
+You could find examples about how to you build, push or pull docker images using `go-docker-build` on the [exmples](https://github.com/apenella/go-docker-builder/tree/master/examples) repository folder.
 
-## Example
-You could find an example on `examples` folder.
+> Note: On the examples, are used unexisting values for users, passowrd or registry hosts. If you would like test any example, take care to modify these values.
 
 ```
 .
@@ -187,8 +188,11 @@ You could find an example on `examples` folder.
     `-- push.go
 ```
 
-- **build-and-push**: Build and push an image.
-- **build-git-context**: Build an images using a git repository as a context.
+### List of examples
+
+- **build-and-push**: Build and push an image. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-and-push)
+- **build-git-context**: Build an images using a git repository as a context. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-git-context)
+On the snipped below, you could see how to run on of these examples.
 ```sh
 apenella [go-docker-builder/examples/build-git-context] $ go run build.go
 registry/namespace/ubuntu ──  Step 1/5 : FROM alpine:3.9
@@ -220,12 +224,13 @@ registry/namespace/ubuntu ──  Successfully tagged registry/namespace/ubuntu:
 apenella [go-docker-builder/examples/build-git-context] $
 
 ```
-- **build-git-context-auth**: Build an images using a git repository as a context and which required git server authorization.
-- **build-path-context**: Build an images using a location folder as a context.
-- **push**: Push and image.
-
-
+- **build-git-context-auth**: Build an images using a git repository as a context and which required git server authorization. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-git-context-auth)
+- **build-path-context**: Build an images using a location folder as a context. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-path-context)
+- **push**: Push and image. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/push)
 
 ## References
 - Here there is docker engine API specifications for building and image using it. https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
 - Taring files strategy was inspired in: https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
+
+## License
+go-docker-builder is available under [MIT](https://github.com/apenella/go-docker-builder/blob/master/LICENSE) license.
