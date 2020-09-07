@@ -15,7 +15,7 @@ import (
 
 const (
 	// DefaultDockerfile is the default filename for Dockerfile
-	DefaultDockerfile = "Dockerfile"
+	DefaultDockerfile string = "Dockerfile"
 )
 
 // DockerBuilderCmd

@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // Tar return an tar io.Reader from the gived directory. It returns an error when the file is not a directory.
@@ -44,8 +43,11 @@ func Tar(path *os.File) (io.Reader, error) {
 		if err != nil {
 			return errors.New("(common::tar::Tar::Walk) Error creating '" + file + "' header. " + err.Error())
 		}
-		// update the name to correctly reflect the desired destination when untaring
-		header.Name = strings.TrimPrefix(strings.Replace(file, path.Name(), "", -1), string(filepath.Separator))
+		relativePath, err := filepath.Rel(path.Name(), file)
+		if err != nil {
+			return errors.New("(common::tar::Tar::Walk) A relative path on'" + file + "' could not be made from '" + path.Name() + "'. " + err.Error())
+		}
+		header.Name = relativePath
 
 		// write the header
 		if err := tw.WriteHeader(header); err != nil {
@@ -55,7 +57,7 @@ func Tar(path *os.File) (io.Reader, error) {
 		// open files for taring
 		f, err := os.Open(file)
 		if err != nil {
-			return err
+			return errors.New("(common::tar::Tar::Walk) Error opening '" + file + "'. " + err.Error())
 		}
 
 		if _, err := io.Copy(tw, f); err != nil {
@@ -68,7 +70,7 @@ func Tar(path *os.File) (io.Reader, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, errors.New("(common::tar::Tar) Error explorint '" + path.Name() + "'. " + err.Error())
+		return nil, errors.New("(common::tar::Tar) Error exploring '" + path.Name() + "'. " + err.Error())
 	}
 
 	return bytes.NewReader(tarBuff.Bytes()), nil
