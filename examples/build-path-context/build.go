@@ -18,7 +18,6 @@ func main() {
 	var dockerCli *client.Client
 
 	imageDefinitionPath := filepath.Join(".", "files")
-
 	registry := "registry"
 	namespace := "namespace"
 	imageName := strings.Join([]string{registry, namespace, "ubuntu"}, "/")
@@ -34,7 +33,7 @@ func main() {
 
 	dockerBuildOptions := &build.DockerBuildOptions{
 		ImageName:          imageName,
-		Dockerfile:         "Dockerfile",
+		Dockerfile:         filepath.Join("Dockerfile"),
 		Tags:               []string{strings.Join([]string{imageName, "tag1"}, ":")},
 		DockerBuildContext: dockerBuildContext,
 	}
