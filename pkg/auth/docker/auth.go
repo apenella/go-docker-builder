@@ -3,9 +3,9 @@ package auth
 import (
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"strings"
 
+	errors "github.com/apenella/go-common-utils/error"
 	dockertypes "github.com/docker/docker/api/types"
 )
 
@@ -13,11 +13,11 @@ import (
 func GenerateAuthConfig(username, password string) (*dockertypes.AuthConfig, error) {
 
 	if username == "" {
-		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig) Username must be provided")
+		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Username must be provided")
 	}
 
 	if password == "" {
-		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig) Password must be provided")
+		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Password must be provided")
 	}
 
 	authConfig := &dockertypes.AuthConfig{
@@ -31,11 +31,11 @@ func GenerateAuthConfig(username, password string) (*dockertypes.AuthConfig, err
 func GenerateUserPasswordAuthConfig(username, password string) (*dockertypes.AuthConfig, error) {
 
 	if username == "" {
-		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig) Username must be provided")
+		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Username must be provided")
 	}
 
 	if password == "" {
-		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig) Password must be provided")
+		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Password must be provided")
 	}
 
 	authConfig := &dockertypes.AuthConfig{
@@ -55,12 +55,12 @@ func GenerateEncodedUserPasswordAuthConfig(username, password string) (*string, 
 
 	auth, err = GenerateUserPasswordAuthConfig(username, password)
 	if err != nil {
-		return nil, errors.New("(auth::GenerateEncodedUserPasswordAuthConfig) " + err.Error())
+		return nil, errors.New("(auth::GenerateEncodedUserPasswordAuthConfig)", "Error generation user password auth configuration", err)
 	}
 
 	encodedAuth, err = encodeAuthConfig(auth)
 	if err != nil {
-		return nil, errors.New("(auth::GenerateEncodedUserPasswordAuthConfig) " + err.Error())
+		return nil, errors.New("(auth::GenerateEncodedUserPasswordAuthConfig)", "Error encoding auth configuration", err)
 	}
 
 	return encodedAuth, nil
@@ -70,7 +70,7 @@ func encodeAuthConfig(authConfig *dockertypes.AuthConfig) (*string, error) {
 
 	encodedJSON, err := json.Marshal(authConfig)
 	if err != nil {
-		return nil, errors.New("(auth::encodeAuthConfig) Error marshaling auth configuration. " + err.Error())
+		return nil, errors.New("(auth::encodeAuthConfig)", "Error marshaling auth configuration", err)
 	}
 	authString := base64.URLEncoding.EncodeToString(encodedJSON)
 

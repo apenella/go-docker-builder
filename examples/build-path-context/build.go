@@ -6,10 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/docker/docker/client"
-
 	"github.com/apenella/go-docker-builder/pkg/build"
 	contextpath "github.com/apenella/go-docker-builder/pkg/build/context/path"
+	"github.com/docker/docker/client"
 )
 
 // go-docker-builder example where is created a ubuntu image

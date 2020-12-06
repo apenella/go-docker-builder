@@ -3,10 +3,12 @@ package tar
 import (
 	"archive/tar"
 	"bytes"
-	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+
+	errors "github.com/apenella/go-common-utils/error"
 )
 
 // Tar return an tar io.Reader from the gived directory. It returns an error when the file is not a directory.
@@ -19,12 +21,12 @@ func Tar(path *os.File) (io.Reader, error) {
 	// ensure the src actually exists before trying to tar it
 	stat, err = os.Stat(path.Name())
 	if err != nil {
-		return nil, errors.New("(common::tar::Tar) '" + path.Name() + "' stat. " + err.Error())
+		return nil, errors.New("(common::tar::Tar)", fmt.Sprintf("Stat error for '%s'", path.Name()), err)
 	}
 
 	// context to tar must be a directory
 	if !stat.IsDir() {
-		return nil, errors.New("(common::tar::Tar) '" + path.Name() + "' must be a directory")
+		return nil, errors.New("(common::tar::Tar)", fmt.Sprintf("'%s' must be a directory", path.Name()))
 	}
 
 	tw := tar.NewWriter(&tarBuff)
@@ -32,7 +34,7 @@ func Tar(path *os.File) (io.Reader, error) {
 
 	err = filepath.Walk(path.Name(), func(file string, fi os.FileInfo, err error) error {
 		if err != nil {
-			return errors.New("(common::tar::Tar::Walk) Error at the beginning of the walk. " + err.Error())
+			return errors.New("(common::tar::Tar::Walk)", "Error at the beginning of the walk", err)
 		}
 
 		if !fi.Mode().IsRegular() {
@@ -41,27 +43,27 @@ func Tar(path *os.File) (io.Reader, error) {
 
 		header, err := tar.FileInfoHeader(fi, fi.Name())
 		if err != nil {
-			return errors.New("(common::tar::Tar::Walk) Error creating '" + file + "' header. " + err.Error())
+			return errors.New("(common::tar::Tar::Walk)", fmt.Sprintf("Error creating '%s' header", file), err)
 		}
 		relativePath, err := filepath.Rel(path.Name(), file)
 		if err != nil {
-			return errors.New("(common::tar::Tar::Walk) A relative path on'" + file + "' could not be made from '" + path.Name() + "'. " + err.Error())
+			return errors.New("(common::tar::Tar::Walk)", fmt.Sprintf("A relative path on '%s' could not be made from '%s'", file, path.Name()), err)
 		}
 		header.Name = relativePath
 
 		// write the header
 		if err := tw.WriteHeader(header); err != nil {
-			return errors.New("(common::tar::Tar::Walk) Error writing '" + file + "' header. " + err.Error())
+			return errors.New("(common::tar::Tar::Walk)", fmt.Sprintf("Error writing '%s' header", file), err)
 		}
 
 		// open files for taring
 		f, err := os.Open(file)
 		if err != nil {
-			return errors.New("(common::tar::Tar::Walk) Error opening '" + file + "'. " + err.Error())
+			return errors.New("(common::tar::Tar::Walk)", fmt.Sprintf("Error opening '%s'", file), err)
 		}
 
 		if _, err := io.Copy(tw, f); err != nil {
-			return errors.New("(common::tar::Tar::Walk) Error copying '" + file + "' into tar. " + err.Error())
+			return errors.New("(common::tar::Tar::Walk)", fmt.Sprintf("Error copying '%s' into tar", file), err)
 		}
 		// manually close here after each file operation; defering would cause each file close
 		// to wait until all operations have completed.
@@ -70,7 +72,7 @@ func Tar(path *os.File) (io.Reader, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, errors.New("(common::tar::Tar) Error exploring '" + path.Name() + "'. " + err.Error())
+		return nil, errors.New("(common::tar::Tar)", fmt.Sprintf("Error exploring '%s'", path.Name()), err)
 	}
 
 	return bytes.NewReader(tarBuff.Bytes()), nil

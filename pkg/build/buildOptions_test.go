@@ -1,9 +1,9 @@
 package build
 
 import (
-	"errors"
 	"testing"
 
+	errors "github.com/apenella/go-common-utils/error"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -49,7 +49,7 @@ func TestAddBuildArgs(t *testing.T) {
 				arg:   "argument",
 				value: "value",
 			},
-			err: errors.New("(builder::AddBuildArgs) Argument 'argument' already defined"),
+			err: errors.New("(builder::AddBuildArgs)", "Argument 'argument' already defined"),
 		},
 	}
 	for _, test := range tests {
