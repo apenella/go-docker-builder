@@ -1,5 +1,7 @@
 package types
 
+import "fmt"
+
 // BuildResponseBodyStreamAuxMessage contains the ImageBuild's aux data from buildResponse
 type ResponseBodyStreamAuxMessage struct {
 	// ID is response body stream aux's id
@@ -10,7 +12,7 @@ type ResponseBodyStreamAuxMessage struct {
 func (m *ResponseBodyStreamAuxMessage) String() string {
 
 	if m.ID != "" {
-		return " \u2023 " + m.ID
+		return fmt.Sprintf(" %s %s", separator, m.ID)
 	}
 	return ""
 }

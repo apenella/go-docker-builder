@@ -3,10 +3,10 @@ package response
 import (
 	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 
+	errors "github.com/apenella/go-common-utils/error"
 	"github.com/apenella/go-docker-builder/pkg/types"
 )
 
@@ -25,13 +25,21 @@ func (d *DefaultResponse) Write(w io.Writer, r io.ReadCloser) error {
 		line := scanner.Bytes()
 		err := json.Unmarshal(line, &streamMessage)
 		if err != nil {
-			return errors.New("(responser:Response) Error unmarshalling line '" + string(line) + "' " + err.Error())
+			return errors.New("(responser:Response)", fmt.Sprintf("Error unmarshalling line '%s'", string(line)), err)
 		}
-		if string(line) != lineBefore {
-			fmt.Fprintf(w, "%s \u2500\u2500  %s\n", prefix, streamMessage.String())
+
+		streamMessageStr := streamMessage.String()
+
+		if streamMessageStr != lineBefore {
+			fmt.Fprintf(w, "\n%s \u2500\u2500  %s %s", prefix, streamMessage.String(), streamMessage.ProgressString())
+		} else {
+			fmt.Fprintf(w, "\r%s \u2500\u2500  %s %s", prefix, streamMessage.String(), streamMessage.ProgressString())
 		}
-		lineBefore = string(line)
+
+		lineBefore = streamMessageStr
 	}
+	// print empty line at the end
+	fmt.Println()
 
 	return nil
 }
