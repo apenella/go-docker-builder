@@ -3,10 +3,10 @@ package git
 import (
 	"archive/tar"
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 
+	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -51,7 +51,7 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 	if c.Auth != nil {
 		auth, err := c.Auth.Auth()
 		if err != nil {
-			return nil, errors.New("(context::git::Reader) Error getting authorization method." + err.Error())
+			return nil, errors.New("(context::git::Reader)", "Error getting authorization method", err)
 		}
 
 		cloneOption.Auth = auth
@@ -59,23 +59,23 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 
 	repo, err := git.Clone(gitstorage, nil, cloneOption)
 	if err != nil {
-		return nil, errors.New("(context::git::Reader) Error cloning '" + c.Repository + "'." + err.Error())
+		return nil, errors.New("(context::git::Reader)", fmt.Sprintf("Error cloning repository '%s'", c.Repository), err)
 	}
 
 	referenceHead, err := repo.Head()
 	if err != nil {
-		return nil, errors.New("(context::git::Reader) Error getting reference '" + referenceName.String() + "' HEAD." + err.Error())
+		return nil, errors.New("(context::git::Reader)", fmt.Sprintf("Error getting reference '%s' HEAD", referenceName.String()), err)
 	}
 
 	commit, err := repo.CommitObject(referenceHead.Hash())
 	if err != nil {
-		return nil, errors.New("(context::git::Reader) Error getting commit '" + referenceHead.Hash().String() + "'. " + err.Error())
+		return nil, errors.New("(context::git::Reader)", fmt.Sprintf("Error getting commit '%s'", referenceHead.Hash().String()), err)
 	}
 
 	filesIterator, err := commit.Files()
 	defer filesIterator.Close()
 	if err != nil {
-		return nil, errors.New("(context::git::Reader) Error getting files iterator")
+		return nil, errors.New("(context::git::Reader)", "Error getting files iterator")
 	}
 
 	tw := tar.NewWriter(&tarBuff)
@@ -87,12 +87,12 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 
 		fileContents, err := file.Contents()
 		if err != nil {
-			return errors.New("(context::git::Reader) Error achiving '" + file.Name + "' contents. " + err.Error())
+			return errors.New("(context::git::Reader)", fmt.Sprintf("Error achiving '%s' contents", file.Name), err)
 		}
 
 		_, err = buff.WriteString(fileContents)
 		if err != nil {
-			return errors.New("(context::git::Reader) Error writting '" + file.Name + "' contents to temporal buffer. " + err.Error())
+			return errors.New("(context::git::Reader)", fmt.Sprintf("Error writting '%s' contents to temporal buffer", file.Name), err)
 		}
 
 		header := &tar.Header{
@@ -102,7 +102,7 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 		}
 
 		if err := tw.WriteHeader(header); err != nil {
-			return errors.New("(context::git::Reader) Error writing '" + file.Name + "' header. " + err.Error())
+			return errors.New("(context::git::Reader)", fmt.Sprintf("Error writing '%s' header. ", file.Name), err)
 		}
 		// write file content into tar writer
 		fmt.Fprint(tw, buff.String())
@@ -112,7 +112,7 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, errors.New("(context::git::Reader) Error packaging repository files. " + err.Error())
+		return nil, errors.New("(context::git::Reader)", "Error packaging repository files", err)
 	}
 
 	return bytes.NewReader(tarBuff.Bytes()), nil

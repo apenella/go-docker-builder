@@ -1,8 +1,7 @@
 package push
 
 import (
-	"errors"
-
+	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 )
 
@@ -21,7 +20,7 @@ func (o *DockerPushOptions) AddAuth(username, password string) error {
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
 	if err != nil {
-		return errors.New("(push::AddAuth) " + err.Error())
+		return errors.New("(push::AddAuth)", "Error generating encoded user password auth configuration", err)
 	}
 
 	o.RegistryAuth = auth

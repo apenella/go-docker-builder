@@ -2,10 +2,11 @@ package build
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"io"
 	"os"
 
+	errors "github.com/apenella/go-common-utils/error"
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
@@ -44,7 +45,7 @@ func (b *DockerBuildCmd) Run() error {
 	var contextReader io.Reader
 
 	if b == nil {
-		return errors.New("(builder:Run) DockerBuilder is nil")
+		return errors.New("(builder:Run)", "DockerBuilder is nil")
 	}
 
 	if b.Writer == nil {
@@ -58,7 +59,7 @@ func (b *DockerBuildCmd) Run() error {
 	}
 
 	if b.DockerBuildOptions.ImageName == "" {
-		return errors.New("(builder:Run) An image name is required to build an image")
+		return errors.New("(builder:Run)", "An image name is required to build an image")
 	}
 
 	if b.DockerBuildOptions.Tags == nil {
@@ -73,7 +74,7 @@ func (b *DockerBuildCmd) Run() error {
 
 	contextReader, err = b.DockerBuildOptions.DockerBuildContext.Reader()
 	if err != nil {
-		return errors.New("(builder:Run) Error generating a build context reader. " + err.Error())
+		return errors.New("(builder:Run)", "Error generating a build context reader", err)
 	}
 
 	buildOptions := dockertypes.ImageBuildOptions{
@@ -90,13 +91,13 @@ func (b *DockerBuildCmd) Run() error {
 
 	buildResponse, err := b.Cli.ImageBuild(b.Context, contextReader, buildOptions)
 	if err != nil {
-		return errors.New("(builder:Run) Error building '" + b.DockerBuildOptions.ImageName + "'. " + err.Error())
+		return errors.New("(builder:Run)", fmt.Sprintf("Error building '%s'", b.DockerBuildOptions.ImageName), err)
 	}
 	defer buildResponse.Body.Close()
 
 	err = b.Response.Write(b.Writer, buildResponse.Body)
 	if err != nil {
-		return errors.New("(builder:Run) " + err.Error())
+		return errors.New("(builder:Run)", fmt.Sprintf("Error writing build response for '%s'", b.DockerBuildOptions.ImageName), err)
 	}
 
 	if b.DockerBuildOptions.PushAfterBuild {
@@ -110,7 +111,7 @@ func (b *DockerBuildCmd) Run() error {
 
 		err = dockerPush.Run()
 		if err != nil {
-			return errors.New("(builder:Run) " + err.Error())
+			return errors.New("(builder:Run)", fmt.Sprintf("Error pushing image '%s'", b.DockerBuildOptions.ImageName), err)
 		}
 	}
 

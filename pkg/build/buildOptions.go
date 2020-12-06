@@ -1,8 +1,9 @@
 package build
 
 import (
-	"errors"
+	"fmt"
 
+	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/build/context"
 
@@ -36,7 +37,7 @@ func (o *DockerBuildOptions) AddBuildArgs(arg string, value string) error {
 
 	_, exists := o.BuildArgs[arg]
 	if exists {
-		return errors.New("(builder::AddBuildArgs) Argument '" + arg + "' already defined")
+		return errors.New("(builder::AddBuildArgs)", fmt.Sprintf("Argument '%s' already defined", arg))
 	}
 
 	o.BuildArgs[arg] = &value
@@ -62,7 +63,7 @@ func (o *DockerBuildOptions) AddAuth(username, password, registry string) error 
 
 	authConfig, err := auth.GenerateUserPasswordAuthConfig(username, password)
 	if err != nil {
-		return errors.New("(build::AddAuth) " + err.Error())
+		return errors.New("(build::AddAuth)", "Error generation user password auth configuration", err)
 	}
 
 	o.Auth[registry] = *authConfig
