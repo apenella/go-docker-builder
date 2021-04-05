@@ -1,0 +1,49 @@
+version: "2.3"
+services:
+  registry:
+    image: registry:2
+    ports:
+      - 443:443
+    volumes:
+      - ./ssl:/ssl:ro
+      - ./auth:/auth:ro
+    restart: always
+    environment:
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
+      - REGISTRY_AUTH=token
+      - REGISTRY_AUTH_TOKEN_REALM=https://auth.go-docker-builder.test:5001/auth
+      - REGISTRY_AUTH_TOKEN_SERVICE="Docker registry"
+      - REGISTRY_AUTH_TOKEN_ISSUER="go-docker-builder"
+      - REGISTRY_HTTP_ADDR=0.0.0.0:443
+      - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/ssl/go-docker-builder.test.crt
+      - REGISTRY_HTTP_TLS_CERTIFICATE=/ssl/go-docker-builder.test.crt
+      - REGISTRY_HTTP_TLS_KEY=/ssl/go-docker-builder.test.key
+    networks:
+      default:
+        aliases:
+          - registry.go-docker-builder.test
+          - example.docker.com
+
+  dockerauth:
+    image: cesanta/docker_auth:1
+    restart: always
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./docker_auth:/config:ro
+      - ./ssl:/ssl
+    command: 
+      - -logtostderr
+      - /config/config.yml
+    networks:
+      default:
+        aliases:
+          - auth.go-docker-builder.test
+
+  client:
+    build:
+      context: client
+    working_dir: /app
+    volumes:
+      - ./ssl/go-docker-builder.test.crt:/etc/docker/certs.d/registry.go-docker-builder.test/ca.crt
+      - ..:/app

@@ -39,7 +39,7 @@ type DockerBuildCmd struct {
 
 // Run execute the docker build
 // https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
-func (b *DockerBuildCmd) Run() error {
+func (b *DockerBuildCmd) Run(ctx context.Context) error {
 
 	var err error
 	var contextReader io.Reader
