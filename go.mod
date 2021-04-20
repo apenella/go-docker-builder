@@ -22,6 +22,7 @@ require (
 	github.com/samalba/dockerclient v0.0.0-20160531175551-a30362618471
 	github.com/stretchr/testify v1.6.1
 	github.com/xanzy/ssh-agent v0.2.1
+	golang.org/x/text v0.3.3
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect
 	google.golang.org/grpc v1.29.1 // indirect
 	gotest.tools v2.2.0+incompatible

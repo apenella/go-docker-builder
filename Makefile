@@ -14,4 +14,4 @@ client-sh: up ## attach to client service
 	docker-compose -p ${PROJECT} -f ${COMPOSE_FILE} exec client sh
 
 test: up ## attach to client service
-	docker-compose -p ${PROJECT} -f ${COMPOSE_FILE} exec client go test ./pkg/...
+	docker-compose -p ${PROJECT} -f ${COMPOSE_FILE} exec client go test ./pkg/...1
