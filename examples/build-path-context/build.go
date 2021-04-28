@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,36 +18,33 @@ func main() {
 	var dockerCli *client.Client
 
 	imageDefinitionPath := filepath.Join(".", "files")
-	registry := "registry"
-	namespace := "namespace"
+	registry := "myregistry.example.com"
+	namespace := "library"
 	imageName := strings.Join([]string{registry, namespace, "ubuntu"}, "/")
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		panic("Error on docker client creation. " + err.Error())
-	}
-
-	dockerBuildContext := &contextpath.PathBuildContext{
-		Path: imageDefinitionPath,
-	}
-
-	dockerBuildOptions := &build.DockerBuildOptions{
-		ImageName:          imageName,
-		Dockerfile:         filepath.Join("Dockerfile"),
-		Tags:               []string{strings.Join([]string{imageName, "tag1"}, ":")},
-		DockerBuildContext: dockerBuildContext,
+		panic(fmt.Sprintf("Error on docker client creation. %s", err.Error()))
 	}
 
 	dockerBuilder := &build.DockerBuildCmd{
-		Writer:             os.Stdout,
-		Cli:                dockerCli,
-		Context:            context.TODO(),
-		DockerBuildOptions: dockerBuildOptions,
-		ExecPrefix:         imageName,
+		Writer:     os.Stdout,
+		Cli:        dockerCli,
+		ImageName:  imageName,
+		ExecPrefix: imageName,
 	}
 
-	err = dockerBuilder.Run()
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
+	dockerBuildContext := &contextpath.PathBuildContext{
+		Path: imageDefinitionPath,
+	}
+	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
-		panic("Error building '" + imageName + "'. " + err.Error())
+		panic(fmt.Sprintf("Error adding build docker context. %s", err.Error()))
+	}
+
+	err = dockerBuilder.Run(context.TODO())
+	if err != nil {
+		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
 	}
 }

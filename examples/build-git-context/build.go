@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 
@@ -17,33 +18,31 @@ func main() {
 
 	registry := "registry"
 	namespace := "namespace"
-	imageName := strings.Join([]string{registry, namespace, "ubuntu"}, "/")
+	imageName := strings.Join([]string{registry, namespace, "alpine"}, "/")
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
+	dockerBuilder := &build.DockerBuildCmd{
+		Writer:     os.Stdout,
+		Cli:        dockerCli,
+		ImageName:  imageName,
+		ExecPrefix: imageName,
+	}
+
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "https://github.com/alpinelinux/docker-alpine.git",
 	}
-
-	dockerBuildOptions := &build.DockerBuildOptions{
-		ImageName:          imageName,
-		Tags:               []string{strings.Join([]string{imageName, "tag1"}, ":")},
-		DockerBuildContext: dockerBuildContext,
-	}
-
-	dockerBuilder := &build.DockerBuildCmd{
-		Writer:             os.Stdout,
-		Cli:                dockerCli,
-		Context:            context.TODO(),
-		DockerBuildOptions: dockerBuildOptions,
-		ExecPrefix:         imageName,
-	}
-
-	err = dockerBuilder.Run()
+	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
-		panic("Error building '" + imageName + "'. " + err.Error())
+		panic(fmt.Sprintf("Error adding build docker context. %s", err.Error()))
+	}
+
+	err = dockerBuilder.Run(context.TODO())
+	if err != nil {
+		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
 	}
 }

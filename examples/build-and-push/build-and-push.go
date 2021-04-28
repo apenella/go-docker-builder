@@ -9,7 +9,7 @@ import (
 
 	"github.com/apenella/go-docker-builder/pkg/build"
 	contextpath "github.com/apenella/go-docker-builder/pkg/build/context/path"
-	"github.com/apenella/go-docker-builder/pkg/push"
+	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -20,50 +20,44 @@ func main() {
 
 	imageDefinitionPath := filepath.Join(".", "files")
 
-	registry := "registry"
-	namespace := "namespace"
-	imageName := strings.Join([]string{registry, namespace, "alpine"}, "/")
-	username := "user"
-	password := "pass"
+	registry := "registry.go-docker-builder.test"
+	imageName := strings.Join([]string{registry, "alpine"}, "/")
+	username := "admin"
+	password := "admin"
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
+	dockerBuilder := &build.DockerBuildCmd{
+		Writer:            os.Stdout,
+		Cli:               dockerCli,
+		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
+		ImagePushOptions:  &dockertypes.ImagePushOptions{},
+		PushAfterBuild:    true,
+		RemoveAfterPush:   true,
+		ImageName:         imageName,
+		ExecPrefix:        imageName,
+	}
+
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
 	dockerBuildContext := &contextpath.PathBuildContext{
 		Path: imageDefinitionPath,
 	}
 
-	dockerBuildOptions := &build.DockerBuildOptions{
-		ImageName:          imageName,
-		Dockerfile:         "Dockerfile",
-		Tags:               []string{strings.Join([]string{imageName, "tag1"}, ":")},
-		PushAfterBuild:     true,
-		DockerBuildContext: dockerBuildContext,
-	}
-
-	dockerPushOptions := &push.DockerPushOptions{
-		ImageName: dockerBuildOptions.ImageName,
-		Tags:      dockerBuildOptions.Tags,
-	}
-	dockerPushOptions.AddAuth(username, password)
-	err = dockerBuildOptions.AddAuth(username, password, registry)
+	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
-		fmt.Println("Error including auth to build options: " + err.Error())
+		panic(fmt.Sprintf("Error adding build docker context. %s", err.Error()))
 	}
 
-	dockerBuilder := &build.DockerBuildCmd{
-		Writer:             os.Stdout,
-		Cli:                dockerCli,
-		Context:            context.TODO(),
-		DockerBuildOptions: dockerBuildOptions,
-		DockerPushOptions:  dockerPushOptions,
-		ExecPrefix:         imageName,
-	}
-
-	err = dockerBuilder.Run()
+	err = dockerBuilder.AddAuth(username, password, registry)
 	if err != nil {
-		panic("Error building '" + imageName + "'. " + err.Error())
+		panic(fmt.Sprintf("Error adding registry auth. %s", err.Error()))
+	}
+
+	err = dockerBuilder.Run(context.TODO())
+	if err != nil {
+		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
 	}
 }

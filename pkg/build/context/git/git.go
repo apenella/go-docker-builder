@@ -46,6 +46,7 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 		URL:           c.Repository,
 		ReferenceName: referenceName,
 		Depth:         1,
+		SingleBranch:  true,
 	}
 
 	if c.Auth != nil {

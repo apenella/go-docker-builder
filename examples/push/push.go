@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 
@@ -23,24 +24,19 @@ func main() {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	dockerPushOptions := &push.DockerPushOptions{
-		ImageName: strings.Join([]string{registry, namespace, imageName}, "/"),
+	dockerPusher := &push.DockerPushCmd{
+		Writer:     os.Stdout,
+		Cli:        dockerCli,
+		ImageName:  strings.Join([]string{registry, namespace, imageName}, "/"),
+		ExecPrefix: imageName,
 	}
 
 	user := "myregistryuser"
 	pass := "myregistrypass"
-	dockerPushOptions.AddAuth(user, pass)
+	dockerPusher.AddAuth(user, pass)
 
-	dockerPusher := &push.DockerPushCmd{
-		Writer:            os.Stdout,
-		Cli:               dockerCli,
-		Context:           context.TODO(),
-		DockerPushOptions: dockerPushOptions,
-		ExecPrefix:        imageName,
-	}
-
-	err = dockerPusher.Run()
+	err = dockerPusher.Run(context.TODO())
 	if err != nil {
-		panic("Error pushing '" + imageName + "'. " + err.Error())
+		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
 	}
 }

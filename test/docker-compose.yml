@@ -23,7 +23,8 @@ services:
         aliases:
           - registry.go-docker-builder.test
           - example.docker.com
-
+    depends_on: 
+      - dockerauth
   dockerauth:
     image: cesanta/docker_auth:1
     restart: always
@@ -44,6 +45,10 @@ services:
     build:
       context: client
     working_dir: /app
+    privileged: true
+    environment:
+      - GODEBUG=x509ignoreCN=0
     volumes:
       - ./ssl/go-docker-builder.test.crt:/etc/docker/certs.d/registry.go-docker-builder.test/ca.crt
       - ..:/app
+#      - /var/run/docker.sock:/var/run/docker.sock

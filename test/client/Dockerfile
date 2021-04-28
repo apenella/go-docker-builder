@@ -1,18 +1,21 @@
 # Based on https://github.com/timberio/docker-client/blob/master/Dockerfile
 ARG GOLANG_VERSION="1.15"
+ARG DOCKER_VERSION="20.10"
 
-FROM golang:${GOLANG_VERSION}-alpine
+FROM golang:${GOLANG_VERSION}-alpine AS golang
 
-ARG DOCKER_CLI_VERSION="20.10.5"
-ENV DOWNLOAD_URL="https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_CLI_VERSION.tgz"
+FROM docker:${DOCKER_VERSION}-dind
 
-RUN apk --no-cache add \
-        curl \
-        build-base \
-    && curl -L $DOWNLOAD_URL | tar -xz docker \
-    && mv docker/docker /usr/local/bin/docker
+COPY --from=golang /usr/local/go /usr/local/go
 
-WORKDIR /app
 
-ENTRYPOINT ["tail"]
-CMD ["-f","/dev/null"]
+ENV GOPATH /go
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+ENV PATH /usr/local/go/bin:$PATH
+ENV PATH $GOPATH/bin:$PATH 
+WORKDIR $GOPATH
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["go","version"]
