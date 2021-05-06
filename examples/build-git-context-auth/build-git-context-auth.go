@@ -18,9 +18,8 @@ func main() {
 	var err error
 	var dockerCli *client.Client
 
-	registry := "registry"
-	namespace := "namespace"
-	imageName := strings.Join([]string{registry, namespace, "myimage"}, "/")
+	registry := "registry.go-docker-builder.test"
+	imageName := strings.Join([]string{registry, "alpine"}, "/")
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
@@ -29,8 +28,8 @@ func main() {
 
 	// authenticate to git server using a key
 	authMethod := &auth.KeyAuth{
-		PkFile:     "mykeyfile",
-		PkPassword: "mypass",
+		PkFile:     "/root/.ssh/id_rsa",
+		PkPassword: "password",
 	}
 	//
 	// Other auth methods
@@ -54,9 +53,9 @@ func main() {
 		ImageName:  imageName,
 		ExecPrefix: imageName,
 	}
-	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "custom"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
-		Repository: "git@myprinvategitserver:base/alpine.git",
+		Repository: "git@gitserver:/git/repos/go-docker-builder-alpine.git",
 		Auth:       authMethod,
 	}
 

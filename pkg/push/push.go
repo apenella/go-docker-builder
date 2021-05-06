@@ -128,10 +128,16 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 		}
 
 		if p.RemoveAfterPush {
-			p.Cli.ImageRemove(ctx, image, dockertypes.ImageRemoveOptions{
+			deleteResponseItems, err := p.Cli.ImageRemove(ctx, image, dockertypes.ImageRemoveOptions{
 				Force:         true,
 				PruneChildren: true,
 			})
+			if err != nil {
+				return errors.New("(push::Run)", fmt.Sprintf("Error removing '%s'", image), err)
+			}
+
+			// TODO
+			fmt.Println(deleteResponseItems)
 		}
 	}
 

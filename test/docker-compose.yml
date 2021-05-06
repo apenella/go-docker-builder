@@ -4,9 +4,6 @@ services:
     image: registry:2
     ports:
       - 443:443
-    volumes:
-      - ./ssl:/ssl:ro
-      - ./auth:/auth:ro
     restart: always
     environment:
       - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
@@ -18,6 +15,8 @@ services:
       - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/ssl/go-docker-builder.test.crt
       - REGISTRY_HTTP_TLS_CERTIFICATE=/ssl/go-docker-builder.test.crt
       - REGISTRY_HTTP_TLS_KEY=/ssl/go-docker-builder.test.key
+    volumes:
+      - ./files/ssl:/ssl:ro
     networks:
       default:
         aliases:
@@ -25,6 +24,7 @@ services:
           - example.docker.com
     depends_on: 
       - dockerauth
+
   dockerauth:
     image: cesanta/docker_auth:1
     restart: always
@@ -32,7 +32,7 @@ services:
       - "5001:5001"
     volumes:
       - ./docker_auth:/config:ro
-      - ./ssl:/ssl
+      - ./files/ssl:/ssl
     command: 
       - -logtostderr
       - /config/config.yml
@@ -48,7 +48,31 @@ services:
     privileged: true
     environment:
       - GODEBUG=x509ignoreCN=0
+      - GIT_KEYS=/git/keys
     volumes:
-      - ./ssl/go-docker-builder.test.crt:/etc/docker/certs.d/registry.go-docker-builder.test/ca.crt
+      - ./files/ssl/go-docker-builder.test.crt:/etc/docker/certs.d/registry.go-docker-builder.test/ca.crt
       - ..:/app
-#      - /var/run/docker.sock:/var/run/docker.sock
+      - ssh:/root/.ssh
+
+  gitserver:
+    build:
+      context: gitserver
+    environment:
+      - GIT_KEYS=/git/keys
+    volumes:
+      - ssh:/git/keys
+      - ./files/repos:/git/repos
+
+  openssh:
+    build:
+      context: openssh-client
+    entrypoint: 
+      - /usr/bin/ssh-keygen
+    working_dir: /ssh
+    volumes:
+      - ssh:/ssh
+    command: ["--help"]
+
+volumes:
+  ssh:
+  ssl:

@@ -8,9 +8,8 @@ import (
 	"testing"
 
 	errors "github.com/apenella/go-common-utils/error"
+	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	buildcontext "github.com/apenella/go-docker-builder/pkg/build/context"
-	"github.com/apenella/go-docker-builder/test/mock"
-	mockclient "github.com/apenella/go-docker-builder/test/mock"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -131,7 +130,7 @@ func TestAddBuildContext(t *testing.T) {
 		desc              string
 		dockerBuildCmd    *DockerBuildCmd
 		buildContext      buildcontext.DockerBuildContexter
-		prepareAssertFunc func(*mock.DockerBuildContext)
+		prepareAssertFunc func(*mockclient.DockerBuildContext)
 		err               error
 	}{
 		{
@@ -143,8 +142,8 @@ func TestAddBuildContext(t *testing.T) {
 		{
 			desc:           "Testing add docker build context",
 			dockerBuildCmd: &DockerBuildCmd{},
-			buildContext:   mock.NewDockerBuildContext(),
-			prepareAssertFunc: func(mock *mock.DockerBuildContext) {
+			buildContext:   mockclient.NewDockerBuildContext(),
+			prepareAssertFunc: func(mock *mockclient.DockerBuildContext) {
 				mock.On("Reader").Return(ioutil.NopCloser(io.Reader(&bytes.Buffer{})), nil)
 			},
 			err: &errors.Error{},
@@ -156,7 +155,7 @@ func TestAddBuildContext(t *testing.T) {
 			t.Log(test.desc)
 
 			if test.prepareAssertFunc != nil {
-				mock := new(mock.DockerBuildContext)
+				mock := new(mockclient.DockerBuildContext)
 				test.prepareAssertFunc(mock)
 				test.buildContext = mock
 			}

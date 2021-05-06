@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	errors "github.com/apenella/go-common-utils/error"
-	mockclient "github.com/apenella/go-docker-builder/test/mock"
+	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -113,23 +113,19 @@ func TestRun(t *testing.T) {
 	tests := []struct {
 		desc              string
 		dockerPushCmd     *DockerPushCmd
-		ctx               context.Context
 		pushOptions       dockertypes.ImagePushOptions
-		mock              *mockclient.DockerClient
 		prepareAssertFunc func(context.Context, *mockclient.DockerClient, *DockerPushCmd)
 		assertFunc        func(*mockclient.DockerClient) bool
 		err               error
 	}{
 		{
 			desc:          "Testing error when DockerPushCmd is undefined",
-			ctx:           context.TODO(),
 			pushOptions:   dockertypes.ImagePushOptions{},
 			dockerPushCmd: nil,
 			err:           errors.New("(push::Run)", "DockerPushCmd is undefined"),
 		},
 		{
 			desc:        "Testing error when ImagePushOptions is undefined",
-			ctx:         context.TODO(),
 			pushOptions: dockertypes.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImagePushOptions: nil,
@@ -138,14 +134,12 @@ func TestRun(t *testing.T) {
 		},
 		{
 			desc: "Testing push a single image",
-			ctx:  context.TODO(),
 			dockerPushCmd: &DockerPushCmd{
 				Writer:           io.Writer(writer),
 				ImageName:        "test_image",
 				ImagePushOptions: &dockertypes.ImagePushOptions{},
 				ExecPrefix:       "",
 			},
-			mock: new(mockclient.DockerClient),
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
 				cmd.Cli = mock
@@ -158,7 +152,6 @@ func TestRun(t *testing.T) {
 
 		{
 			desc: "Testing push a single image with remove after push",
-			ctx:  context.TODO(),
 			dockerPushCmd: &DockerPushCmd{
 				Writer:           io.Writer(writer),
 				ImageName:        "test_image",
@@ -166,7 +159,6 @@ func TestRun(t *testing.T) {
 				ExecPrefix:       "",
 				RemoveAfterPush:  true,
 			},
-			mock: new(mockclient.DockerClient),
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
 				mock.On("ImageRemove", ctx, cmd.ImageName, dockertypes.ImageRemoveOptions{
@@ -183,7 +175,6 @@ func TestRun(t *testing.T) {
 
 		{
 			desc: "Testing push a single image with auth",
-			ctx:  context.TODO(),
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
 				cmd.Cli = mock
@@ -200,12 +191,10 @@ func TestRun(t *testing.T) {
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImagePush", 1)
 			},
-			mock: new(mockclient.DockerClient),
-			err:  &errors.Error{},
+			err: &errors.Error{},
 		},
 		{
 			desc: "Testing push a single image with tags",
-			ctx:  context.TODO(),
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
 				mock.On("ImagePush", ctx, "tag1", *cmd.ImagePushOptions).Return(reader, nil)
@@ -223,25 +212,26 @@ func TestRun(t *testing.T) {
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImagePush", 3)
 			},
-			mock: new(mockclient.DockerClient),
-			err:  &errors.Error{},
+			err: &errors.Error{},
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Log(test.desc)
+			mock := new(mockclient.DockerClient)
+			ctx := context.TODO()
 
 			if test.prepareAssertFunc != nil {
-				test.prepareAssertFunc(test.ctx, test.mock, test.dockerPushCmd)
+				test.prepareAssertFunc(ctx, mock, test.dockerPushCmd)
 			}
 
-			err := test.dockerPushCmd.Run(test.ctx)
+			err := test.dockerPushCmd.Run(ctx)
 
 			if err != nil {
 				assert.Equal(t, test.err, err)
 			} else {
-				assert.True(t, test.assertFunc(test.mock))
+				assert.True(t, test.assertFunc(mock))
 			}
 		})
 	}

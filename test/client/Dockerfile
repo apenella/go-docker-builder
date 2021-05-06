@@ -8,12 +8,13 @@ FROM docker:${DOCKER_VERSION}-dind
 
 COPY --from=golang /usr/local/go /usr/local/go
 
-
 ENV GOPATH /go
-RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 ENV PATH /usr/local/go/bin:$PATH
 ENV PATH $GOPATH/bin:$PATH 
+
 WORKDIR $GOPATH
+
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
