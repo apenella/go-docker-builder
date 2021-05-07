@@ -2,14 +2,14 @@
 default_bits = 2048
 default_md = sha256
 distinguished_name=req_distinguished_name
-req_extensions = v3_req
+req_extensions = req_ext
 prompt = no
 
 [ req_distinguished_name ]
 organizationName    = go-docker-builder
 commonName = *.go-docker-builder.test
 
-[ v3_req ]
+[ req_ext ]
 subjectAltName = @alt_names
 
 [alt_names]

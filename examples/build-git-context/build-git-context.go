@@ -38,7 +38,9 @@ func main() {
 		RemoveAfterPush:   true,
 	}
 
-	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "a-tag"}, ":"))
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "b-tag"}, ":"))
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "z-tag"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "https://github.com/alpinelinux/docker-alpine.git",
 	}

@@ -16,7 +16,7 @@ services:
       - REGISTRY_HTTP_TLS_CERTIFICATE=/ssl/go-docker-builder.test.crt
       - REGISTRY_HTTP_TLS_KEY=/ssl/go-docker-builder.test.key
     volumes:
-      - ./files/ssl:/ssl:ro
+      - ssl:/ssl:ro
     networks:
       default:
         aliases:
@@ -32,7 +32,7 @@ services:
       - "5001:5001"
     volumes:
       - ./docker_auth:/config:ro
-      - ./files/ssl:/ssl
+      - ssl:/ssl:ro
     command: 
       - -logtostderr
       - /config/config.yml
@@ -47,10 +47,9 @@ services:
     working_dir: /app
     privileged: true
     environment:
-      - GODEBUG=x509ignoreCN=0
       - GIT_KEYS=/git/keys
     volumes:
-      - ./files/ssl/go-docker-builder.test.crt:/etc/docker/certs.d/registry.go-docker-builder.test/ca.crt
+      - ssl:/ssl
       - ..:/app
       - ssh:/root/.ssh
 
@@ -72,6 +71,17 @@ services:
     volumes:
       - ssh:/ssh
     command: ["--help"]
+
+  openssl:
+    build:
+      context: openssl-client
+    entrypoint: 
+      - openssl
+    working_dir: /ssl
+    volumes:
+      - ssl:/ssl
+      - ./files/ssl:/root/ssl
+    command: ["version"]
 
 volumes:
   ssh:
