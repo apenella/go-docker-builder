@@ -14,10 +14,6 @@ import (
 	dockertypes "github.com/docker/docker/api/types"
 )
 
-// type PusherClient interface {
-// 	ImagePush(ctx context.Context, image string, options dockertypes.ImagePushOptions) (io.ReadCloser, error)
-// }
-
 // DockerPushCmd is used to push images to docker registry
 type DockerPushCmd struct {
 	// Writer to use to write docker client messges
