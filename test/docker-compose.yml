@@ -1,5 +1,19 @@
 version: "2.3"
 services:
+
+  other-registry:
+    image: registry:2
+    ports:
+      - 5000:5000
+    restart: always
+    volumes:
+      - ssl:/ssl:ro
+      - ./files/other-registry-storage:/var/lib/registry
+    networks:
+      default:
+        aliases:
+          - other-registry.go-docker-builder.test
+            
   registry:
     image: registry:2
     ports:
@@ -52,6 +66,7 @@ services:
       - ssl:/ssl
       - ..:/app
       - ssh:/root/.ssh
+      - ./client/daemon.json:/etc/docker/daemon.json
 
   gitserver:
     build:

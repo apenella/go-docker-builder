@@ -1,0 +1,3 @@
+{
+    "insecure-registries" : ["other-registry.go-docker-builder.test:5000"]
+}  
