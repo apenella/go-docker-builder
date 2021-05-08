@@ -168,24 +168,34 @@ On this folder there is a set of custom types for `go-docker-builder`.
 ## Examples
 You could find examples about how to you build, push or pull docker images using `go-docker-build` on the [exmples](https://github.com/apenella/go-docker-builder/tree/master/examples) repository folder.
 
-> Note: On the examples, are used unexisting values for users, passowrd or registry hosts. If you would like test any example, take care to modify these values.
+Each example is provided by a Makefile which starts the environment required by the test and runs the test.
 
 ```
 .
-|-- build-and-push
-|   |-- build-and-push.go
-|   `-- files
-|       `-- Dockerfile
-|-- build-git-context
-|   `-- build.go
-|-- build-git-context-auth
-|   `-- build.go
-|-- build-path-context
-|   |-- build.go
-|   `-- files
-|       `-- Dockerfile
-`-- push
-    `-- push.go
+├── build-and-push
+│   ├── build-and-push.go
+│   ├── files
+│   │   └── Dockerfile
+│   └── Makefile
+├── build-git-context
+│   ├── build-git-context.go
+│   └── Makefile
+├── build-git-context-auth
+│   ├── build-git-context-auth.go
+│   └── Makefile
+├── build-path-context
+│   ├── build-path-context.go
+│   ├── files
+│   │   ├── Dockerfile
+│   │   └── etc
+│   │       └── config
+│   │           └── file.cfg
+│   └── Makefile
+├── copy-remote
+│   ├── copy-remote.go
+│   └── Makefile
+└── push
+    └── push.go
 ```
 
 ### List of examples
@@ -230,7 +240,7 @@ apenella [go-docker-builder/examples/build-git-context] $
 
 ## References
 - Here there is docker engine API specifications for building and image using it. https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
-- Taring files strategy was inspired in: https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
+- Taring files strategy was inspired by: https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
 
 ## License
 go-docker-builder is available under [MIT](https://github.com/apenella/go-docker-builder/blob/master/LICENSE) license.
