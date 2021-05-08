@@ -122,8 +122,10 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 		if err != nil {
 			return errors.New("(push::Run)", fmt.Sprintf("Error writing push response for '%s'", image), err)
 		}
+	}
 
-		if p.RemoveAfterPush {
+	if p.RemoveAfterPush {
+		for _, image := range p.Tags {
 			deleteResponseItems, err := p.Cli.ImageRemove(ctx, image, dockertypes.ImageRemoveOptions{
 				Force:         true,
 				PruneChildren: true,

@@ -24,6 +24,12 @@ func (client *DockerClient) ImageBuild(ctx context.Context, buildContext io.Read
 	return args.Get(0).(dockertypes.ImageBuildResponse), args.Error(1)
 }
 
+// ImagePull is a mock method to pull docker images from registry
+func (client *DockerClient) ImagePull(ctx context.Context, ref string, options dockertypes.ImagePullOptions) (io.ReadCloser, error) {
+	args := client.Mock.Called(ctx, ref, options)
+	return args.Get(0).(io.ReadCloser), args.Error(1)
+}
+
 // ImagePush is a mock method to push docker images to registry
 func (client *DockerClient) ImagePush(ctx context.Context, image string, options dockertypes.ImagePushOptions) (io.ReadCloser, error) {
 	args := client.Mock.Called(ctx, image, options)
@@ -35,4 +41,11 @@ func (client *DockerClient) ImageRemove(ctx context.Context, imageID string, opt
 	args := client.Mock.Called(ctx, imageID, options)
 
 	return args.Get(0).([]dockertypes.ImageDeleteResponseItem), args.Error(1)
+}
+
+// ImageTag is a mock method to tag docker images
+func (client *DockerClient) ImageTag(ctx context.Context, imageID, ref string) error {
+	args := client.Mock.Called(ctx, imageID, ref)
+
+	return args.Error(0)
 }

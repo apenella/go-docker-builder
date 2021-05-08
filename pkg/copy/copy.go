@@ -2,10 +2,13 @@ package copy
 
 import (
 	"context"
+	"fmt"
 	"io"
 
 	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
+	"github.com/apenella/go-docker-builder/pkg/push"
+	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
 	dockertypes "github.com/docker/docker/api/types"
 )
@@ -22,8 +25,10 @@ type DockerImageCopyCmd struct {
 	ImagePushOptions *dockertypes.ImagePushOptions
 	// ExecPrefix prefix to include add to each docker client message
 	ExecPrefix string
-	// SourceImage is the name of the image
+	// SourceImage is the name of the image to be copied
 	SourceImage string
+	// TargetImage is the name of the copied image
+	TargetImage string
 	// Tags is a copied images tags list
 	Tags []string
 	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
@@ -97,14 +102,68 @@ func (c *DockerImageCopyCmd) AddTag(tag ...string) {
 
 // Run performs the image copy
 func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
+	var err error
+	var pullResponse io.ReadCloser
+
+	if c == nil {
+		return errors.New("(copy::Run)", "DockerImageCopyCmd is undefined")
+	}
+
+	if c.SourceImage == "" {
+		return errors.New("(copy::Run)", "Source image must be defined")
+	}
+
+	if c.TargetImage == "" {
+		return errors.New("(copy::Run)", "Target image must be defined")
+	}
+
+	if c.ImagePushOptions == nil {
+		return errors.New("(copy::Run)", "Image push options is undefined")
+	}
+
+	if c.Response == nil {
+		c.Response = &response.DefaultResponse{
+			Prefix: c.ExecPrefix,
+		}
+	}
 
 	// if remote, pull
+	if c.RemoteSource {
+		if c.ImagePullOptions == nil {
+			return errors.New("(copy::Run)", "Image pull options is undefined")
+		}
 
-	// generate tags imageTag
+		pullResponse, err = c.Cli.ImagePull(ctx, c.SourceImage, *c.ImagePullOptions)
+		if err != nil {
+			return errors.New("(copy::Run)", fmt.Sprintf("Error pull image '%s", c.SourceImage), err)
+		}
 
-	// prepare DockerPushCmd
+		err = c.Response.Write(c.Writer, pullResponse)
+		if err != nil {
+			return errors.New("(copy::Run)", fmt.Sprintf("Error writing push response for '%s'", c.SourceImage), err)
+		}
+	}
 
-	// remove tags and source image
+	err = c.Cli.ImageTag(ctx, c.SourceImage, c.TargetImage)
+	if err != nil {
+		return errors.New("(copy::Run)", fmt.Sprintf("Error tagging image '%s' to '%s'", c.SourceImage, c.TargetImage), err)
+	}
+
+	push := &push.DockerPushCmd{
+		Writer:             c.Writer,
+		Cli:                c.Cli,
+		ExecPrefix:         c.ExecPrefix,
+		Response:           c.Response,
+		ImageName:          c.TargetImage,
+		Tags:               c.Tags,
+		ImagePushOptions:   c.ImagePushOptions,
+		UseNormalizedNamed: c.UseNormalizedNamed,
+	}
+
+	err = push.Run(ctx)
+	if err != nil {
+		return errors.New("(copy::Run)", "Error pushing image", err)
+	}
 
 	return nil
 }
