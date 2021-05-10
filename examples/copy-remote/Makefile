@@ -8,10 +8,10 @@ help: ## list allowed targets
 	@echo 
 
 start: cleanup generate-certs ## start docker registry
-	docker-compose -f ../../test/docker-compose.yml up -d --build registry other-registry gitserver
+	@docker-compose -f ../../test/docker-compose.yml up -d --build registry other-registry gitserver
 
 cleanup: ## cleanup example environment
-	docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
 
 generate-certs: cleanup-certs ## generate certificate for go-docker-builder.test
 	@docker-compose -f ../../test/docker-compose.yml run --rm openssl req -newkey rsa:2048 -nodes -keyout go-docker-builder.test.key -out go-docker-builder.test.csr -config /root/ssl/go-docker-builder.test.cnf
@@ -21,7 +21,8 @@ cleanup-certs: ## cleanup certificates
 	@docker-compose -f ../../test/docker-compose.yml run --rm --entrypoint /bin/sh openssl -c 'rm -rf $$(ls)'
 
 example: start ## executes the examples
-	docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go
+	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go
+	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
 
 logs: ## show services logs
-	docker-compose -f ../../test/docker-compose.yml logs
+	@docker-compose -f ../../test/docker-compose.yml logs

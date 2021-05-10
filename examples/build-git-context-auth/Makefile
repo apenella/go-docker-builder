@@ -28,6 +28,7 @@ cleanup-certs: ## cleanup certificates
 
 example: start ## executes the examples
 	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go
-
+	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	
 logs: ## show services logs
 	@docker-compose -f ../../test/docker-compose.yml logs

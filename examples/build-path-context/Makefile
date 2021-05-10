@@ -15,7 +15,8 @@ cleanup: ## cleanup example environment
 
 example: start ## executes the examples
 	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go
-
+	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	
 generate-certs: cleanup-certs ## generate certificate for go-docker-builder.test
 	@docker-compose -f ../../test/docker-compose.yml run --rm openssl req -newkey rsa:2048 -nodes -keyout go-docker-builder.test.key -out go-docker-builder.test.csr -config /root/ssl/go-docker-builder.test.cnf
 	@docker-compose -f ../../test/docker-compose.yml run --rm openssl  x509 -signkey go-docker-builder.test.key -in go-docker-builder.test.csr -req -days 365 -out go-docker-builder.test.crt -extensions req_ext -extfile /root/ssl/go-docker-builder.test.cnf
