@@ -6,6 +6,7 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
+	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/apenella/go-common-utils/error v0.0.0-20200917063805-34b0ed3c4ce1
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/docker/docker v0.0.0-20190822180741-9552f2b2fdde

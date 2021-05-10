@@ -67,6 +67,8 @@ services:
       - ..:/app
       - ssh:/root/.ssh
       - ./client/daemon.json:/etc/docker/daemon.json
+    depends_on:
+      - gitserver
 
   gitserver:
     build:
