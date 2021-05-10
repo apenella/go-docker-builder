@@ -37,10 +37,9 @@ func (d *DefaultResponse) Write(w io.Writer, r io.ReadCloser) error {
 
 		if streamMessageStr != lineBefore && streamMessageStr != "" {
 			if streamMessage.ID != "" {
-				// fmt.Fprintf(w, "%s %s (%d)\n", streamMessage.ID, streamMessage.Status, numLayers)
 				lines[streamMessage.ID] = fmt.Sprintf("%s \u2500\u2500  %s %s", prefix, streamMessage.String(), streamMessage.ProgressString())
 
-				fmt.Printf(cursor.MoveUp(numLayers))
+				fmt.Fprintf(w, "%s", cursor.MoveUp(numLayers))
 
 				for _, line := range lines {
 					fmt.Fprintf(w, "\r%s%s\n", cursor.ClearEntireLine(), line)
