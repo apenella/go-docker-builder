@@ -9,4 +9,7 @@ do
     cat "${key}" >> "${git_ssh_folder}/authorized_keys"
 done
 
+spawn-fcgi -U git -G git -s /var/run/fcgiwrap.socket /usr/bin/fcgiwrap &
+nginx -g "daemon off;" &
+
 /usr/sbin/sshd -D

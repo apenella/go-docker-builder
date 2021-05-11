@@ -17,7 +17,7 @@ RUN apk add --no-cache \
     && rm -rf /var/cache/apk/* \
     && ssh-keygen -A \
     && adduser -D --home ${git_user_home} --shel /usr/bin/git-shell git \ 
-    # user password is required
+    # user password is required in order to access via ssh
     && echo git:$(xxd -l4 /dev/random -p) | chpasswd \
     && mkdir -p ${repos_dir} \
     && mkdir -p ${keys_dir} \
@@ -29,7 +29,17 @@ RUN apk add --no-cache \
     && sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config \
     && sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
+RUN apk add  --no-cache \
+        nginx \
+        git-daemon \
+        fcgiwrap \
+        spawn-fcgi \
+    && rm -rf /var/cache/apk/*
+
+COPY files/nginx.conf /etc/nginx/nginx.conf
+
 EXPOSE 22
+EXPOSE 80
 
 COPY entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]

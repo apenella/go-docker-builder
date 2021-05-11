@@ -78,6 +78,10 @@ services:
     volumes:
       - ssh:/git/keys
       - ./files/repos:/git/repos
+    networks:
+      default:
+        aliases:
+          - gitserver.go-docker-builder.test
 
   openssh:
     build:

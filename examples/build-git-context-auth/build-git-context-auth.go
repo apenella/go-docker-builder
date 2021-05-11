@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git/key"
+	// Uncomment the line below in case you want to run the example using the basic auth
+	//auth "github.com/apenella/go-docker-builder/pkg/auth/git/basic"
 	"github.com/apenella/go-docker-builder/pkg/build"
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
 	dockertypes "github.com/docker/docker/api/types"
@@ -31,13 +33,14 @@ func main() {
 		PkFile:     "/root/.ssh/id_rsa",
 		PkPassword: "password",
 	}
+
 	//
 	// Other auth methods
 	//
 	// - basic auth authentication ("github.com/apenella/go-docker-builder/pkg/auth/git/basic"):
 	// 		authMethod := &auth.BasicAuth{
-	// 			Username: "aleix.penella",
-	// 			Password: "mypass",
+	// 			Username: "admin",
+	// 			Password: "admin",
 	// 		}
 	//
 	// - sshagent authentication ("github.com/apenella/go-docker-builder/pkg/auth/git/basic"):
@@ -56,7 +59,9 @@ func main() {
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "custom"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "git@gitserver:/git/repos/go-docker-builder-alpine.git",
-		Auth:       authMethod,
+		// Uncomment the line below in case you want to run the example using the basic auth
+		// Repository: "http://gitserver/repos/go-docker-builder-alpine.git",
+		Auth: authMethod,
 	}
 
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
