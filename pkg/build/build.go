@@ -126,12 +126,12 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 		var cfs *filesystem.ContextFilesystem
 		cfs, err = dc.GenerateContextFilesystem()
 		if err != nil {
-			errors.New(errorContext, "Error generationg context filesystem", err)
+			return errors.New(errorContext, "Error generationg context filesystem", err)
 		}
 
 		dockercontext, err = filesystem.Join(true, dockercontext, cfs)
 		if err != nil {
-			errors.New(errorContext, "Error joining docker context", err)
+			return errors.New(errorContext, "Error joining docker context", err)
 		}
 	}
 
@@ -206,13 +206,6 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 	if b.ImageBuildOptions.Dockerfile == "" {
 		b.ImageBuildOptions.Dockerfile = DefaultDockerfile
 	}
-
-	// contextReader, err = b.DockerBuildContext.Reader()
-	// if err != nil {
-	// 	return errors.New("(build::Run)", "Error generating a build context reader", err)
-	// }
-
-	// b.ImageBuildOptions.Context = contextReader
 
 	buildResponse, err := b.Cli.ImageBuild(ctx, b.ImageBuildOptions.Context, *b.ImageBuildOptions)
 	if err != nil {

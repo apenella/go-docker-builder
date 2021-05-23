@@ -134,8 +134,10 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 				return errors.New("(push::Run)", fmt.Sprintf("Error removing '%s'", image), err)
 			}
 
-			// TODO
-			fmt.Println(deleteResponseItems)
+			for _, item := range deleteResponseItems {
+				fmt.Fprintf(p.Writer, fmt.Sprintf("Deleting: '%+v'\n", item))
+			}
+
 		}
 	}
 

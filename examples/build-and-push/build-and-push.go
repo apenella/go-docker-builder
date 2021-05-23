@@ -18,8 +18,9 @@ func main() {
 	var err error
 	var dockerCli *client.Client
 
-	imageDefinitionPath := filepath.Join(".", "files")
-	//imageDefinitionPath := filepath.Join("..", "..", "test", "dummy-image-layers")
+	dockerBuildContext := &contextpath.PathBuildContext{
+		Path: filepath.Join(".", "files"),
+	}
 
 	registry := "registry.go-docker-builder.test"
 	imageName := strings.Join([]string{registry, "dummy-image-layers"}, "/")
@@ -43,9 +44,6 @@ func main() {
 	}
 
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
-	dockerBuildContext := &contextpath.PathBuildContext{
-		Path: imageDefinitionPath,
-	}
 
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
