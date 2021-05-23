@@ -12,6 +12,7 @@ require (
 	github.com/docker/docker v0.0.0-20190822180741-9552f2b2fdde
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/go-git/go-git v4.7.0+incompatible // indirect
 	github.com/go-git/go-git/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/google/go-cmp v0.4.0 // indirect
@@ -19,10 +20,12 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/spf13/afero v1.6.0
 	github.com/stretchr/testify v1.6.1
 	github.com/xanzy/ssh-agent v0.2.1
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect
 	google.golang.org/grpc v1.29.1 // indirect
+	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 	gotest.tools v2.2.0+incompatible
 )
