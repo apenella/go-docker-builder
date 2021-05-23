@@ -1,8 +1,7 @@
 package mock
 
 import (
-	"io"
-
+	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -15,8 +14,7 @@ func NewDockerBuildContext() *DockerBuildContext {
 	return &DockerBuildContext{}
 }
 
-// Reader is mock method to build docker images
-func (context *DockerBuildContext) Reader() (io.Reader, error) {
+func (context *DockerBuildContext) GenerateContextFilesystem() (*filesystem.ContextFilesystem, error) {
 	args := context.Mock.Called()
-	return args.Get(0).(io.Reader), args.Error(1)
+	return args.Get(0).(*filesystem.ContextFilesystem), args.Error(1)
 }

@@ -9,11 +9,13 @@ import (
 	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	buildcontext "github.com/apenella/go-docker-builder/pkg/build/context"
+	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
 	"github.com/docker/distribution/reference"
 	dockertypes "github.com/docker/docker/api/types"
+	"github.com/spf13/afero"
 )
 
 const (
@@ -108,19 +110,34 @@ func (b *DockerBuildCmd) AddBuildArgs(arg string, value string) error {
 	return nil
 }
 
-func (b *DockerBuildCmd) AddBuildContext(c buildcontext.DockerBuildContexter) error {
-
-	if c == nil {
-		return errors.New("(build:.AddBuilderContext)", "Docker build context is not defined")
+func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBuildContexter) error {
+	var err error
+	errorContext := "(build:.AddBuilderContext)"
+	dockercontext := filesystem.NewContextFilesystem(afero.NewMemMapFs())
+	if dockercontexts == nil {
+		return errors.New(errorContext, "Docker build context is not defined")
 	}
 
 	if b.ImageBuildOptions == nil {
 		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
 	}
 
-	dockerBuildContextReader, err := c.Reader()
+	for _, dc := range dockercontexts {
+		var cfs *filesystem.ContextFilesystem
+		cfs, err = dc.GenerateContextFilesystem()
+		if err != nil {
+			errors.New(errorContext, "Error generationg context filesystem", err)
+		}
+
+		dockercontext, err = filesystem.Join(true, dockercontext, cfs)
+		if err != nil {
+			errors.New(errorContext, "Error joining docker context", err)
+		}
+	}
+
+	dockerBuildContextReader, err := dockercontext.Tar()
 	if err != nil {
-		return errors.New("(build:.AddBuilderContext)", "Error creating docker build context reader", err)
+		return errors.New(errorContext, "Error creating docker build context reader", err)
 	}
 
 	b.ImageBuildOptions.Context = dockerBuildContextReader

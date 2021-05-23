@@ -1,0 +1,1 @@
+fs2 > dir1 > file1
