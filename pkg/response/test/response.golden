@@ -1,0 +1,701 @@
+prefix ──  ‣  The push refers to repository [registry.go-docker-builder.test/dummy-image-layers]
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Preparing
+prefix ──  ‣  [8407c4f3604d]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Preparing
+prefix ──  ‣  [8407c4f3604d]  Preparing
+prefix ──  ‣  [4367a98dd925]  Preparing
+prefix ──  ‣  [4367a98dd925]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Preparing
+prefix ──  ‣  [8407c4f3604d]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Preparing
+prefix ──  ‣  [8407c4f3604d]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [8407c4f3604d]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [>                                                  ]    361kB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===>                                               ]  2.163MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=====>                                             ]  3.965MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [======>                                            ]  4.326MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=========>                                         ]  6.128MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========>                                         ]  6.489MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========>                                       ]   7.93MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============>                                      ]  8.291MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==============>                                    ]  9.733MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [===============>                                   ]  10.09MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================>                                 ]  11.53MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================>                                ]  12.26MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================>                               ]  13.34MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================>                           ]  15.86MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================>                           ]  15.86MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [====================>                              ]  14.06MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================>                           ]   15.5MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================>                           ]  15.86MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================>                           ]   15.5MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================>                           ]  15.86MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================>                           ]   15.5MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================>                           ]  15.86MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================>                            ]  14.78MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================>                           ]   15.5MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================>                           ]   15.5MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================>                          ]  16.58MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================>                         ]   17.3MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================>                    ]  20.19MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================>                    ]  20.19MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================>                    ]  20.19MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===========================>                       ]  18.38MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================>                      ]   19.1MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================>                    ]  20.19MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================>                    ]  20.19MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================>                  ]  21.63MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================>                  ]  21.63MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================>                  ]  21.63MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================>                     ]  19.83MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================>                    ]  20.55MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================>                  ]  21.63MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================>                  ]  21.63MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================>                ]  23.07MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================>                ]  23.07MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================>                ]  23.07MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================>                   ]  21.27MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================>                  ]  21.99MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================>                ]  23.07MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================>                ]  23.07MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================>                ]  23.07MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [4367a98dd925]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================>                 ]  22.71MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [====================================>              ]  24.51MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [====================================>              ]  24.51MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================================>               ]  24.15MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================>                ]  23.43MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [====================================>              ]  24.51MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================================>               ]  24.15MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [====================================>              ]  24.51MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================================>               ]  24.15MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================================>               ]  24.15MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [====================================>              ]  24.51MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================================>            ]  25.95MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===================================>               ]  24.15MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=====================================>             ]  24.87MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================================>            ]  25.95MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================================>            ]  25.59MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================================>            ]  25.59MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================================>            ]  25.95MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================================>            ]  25.59MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================================>            ]  25.95MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [======================================>            ]  25.95MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================================>            ]  25.59MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [======================================>            ]  25.59MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=======================================>           ]  26.31MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================================>         ]  28.12MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================================>         ]  28.12MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [=========================================>         ]  27.76MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================================>       ]   29.2MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================================>         ]  28.12MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================================>      ]  29.56MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================================>       ]   29.2MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [========================================>          ]  27.39MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================================>         ]  28.12MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================================>      ]  29.56MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================================>       ]   29.2MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================================>       ]   29.2MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [=========================================>         ]  28.12MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================================>      ]  29.56MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [===========================================>       ]   29.2MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================================>      ]  29.92MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================================>      ]  29.56MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================================>      ]  29.92MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [============================================>      ]  29.56MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================================>    ]     31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================================>      ]  29.92MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================================>    ]     31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================================>      ]  29.92MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================================>    ]     31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==========================================>        ]  28.84MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================================>    ]     31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [============================================>      ]  29.92MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================================>    ]     31MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==============================================>    ]     31MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================================>  ]  32.44MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=============================================>     ]  30.28MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================================>   ]  31.72MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================================>  ]  32.44MB/33.55MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================================>   ]  31.72MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================================>  ]  32.44MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================================>   ]  32.08MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================================>   ]  32.08MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==============================================>    ]  31.36MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================================>   ]  31.72MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================================>  ]  32.44MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================================>   ]  31.72MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [================================================>  ]  32.44MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================================>   ]  32.08MB/33.55MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================================>   ]  32.08MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [===============================================>   ]  31.72MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================================>   ]  32.08MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [================================================>  ]   32.8MB/33.55MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================================> ]  33.16MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [===============================================>   ]  32.08MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================================> ]  33.16MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================================> ]  33.52MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [=================================================> ]  33.16MB/33.55MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================================> ]  33.52MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [=================================================> ]  33.52MB/33.55MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Preparing
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [4367a98dd925]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [36b45d63da70]  Layer already exists
+prefix ──  ‣  [4367a98dd925]  Pushed
+prefix ──  ‣  [36b45d63da70]  Layer already exists
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [6a996c0ce279]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [6a996c0ce279]  Pushed
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [4367a98dd925]  Pushed
+prefix ──  ‣  [36b45d63da70]  Layer already exists
+prefix ──  ‣  [38be7762a5d3]  Pushing  [==================================================>]  33.56MB
+prefix ──  ‣  [6a996c0ce279]  Pushed
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushed
+prefix ──  ‣  [4367a98dd925]  Pushed
+prefix ──  ‣  [36b45d63da70]  Layer already exists
+prefix ──  ‣  [d6f45f2d1604]  Pushed
+prefix ──  ‣  [8407c4f3604d]  Pushed
+prefix ──  ‣  [4367a98dd925]  Pushed
+prefix ──  ‣  [36b45d63da70]  Layer already exists
+prefix ──  ‣  [38be7762a5d3]  Pushed
+prefix ──  ‣  [6a996c0ce279]  Pushed
+prefix ──  ‣  tag1: digest: sha256:b85b4ed8bb804e9ebcc985bcab6dddbeb75656ed7c1186e4694d32b2b0512b35 size: 1587
