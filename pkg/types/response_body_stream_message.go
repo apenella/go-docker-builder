@@ -27,7 +27,7 @@ func (m *ResponseBodyStreamMessage) String() string {
 	if m.Status != "" {
 		str := fmt.Sprintf("%s ", separator)
 		if m.ID != "" {
-			str = fmt.Sprintf("%s [%s] ", str, strings.TrimSpace(m.ID))
+			str = fmt.Sprintf("%s %s: ", str, strings.TrimSpace(m.ID))
 		}
 		str = fmt.Sprintf("%s %s ", str, strings.TrimSpace(m.Status))
 		return str

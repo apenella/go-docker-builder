@@ -10,7 +10,9 @@ import (
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	buildcontext "github.com/apenella/go-docker-builder/pkg/build/context"
+	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
 	dockertypes "github.com/docker/docker/api/types"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -144,7 +146,7 @@ func TestAddBuildContext(t *testing.T) {
 			dockerBuildCmd: &DockerBuildCmd{},
 			buildContext:   mockclient.NewDockerBuildContext(),
 			prepareAssertFunc: func(mock *mockclient.DockerBuildContext) {
-				mock.On("Reader").Return(ioutil.NopCloser(io.Reader(&bytes.Buffer{})), nil)
+				mock.On("GenerateContextFilesystem").Return(filesystem.NewContextFilesystem(afero.NewMemMapFs()), nil)
 			},
 			err: &errors.Error{},
 		},

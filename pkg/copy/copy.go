@@ -6,6 +6,7 @@ import (
 	"io"
 
 	errors "github.com/apenella/go-common-utils/error"
+	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
@@ -121,10 +122,19 @@ func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
 		return errors.New("(copy::Run)", "Image push options is undefined")
 	}
 
+	// if c.Response == nil {
+	// 	c.Response = &response.DefaultResponse{
+	// 		Prefix: c.ExecPrefix,
+	// 	}
+	// }
+
 	if c.Response == nil {
-		c.Response = &response.DefaultResponse{
-			Prefix: c.ExecPrefix,
-		}
+		c.Response = response.NewDefaultResponse(
+			response.WithTransformers(
+				transformer.Prepend(c.ExecPrefix),
+			),
+			response.WithWriter(c.Writer),
+		)
 	}
 
 	// if remote, pull
@@ -138,7 +148,7 @@ func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
 			return errors.New("(copy::Run)", fmt.Sprintf("Error pull image '%s", c.SourceImage), err)
 		}
 
-		err = c.Response.Write(c.Writer, pullResponse)
+		err = c.Response.Print(pullResponse)
 		if err != nil {
 			return errors.New("(copy::Run)", fmt.Sprintf("Error writing push response for '%s'", c.SourceImage), err)
 		}

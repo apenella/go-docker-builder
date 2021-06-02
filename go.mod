@@ -8,6 +8,7 @@ require (
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/apenella/go-common-utils/error v0.0.0-20200917063805-34b0ed3c4ce1
+	github.com/apenella/go-common-utils/transformer/string v0.0.0-20210528133155-34ba915e28c8
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/docker/docker v0.0.0-20190822180741-9552f2b2fdde
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -21,7 +22,8 @@ require (
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/afero v1.6.0
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
+	github.com/wk8/go-ordered-map v0.2.0
 	github.com/xanzy/ssh-agent v0.2.1
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
 	golang.org/x/time v0.0.0-20200416051211-89c76fbcd5d1 // indirect

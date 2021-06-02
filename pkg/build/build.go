@@ -7,6 +7,7 @@ import (
 	"os"
 
 	errors "github.com/apenella/go-common-utils/error"
+	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	buildcontext "github.com/apenella/go-docker-builder/pkg/build/context"
 	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
@@ -114,9 +115,6 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 	var err error
 	errorContext := "(build:.AddBuilderContext)"
 	dockercontext := filesystem.NewContextFilesystem(afero.NewMemMapFs())
-	if dockercontexts == nil {
-		return errors.New(errorContext, "Docker build context is not defined")
-	}
 
 	if b.ImageBuildOptions == nil {
 		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
@@ -124,6 +122,11 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 
 	for _, dc := range dockercontexts {
 		var cfs *filesystem.ContextFilesystem
+
+		if dc == nil {
+			return errors.New(errorContext, "Docker build context is not defined")
+		}
+
 		cfs, err = dc.GenerateContextFilesystem()
 		if err != nil {
 			return errors.New(errorContext, "Error generationg context filesystem", err)
@@ -192,10 +195,19 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 		b.Writer = os.Stdout
 	}
 
+	// if b.Response == nil {
+	// 	b.Response = &response.DefaultResponse{
+	// 		Prefix: b.ExecPrefix,
+	// 	}
+	// }
+
 	if b.Response == nil {
-		b.Response = &response.DefaultResponse{
-			Prefix: b.ExecPrefix,
-		}
+		b.Response = response.NewDefaultResponse(
+			response.WithTransformers(
+				transformer.Prepend(b.ExecPrefix),
+			),
+			response.WithWriter(b.Writer),
+		)
 	}
 
 	if b.ImageName == "" {
@@ -213,7 +225,7 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 	}
 	defer buildResponse.Body.Close()
 
-	err = b.Response.Write(b.Writer, buildResponse.Body)
+	err = b.Response.Print(buildResponse.Body)
 	if err != nil {
 		return errors.New("(build::Run)", fmt.Sprintf("Error writing build response for '%s'", b.ImageName), err)
 	}
@@ -227,6 +239,7 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 			ImagePushOptions: b.ImagePushOptions,
 			ExecPrefix:       b.ExecPrefix,
 			Tags:             b.ImageBuildOptions.Tags,
+			Response:         b.Response,
 		}
 
 		if b.RemoveAfterPush {

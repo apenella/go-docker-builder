@@ -8,10 +8,12 @@ import (
 	"io/ioutil"
 	"strings"
 	"testing"
-	"time"
+
+	transformer "github.com/apenella/go-common-utils/transformer/string"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestWrite(t *testing.T) {
+func TestPrint(t *testing.T) {
 
 	var w bytes.Buffer
 
@@ -139,32 +141,57 @@ func TestWrite(t *testing.T) {
 	{"progressDetail":{},"aux":{"Tag":"tag1","Digest":"sha256:b85b4ed8bb804e9ebcc985bcab6dddbeb75656ed7c1186e4694d32b2b0512b35","Size":1587}}
 `
 
-	// 	expected := `prefix ──  ‣  [d6f45f2d1604]  Pushed
-	// prefix ──  ‣  [8407c4f3604d]  Pushed
-	// prefix ──  ‣  [4367a98dd925]  Pushed
-	// prefix ──  ‣  [36b45d63da70]  Layer already exists
-	// prefix ──  ‣  [38be7762a5d3]  Pushed
-	// prefix ──  ‣  [6a996c0ce279]  Pushed
-
-	// prefix ──  ‣  tag1: digest: sha256:b85b4ed8bb804e9ebcc985bcab6dddbeb75656ed7c1186e4694d32b2b0512b35 size: 1587
-	// `
-
-	pr, pw := io.Pipe()
-	r := &DefaultResponse{
-		Prefix: "prefix",
+	expected := map[string]struct{}{
+		"prefix ‣  38be7762a5d3:  Pushed \x1b[0K\n":                                                                     {},
+		"prefix ‣  6a996c0ce279:  Pushed \x1b[0K\n":                                                                     {},
+		"prefix ‣  d6f45f2d1604:  Pushed \x1b[0K\n":                                                                     {},
+		"prefix ‣  8407c4f3604d:  Pushed \x1b[0K\n":                                                                     {},
+		"prefix ‣  4367a98dd925:  Pushed \x1b[0K\n":                                                                     {},
+		"prefix ‣  36b45d63da70:  Layer already exists \x1b[0K\n":                                                       {},
+		"prefix ‣  tag1: digest: sha256:b85b4ed8bb804e9ebcc985bcab6dddbeb75656ed7c1186e4694d32b2b0512b35 size: 1587 \n": {},
 	}
 
+	pr, pw := io.Pipe()
+
+	r := NewDefaultResponse(
+		WithWriter(io.Writer(&w)),
+		WithTransformers(
+			transformer.Prepend("prefix"),
+		),
+	)
+	w.Reset()
 	go func() {
 		scanner := bufio.NewScanner(strings.NewReader(input))
 		for scanner.Scan() {
 			fmt.Fprintln(pw, strings.TrimSpace(scanner.Text()))
-			time.Sleep(100 * time.Millisecond)
 		}
 		pw.Close()
 	}()
 
-	w.Reset()
-	r.Write(io.Writer(&w), ioutil.NopCloser(io.Reader(pr)))
+	r.Print(ioutil.NopCloser(io.Reader(pr)))
 
 	fmt.Println(w.String())
+
+	maxsize := len(expected)
+	output := make([]string, maxsize)
+	scanner := bufio.NewScanner(&w)
+	it := 0
+	// buffer does not interprete console ANSI scape sequences then are only taken the last few lines for the test
+	for scanner.Scan() {
+		if scanner.Text() != "" {
+			output[it] = fmt.Sprintf("%s\n", scanner.Text())
+		}
+		it++
+		if it == maxsize {
+			it = 0
+		}
+	}
+
+	for _, line := range output {
+		_, ok := expected[line]
+		assert.True(t, ok, fmt.Sprintf("#>%s<#", line))
+		delete(expected, line)
+	}
+	assert.Empty(t, expected)
+
 }

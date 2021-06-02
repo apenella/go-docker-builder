@@ -6,6 +6,8 @@ const (
 	separator string = "\u2023"
 )
 
+// Responser interface to write responses
 type Responser interface {
-	Write(io.Writer, io.ReadCloser) error
+	Print(io.ReadCloser) error
+	Fwriteln(interface{})
 }

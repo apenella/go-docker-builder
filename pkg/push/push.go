@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	errors "github.com/apenella/go-common-utils/error"
+	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
@@ -105,9 +107,12 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 	}
 
 	if p.Response == nil {
-		p.Response = &response.DefaultResponse{
-			Prefix: p.ExecPrefix,
-		}
+		p.Response = response.NewDefaultResponse(
+			response.WithTransformers(
+				transformer.Prepend(p.ExecPrefix),
+			),
+			response.WithWriter(p.Writer),
+		)
 	}
 
 	p.AddTag(p.ImageName)
@@ -118,7 +123,7 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 			return errors.New("(push::Run)", fmt.Sprintf("Error pushing image '%s'", image), err)
 		}
 
-		err = p.Response.Write(p.Writer, pushResponse)
+		err = p.Response.Print(pushResponse)
 		if err != nil {
 			return errors.New("(push::Run)", fmt.Sprintf("Error writing push response for '%s'", image), err)
 		}
@@ -135,7 +140,19 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 			}
 
 			for _, item := range deleteResponseItems {
-				fmt.Fprintf(p.Writer, fmt.Sprintf("Deleting: '%+v'\n", item))
+
+				str := ""
+				if item.Deleted != "" {
+					str = fmt.Sprintf("deleted: %s %s ", str, strings.TrimSpace(item.Deleted))
+				}
+
+				if item.Untagged != "" {
+					str = fmt.Sprintf("untagged: %s %s ", str, strings.TrimSpace(item.Untagged))
+				}
+
+				if str != "" {
+					p.Response.Fwriteln(str)
+				}
 			}
 
 		}
