@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	errors "github.com/apenella/go-common-utils/error"
 	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git/key"
 	"github.com/apenella/go-docker-builder/pkg/build"
@@ -20,6 +22,14 @@ import (
 
 // go-docker-builder example where is created a ubuntu image
 func main() {
+	err := buildAndPushJoinContext(os.Stdout)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func buildAndPushJoinContext(w io.Writer) error {
+
 	var err error
 	var dockerCli *client.Client
 
@@ -30,7 +40,7 @@ func main() {
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		panic("Error on docker client creation. " + err.Error())
+		return errors.New("buildAndPushJoinContext", "Error on docker client creation", err)
 	}
 
 	// authenticate to git server using a key
@@ -65,13 +75,12 @@ func main() {
 
 	res := response.NewDefaultResponse(
 		response.WithTransformers(
-			transformer.Prepend("\u2500\u2500"),
-			transformer.Prepend(imageName),
+			transformer.Prepend("buildAndPushJoinContext"),
 		),
+		response.WithWriter(w),
 	)
 
 	dockerBuilder := &build.DockerBuildCmd{
-		Writer:           os.Stdout,
 		Cli:              dockerCli,
 		ImagePushOptions: &dockertypes.ImagePushOptions{},
 		PushAfterBuild:   true,
@@ -83,12 +92,12 @@ func main() {
 
 	err = dockerBuilder.AddAuth(registryUsername, registryPassword, registry)
 	if err != nil {
-		panic(fmt.Sprintf("Error adding registry auth. %s", err.Error()))
+		return errors.New("buildAndPushJoinContext", "Error adding registry auth", err)
 	}
 
 	err = dockerBuilder.AddBuildContext(codeContext, dockerContextInjection)
 	if err != nil {
-		panic(fmt.Sprintf("Error adding build docker context. %s", err.Error()))
+		return errors.New("buildAndPushJoinContext", "Error adding build docker context", err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(300)*time.Second)
@@ -96,6 +105,8 @@ func main() {
 
 	err = dockerBuilder.Run(ctx)
 	if err != nil {
-		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
+		return errors.New("buildAndPushJoinContext", fmt.Sprintf("Error building '%s'", imageName), err)
 	}
+
+	return nil
 }
