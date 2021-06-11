@@ -12,7 +12,7 @@ type ResponseBodyStreamAuxMessage struct {
 func (m *ResponseBodyStreamAuxMessage) String() string {
 
 	if m.ID != "" {
-		return fmt.Sprintf(" %s %s", separator, m.ID)
+		return fmt.Sprintf(" %s %s", LayerMessagePrefix, m.ID)
 	}
 	return ""
 }

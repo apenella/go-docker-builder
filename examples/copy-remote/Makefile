@@ -8,7 +8,7 @@ help: ## list allowed targets
 	@echo 
 
 start: cleanup generate-certs ## start docker registry
-	@docker-compose -f ../../test/docker-compose.yml up -d --build registry other-registry gitserver
+	@docker-compose -f ../../test/docker-compose.yml up -d --build registry base-registry gitserver
 
 cleanup: ## cleanup example environment
 	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans

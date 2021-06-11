@@ -25,11 +25,11 @@ type ResponseBodyStreamMessage struct {
 func (m *ResponseBodyStreamMessage) String() string {
 
 	if m.Status != "" {
-		str := fmt.Sprintf("%s ", separator)
+		str := fmt.Sprintf("%s ", LayerMessagePrefix)
 		if m.ID != "" {
 			str = fmt.Sprintf("%s %s: ", str, strings.TrimSpace(m.ID))
 		}
-		str = fmt.Sprintf("%s %s ", str, strings.TrimSpace(m.Status))
+		str = fmt.Sprintf("%s %s ", str, strings.TrimSuffix(m.Status, "\n"))
 		return str
 	}
 	if m.Stream != "" {
