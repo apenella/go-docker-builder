@@ -3,7 +3,7 @@ help: ## list allowed targets
 	@echo 
 
 start: cleanup generate-keys generate-certs ## start docker registry
-	docker-compose up -d --build registry other-registry gitserver
+	docker-compose up -d --build registry base-registry gitserver
 
 cleanup: cleanup-certs ## cleanup example environment
 	docker-compose down -v --remove-orphans

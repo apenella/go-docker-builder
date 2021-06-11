@@ -8,10 +8,12 @@ import (
 	"strings"
 	"time"
 
+	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git/key"
 	"github.com/apenella/go-docker-builder/pkg/build"
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
 	pathcontext "github.com/apenella/go-docker-builder/pkg/build/context/path"
+	"github.com/apenella/go-docker-builder/pkg/response"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
@@ -61,6 +63,13 @@ func main() {
 		Path: filepath.Join(".", "files", "injection"),
 	}
 
+	res := response.NewDefaultResponse(
+		response.WithTransformers(
+			transformer.Prepend("\u2500\u2500"),
+			transformer.Prepend(imageName),
+		),
+	)
+
 	dockerBuilder := &build.DockerBuildCmd{
 		Writer:           os.Stdout,
 		Cli:              dockerCli,
@@ -69,6 +78,7 @@ func main() {
 		RemoveAfterPush:  true,
 		ImageName:        imageName,
 		ExecPrefix:       imageName,
+		Response:         res,
 	}
 
 	err = dockerBuilder.AddAuth(registryUsername, registryPassword, registry)
@@ -81,7 +91,7 @@ func main() {
 		panic(fmt.Sprintf("Error adding build docker context. %s", err.Error()))
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(30)*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(300)*time.Second)
 	defer cancel()
 
 	err = dockerBuilder.Run(ctx)

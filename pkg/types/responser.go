@@ -3,7 +3,7 @@ package types
 import "io"
 
 const (
-	separator string = "\u2023"
+	LayerMessagePrefix string = "\u2023"
 )
 
 // Responser interface to write responses

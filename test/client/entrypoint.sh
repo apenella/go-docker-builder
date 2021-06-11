@@ -14,11 +14,11 @@ if [ -f /ssl/go-docker-builder.test.crt ]; then
     cp /ssl/go-docker-builder.test.crt /etc/docker/certs.d/registry.go-docker-builder.test/ca.crt
 fi
 
-/usr/local/bin/dockerd-entrypoint.sh &
+/usr/local/bin/dockerd-entrypoint.sh 2> /dev/null &
 
 while ! nc -z localhost 2376; do
-    echo " Waiting for dockerd to be ready..."
-    sleep 0.5 # wait for 1/10 of the second before check again
+    >&2 echo " Waiting for dockerd to be ready..."
+    sleep 0.5 # wait for 1/2 of the second before check again
 done
 
 exec "$@"

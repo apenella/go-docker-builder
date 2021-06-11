@@ -21,7 +21,11 @@ cleanup-certs: ## cleanup certificates
 	@docker-compose -f ../../test/docker-compose.yml run --rm --entrypoint /bin/sh openssl -c 'rm -rf $$(ls)'
 
 example: start ## executes the examples
-	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go
+	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go -test
+	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
+
+test: start ## executes the examples
+	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go test -v . -count=1
 	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
 
 logs: ## show services logs

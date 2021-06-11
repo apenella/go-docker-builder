@@ -15,7 +15,7 @@ import (
 
 func TestPrint(t *testing.T) {
 
-	var w bytes.Buffer
+	var buff bytes.Buffer
 
 	input := `{"status":"The push refers to repository [registry.go-docker-builder.test/dummy-image-layers]"}
 	{"status":"Preparing","progressDetail":{},"id":"38be7762a5d3"}
@@ -154,12 +154,12 @@ func TestPrint(t *testing.T) {
 	pr, pw := io.Pipe()
 
 	r := NewDefaultResponse(
-		WithWriter(io.Writer(&w)),
+		WithWriter(io.Writer(&buff)),
 		WithTransformers(
 			transformer.Prepend("prefix"),
 		),
 	)
-	w.Reset()
+	buff.Reset()
 	go func() {
 		scanner := bufio.NewScanner(strings.NewReader(input))
 		for scanner.Scan() {
@@ -170,11 +170,11 @@ func TestPrint(t *testing.T) {
 
 	r.Print(ioutil.NopCloser(io.Reader(pr)))
 
-	fmt.Println(w.String())
+	fmt.Println(buff.String())
 
 	maxsize := len(expected)
 	output := make([]string, maxsize)
-	scanner := bufio.NewScanner(&w)
+	scanner := bufio.NewScanner(&buff)
 	it := 0
 	// buffer does not interprete console ANSI scape sequences then are only taken the last few lines for the test
 	for scanner.Scan() {

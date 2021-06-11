@@ -1,18 +1,18 @@
 version: "2.3"
 services:
 
-  other-registry:
+  base-registry:
     image: registry:2
     ports:
       - 5000:5000
     restart: always
     volumes:
       - ssl:/ssl:ro
-      - ./files/other-registry-storage:/var/lib/registry
+      - ./files/base-registry-storage:/var/lib/registry
     networks:
       default:
         aliases:
-          - other-registry.go-docker-builder.test
+          - base-registry.go-docker-builder.test
             
   registry:
     image: registry:2
@@ -62,6 +62,7 @@ services:
     privileged: true
     environment:
       - GIT_KEYS=/git/keys
+      - CGO_ENABLED=0
     volumes:
       - ssl:/ssl
       - ..:/app
