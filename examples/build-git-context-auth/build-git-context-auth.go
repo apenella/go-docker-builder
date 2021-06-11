@@ -3,10 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
+	errors "github.com/apenella/go-common-utils/error"
+	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git/key"
+	"github.com/apenella/go-docker-builder/pkg/response"
+
 	// Uncomment the line below in case you want to run the example using the basic auth
 	//auth "github.com/apenella/go-docker-builder/pkg/auth/git/basic"
 	"github.com/apenella/go-docker-builder/pkg/build"
@@ -17,6 +22,13 @@ import (
 
 func main() {
 
+	err := buildGitContextAuth(os.Stdout)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func buildGitContextAuth(w io.Writer) error {
 	var err error
 	var dockerCli *client.Client
 
@@ -25,7 +37,7 @@ func main() {
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		panic("Error on docker client creation. " + err.Error())
+		return errors.New("BuildGitContextAuth", "Error on docker client creation", err)
 	}
 
 	// authenticate to git server using a key
@@ -47,14 +59,21 @@ func main() {
 	// 		authMethod := &auth.SSHAgentAuth{}
 	//
 
+	res := response.NewDefaultResponse(
+		response.WithTransformers(
+			transformer.Prepend("buildGitContextAuth"),
+		),
+		response.WithWriter(w),
+	)
+
 	dockerBuilder := &build.DockerBuildCmd{
-		Writer: os.Stdout,
-		Cli:    dockerCli,
+		Cli: dockerCli,
 		ImageBuildOptions: &dockertypes.ImageBuildOptions{
 			Dockerfile: "Dockerfile.custom",
 		},
 		ImageName:  imageName,
 		ExecPrefix: imageName,
+		Response:   res,
 	}
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "custom"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
@@ -66,11 +85,13 @@ func main() {
 
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
-		panic(fmt.Sprintf("Error adding build docker context. %s", err.Error()))
+		return errors.New("BuildGitContextAuth", "Error adding build docker context", err)
 	}
 
 	err = dockerBuilder.Run(context.TODO())
 	if err != nil {
-		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
+		return errors.New("BuildGitContextAuth", fmt.Sprintf("Error building '%s'", imageName), err)
 	}
+
+	return nil
 }
