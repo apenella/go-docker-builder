@@ -60,6 +60,8 @@ func buildGitContext(w io.Writer) error {
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "z-tag"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "https://github.com/alpinelinux/docker-alpine.git",
+		Reference:  "v3.13",
+		Path:       "x86_64",
 	}
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {

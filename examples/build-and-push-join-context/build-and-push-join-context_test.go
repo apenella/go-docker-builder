@@ -14,7 +14,10 @@ func TestBuildAndPushJoinContext(t *testing.T) {
 
 	var buff bytes.Buffer
 
-	buildAndPushJoinContext(io.Writer(&buff))
+	err := buildAndPushJoinContext(io.Writer(&buff))
+	if err != nil {
+		t.Error(err.Error())
+	}
 
 	expected := `1.15-alpine: Pulling from golang
 <HASH>: Pushed

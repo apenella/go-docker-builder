@@ -14,18 +14,19 @@ func TestBuildGitContext(t *testing.T) {
 
 	var buff bytes.Buffer
 
-	buildGitContext(io.Writer(&buff))
+	err := buildGitContext(io.Writer(&buff))
+	if err != nil {
+		t.Error(err.Error())
+	}
 
-	expected := `3.9: Pulling from library/alpine
+	expected := `sha256: <HASH>
 <HASH>: Layer already exists
-Digest: sha256
-Status: Downloaded newer image for alpine
-sha256: <HASH>
 a-tag: digest
 b-tag: digest
 z-tag: digest
 latest: digest
 `
+
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
 	assert.Equal(t, expected, actual)

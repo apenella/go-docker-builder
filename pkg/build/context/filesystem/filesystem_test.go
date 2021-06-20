@@ -86,7 +86,7 @@ func TestJoin(t *testing.T) {
 					t.Fatal(err.Error())
 				}
 
-				for efile, _ := range expectedFiles {
+				for efile := range expectedFiles {
 					_, exists := resultFiles[efile]
 					assert.True(t, exists, fmt.Sprintf("Expected file '%s' does not exists", efile))
 					delete(resultFiles, efile)
