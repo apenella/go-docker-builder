@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git"
@@ -22,12 +23,12 @@ import (
 
 // GitBuildContext defines a build context from a git repository
 type GitBuildContext struct {
+	// Path identify where is located the context inside the repository
+	Path string
 	// Repository which will be used as docker build context
 	Repository string
 	// Reference is the name of the branch to clone. By default is used 'master'
 	Reference string
-	// Dockerfile is the dockerfile placement inside the repository
-	Dockerfile string
 	// Auth
 	Auth auth.GitAuther
 }
@@ -45,6 +46,11 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 func (c *GitBuildContext) GenerateContextFilesystem() (*filesystem.ContextFilesystem, error) {
 	var err error
 	fs := filesystem.NewContextFilesystem(afero.NewMemMapFs())
+
+	// if c.Path != "" {
+	// 	fs.RootPath = c.Path
+	// }
+
 	gitstorage := memory.NewStorage()
 	errorContext := "(context::git::GenerateContextFilesystem)"
 
@@ -90,29 +96,47 @@ func (c *GitBuildContext) GenerateContextFilesystem() (*filesystem.ContextFilesy
 	}
 	defer filesIterator.Close()
 
+	subPath := c.Path != ""
+	subPathRegexp, _ := regexp.Compile(fmt.Sprintf("^%s", c.Path))
+
 	err = filesIterator.ForEach(func(file *object.File) error {
 
 		var buff bytes.Buffer
+		var fileContents string
+		var err error
 		var memfile afero.File
+		var mode os.FileMode
+		var relativePath string
 
-		fileContents, err := file.Contents()
+		subPathMatch := subPathRegexp.MatchString(file.Name)
+
+		// skip files when subpath is defined and its location does not match to subpath base
+		if subPath && !subPathMatch {
+			return nil
+		}
+
+		fileContents, err = file.Contents()
 		if err != nil {
 			return errors.New(errorContext, fmt.Sprintf("Error achiving '%s' contents", file.Name), err)
 		}
-		var mode os.FileMode
 		mode, err = file.Mode.ToOSFileMode()
 		if err != nil {
 			return errors.New(errorContext, fmt.Sprintf("Error converting file mode to '%s' on '%s'", file.Mode.String(), file.Name), err)
 		}
 
-		memfile, err = fs.OpenFile(filepath.Join(fs.RootPath, file.Name), os.O_CREATE, mode)
+		relativePath, err = filepath.Rel(c.Path, file.Name)
 		if err != nil {
-			return errors.New("(Walk)", fmt.Sprintf("Error extracting '%s' from git repository", file.Name), err)
+			return errors.New(errorContext, fmt.Sprintf("Error creating relative path on '%s' from '%s'", file.Name, c.Path), err)
+		}
+
+		memfile, err = fs.OpenFile(filepath.Join(fs.RootPath, relativePath), os.O_CREATE, mode)
+		if err != nil {
+			return errors.New("(Walk)", fmt.Sprintf("Error extracting '%s' from git repository", relativePath), err)
 		}
 
 		_, err = buff.WriteString(fileContents)
 		if err != nil {
-			return errors.New(errorContext, fmt.Sprintf("Error writting '%s' contents to temporal buffer", file.Name), err)
+			return errors.New(errorContext, fmt.Sprintf("Error writting '%s' contents to temporal buffer", relativePath), err)
 		}
 
 		io.Copy(memfile, io.Reader(&buff))

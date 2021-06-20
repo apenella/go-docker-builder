@@ -62,6 +62,7 @@ func (f *ContextFilesystem) Tar() (io.Reader, error) {
 	}
 
 	err = afero.Walk(f.Fs, f.RootPath, func(file string, fi os.FileInfo, err error) error {
+
 		if err != nil {
 			return errors.New(errorContext, "Error at the beginning of the walk", err)
 		}
