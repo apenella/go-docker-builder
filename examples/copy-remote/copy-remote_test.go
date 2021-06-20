@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"testing"
 
@@ -26,8 +25,6 @@ Digest: sha256
 Status: Downloaded newer image for base-registry.go-docker-builder.test
 `
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
-
-	fmt.Println(actual)
 
 	assert.Equal(t, expected, actual)
 }
