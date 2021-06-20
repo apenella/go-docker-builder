@@ -5,7 +5,7 @@ help: ## list allowed targets
 	@grep -E '^[a-zA-Z1-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[32m%-20s\033[0m %s\n", $$1, $$2}'
 	@echo 
 
-test: unit-test functional-test
+test: unit-test functional-test ## Run all test
 
 functional-test: ## Run functional test
 	@echo
