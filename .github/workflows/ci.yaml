@@ -32,5 +32,6 @@ jobs:
         make unit-test
 
     - name: Run functional tests
+      if: ${{ github.ref == 'refs/heads/master' }}
       run: |
         make functional-test
