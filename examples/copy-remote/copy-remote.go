@@ -46,7 +46,6 @@ func copyRemote(w io.Writer) error {
 
 	copy := &copy.DockerImageCopyCmd{
 		Cli:              dockerCli,
-		ExecPrefix:       "copy alpine:3.13",
 		SourceImage:      sourceImage,
 		TargetImage:      targetImage,
 		ImagePullOptions: &dockertypes.ImagePullOptions{},

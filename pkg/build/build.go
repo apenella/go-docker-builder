@@ -3,11 +3,9 @@ package build
 import (
 	"context"
 	"fmt"
-	"io"
 	"os"
 
 	errors "github.com/apenella/go-common-utils/error"
-	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	buildcontext "github.com/apenella/go-docker-builder/pkg/build/context"
 	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
@@ -26,13 +24,8 @@ const (
 
 // DockerBuilderCmd
 type DockerBuildCmd struct {
-	// Writer to write the build output
-	Writer io.Writer
-	// Context manages the build context
-	// Context context.Context
 	// Cli is the docker api client
 	Cli types.DockerClienter
-
 	// ImageName is the name of the image
 	ImageName string
 	// ImageBuildOptions from docker sdk
@@ -41,12 +34,6 @@ type DockerBuildCmd struct {
 	ImagePushOptions *dockertypes.ImagePushOptions
 	// PushAfterBuild push image to registry after building
 	PushAfterBuild bool
-
-	// BuildContext
-	// DockerBuildContext dockercontext.DockerBuildContexter
-
-	// ExecPrefix defines a prefix to each output lines
-	ExecPrefix string
 	// Response manages responses from docker client
 	Response types.Responser
 	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
@@ -191,22 +178,9 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 		return errors.New("(build::Run)", "Docker build context is not defined")
 	}
 
-	if b.Writer == nil {
-		b.Writer = os.Stdout
-	}
-
-	// if b.Response == nil {
-	// 	b.Response = &response.DefaultResponse{
-	// 		Prefix: b.ExecPrefix,
-	// 	}
-	// }
-
 	if b.Response == nil {
 		b.Response = response.NewDefaultResponse(
-			response.WithTransformers(
-				transformer.Prepend(b.ExecPrefix),
-			),
-			response.WithWriter(b.Writer),
+			response.WithWriter(os.Stdout),
 		)
 	}
 
@@ -233,11 +207,9 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 	if b.PushAfterBuild {
 
 		dockerPush := &push.DockerPushCmd{
-			Writer:           b.Writer,
 			Cli:              b.Cli,
 			ImageName:        b.ImageName,
 			ImagePushOptions: b.ImagePushOptions,
-			ExecPrefix:       b.ExecPrefix,
 			Tags:             b.ImageBuildOptions.Tags,
 			Response:         b.Response,
 		}

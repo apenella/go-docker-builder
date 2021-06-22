@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 
 	errors "github.com/apenella/go-common-utils/error"
-	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
@@ -16,16 +16,12 @@ import (
 
 // DockerCopyImageCmd is used to copy images to docker registry. Copy image is understood as tag an existing image and push it to a docker registry
 type DockerImageCopyCmd struct {
-	// Writer to use to write docker client messges
-	Writer io.Writer
 	// Cli is the docker client to use
 	Cli types.DockerClienter
 	// ImagePushOptions from docker sdk
 	ImagePullOptions *dockertypes.ImagePullOptions
 	// ImagePushOptions from docker sdk
 	ImagePushOptions *dockertypes.ImagePushOptions
-	// ExecPrefix prefix to include add to each docker client message
-	ExecPrefix string
 	// SourceImage is the name of the image to be copied
 	SourceImage string
 	// TargetImage is the name of the copied image
@@ -122,18 +118,9 @@ func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
 		return errors.New("(copy::Run)", "Image push options is undefined")
 	}
 
-	// if c.Response == nil {
-	// 	c.Response = &response.DefaultResponse{
-	// 		Prefix: c.ExecPrefix,
-	// 	}
-	// }
-
 	if c.Response == nil {
 		c.Response = response.NewDefaultResponse(
-			response.WithTransformers(
-				transformer.Prepend(c.ExecPrefix),
-			),
-			response.WithWriter(c.Writer),
+			response.WithWriter(os.Stdout),
 		)
 	}
 
@@ -160,9 +147,7 @@ func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
 	}
 
 	push := &push.DockerPushCmd{
-		Writer:             c.Writer,
 		Cli:                c.Cli,
-		ExecPrefix:         c.ExecPrefix,
 		Response:           c.Response,
 		ImageName:          c.TargetImage,
 		Tags:               c.Tags,

@@ -47,10 +47,9 @@ func buildPathContext(w io.Writer) error {
 	)
 
 	dockerBuilder := &build.DockerBuildCmd{
-		Cli:        dockerCli,
-		ImageName:  imageName,
-		ExecPrefix: imageName,
-		Response:   res,
+		Cli:       dockerCli,
+		ImageName: imageName,
+		Response:  res,
 	}
 
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))

@@ -86,7 +86,6 @@ func buildAndPushJoinContext(w io.Writer) error {
 		PushAfterBuild:   true,
 		RemoveAfterPush:  true,
 		ImageName:        imageName,
-		ExecPrefix:       imageName,
 		Response:         res,
 	}
 

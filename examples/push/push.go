@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/apenella/go-docker-builder/pkg/push"
@@ -25,10 +24,8 @@ func main() {
 	}
 
 	dockerPusher := &push.DockerPushCmd{
-		Writer:     os.Stdout,
-		Cli:        dockerCli,
-		ImageName:  strings.Join([]string{registry, namespace, imageName}, "/"),
-		ExecPrefix: imageName,
+		Cli:       dockerCli,
+		ImageName: strings.Join([]string{registry, namespace, imageName}, "/"),
 	}
 
 	user := "myregistryuser"

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	errors "github.com/apenella/go-common-utils/error"
-	transformer "github.com/apenella/go-common-utils/transformer/string"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
@@ -18,14 +17,10 @@ import (
 
 // DockerPushCmd is used to push images to docker registry
 type DockerPushCmd struct {
-	// Writer to use to write docker client messges
-	Writer io.Writer
 	// Cli is the docker client to use
 	Cli types.DockerClienter
 	// ImagePushOptions from docker sdk
 	ImagePushOptions *dockertypes.ImagePushOptions
-	// ExecPrefix prefix to include add to each docker client message
-	ExecPrefix string
 	// ImageName is the name of the image
 	ImageName string
 	// Tags is a list of the images to push
@@ -102,16 +97,9 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 		return errors.New("(push::Run)", "Image push options is undefined")
 	}
 
-	if p.Writer == nil {
-		p.Writer = os.Stdout
-	}
-
 	if p.Response == nil {
 		p.Response = response.NewDefaultResponse(
-			response.WithTransformers(
-				transformer.Prepend(p.ExecPrefix),
-			),
-			response.WithWriter(p.Writer),
+			response.WithWriter(os.Stdout),
 		)
 	}
 

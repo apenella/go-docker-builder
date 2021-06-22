@@ -106,8 +106,6 @@ func TestAddTags(t *testing.T) {
 
 func TestRun(t *testing.T) {
 
-	var w bytes.Buffer
-	writer := io.Writer(&w)
 	reader := ioutil.NopCloser(io.Reader(&bytes.Buffer{}))
 
 	tests := []struct {
@@ -135,10 +133,8 @@ func TestRun(t *testing.T) {
 		{
 			desc: "Testing push a single image",
 			dockerPushCmd: &DockerPushCmd{
-				Writer:           io.Writer(writer),
 				ImageName:        "test_image",
 				ImagePushOptions: &dockertypes.ImagePushOptions{},
-				ExecPrefix:       "",
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
@@ -153,10 +149,8 @@ func TestRun(t *testing.T) {
 		{
 			desc: "Testing push a single image with remove after push",
 			dockerPushCmd: &DockerPushCmd{
-				Writer:           io.Writer(writer),
 				ImageName:        "test_image",
 				ImagePushOptions: &dockertypes.ImagePushOptions{},
-				ExecPrefix:       "",
 				RemoveAfterPush:  true,
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
@@ -181,12 +175,10 @@ func TestRun(t *testing.T) {
 			},
 			pushOptions: dockertypes.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
-				Writer:    io.Writer(writer),
 				ImageName: "test_image",
 				ImagePushOptions: &dockertypes.ImagePushOptions{
 					RegistryAuth: "auth",
 				},
-				ExecPrefix: "",
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImagePush", 1)
@@ -203,11 +195,9 @@ func TestRun(t *testing.T) {
 			},
 			pushOptions: dockertypes.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
-				Writer:           io.Writer(writer),
 				ImageName:        "test_image",
 				Tags:             []string{"tag1", "tag2"},
 				ImagePushOptions: &dockertypes.ImagePushOptions{},
-				ExecPrefix:       "",
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImagePush", 3)

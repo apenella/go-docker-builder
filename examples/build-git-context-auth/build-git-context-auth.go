@@ -71,9 +71,8 @@ func buildGitContextAuth(w io.Writer) error {
 		ImageBuildOptions: &dockertypes.ImageBuildOptions{
 			Dockerfile: "Dockerfile.custom",
 		},
-		ImageName:  imageName,
-		ExecPrefix: imageName,
-		Response:   res,
+		ImageName: imageName,
+		Response:  res,
 	}
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "custom"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{

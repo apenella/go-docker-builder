@@ -47,7 +47,6 @@ func buildGitContext(w io.Writer) error {
 	dockerBuilder := &build.DockerBuildCmd{
 		Cli:               dockerCli,
 		ImageName:         imageName,
-		ExecPrefix:        imageName,
 		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
 		ImagePushOptions:  &dockertypes.ImagePushOptions{},
 		PushAfterBuild:    true,
