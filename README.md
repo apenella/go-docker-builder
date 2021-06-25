@@ -338,7 +338,7 @@ To customize the Docker output coming from response items, it could receive a li
 type TransformerFunc func(string) string
 ```
 
-A custom response definition could be (the snipped belongs to [build-and-push](https://github.com/apenella/go-docker-builder/tree/master/examples/build-and-push) example):
+Below there is a [build-and-push](https://github.com/apenella/go-docker-builder/tree/master/examples/build-and-push) snipped that shows how to define your own `response`:
 ```go
 res := response.NewDefaultResponse(
 	response.WithTransformers(
@@ -359,9 +359,9 @@ dockerBuilder := &build.DockerBuildCmd{
 ```
 
 ## Examples
-On folder [examples](https://github.com/apenella/go-docker-builder/tree/master/examples), you could find some `go-docker-build` examples. Among those examples you could find how to build images using distinct Docker build context locations, Docker registry or git authentications, etc.
+On folder [examples](https://github.com/apenella/go-docker-builder/tree/master/examples), you could find some `go-docker-build` examples. Among those examples you could find how to build images using distinct Docker build context, how to authenticate to Docker registry or git server, etc.
 
-To run any example, the repository is provided with some resources that let you to start an ephemeral environment where examples can run. The environments run on `docker-compose` and start a Docker registry, a git server and a client container where example runs. That environments are also used to run functional test.
+To run any example, the repository is provided with some resources that let you to start an ephemeral environment where examples can run. Each environments run on `docker-compose` and starts a Docker registry, a git server and a client container where example runs. That environments are also used to run functional test.
 
 Each example is also provide by a `Makefile` which helps you to start the examples or tests.
 
