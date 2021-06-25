@@ -1,12 +1,11 @@
 package path
 
 import (
-	"fmt"
 	"io"
-	"os"
 
 	errors "github.com/apenella/go-common-utils/error"
-	"github.com/apenella/go-docker-builder/pkg/common/tar"
+	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
+	"github.com/spf13/afero"
 )
 
 // PathBuildContext creates a build context from path
@@ -17,16 +16,28 @@ type PathBuildContext struct {
 
 // Reader return a context reader
 func (c *PathBuildContext) Reader() (io.Reader, error) {
+	errorContext := "(context::path::Reader)"
+	// context, err := os.Open(c.Path)
+	// if err != nil {
+	// 	return nil, errors.New("(context::path::Reader)", fmt.Sprintf("Error opening '%s'", c.Path), err)
+	// }
 
-	context, err := os.Open(c.Path)
+	// reader, err := tar.Tar(context)
+	// if err != nil {
+	// 	return nil, errors.New("(context::path::Reader)", fmt.Sprintf("Error archieving '%s'", c.Path), err)
+	// }
+
+	// return reader, nil
+	fs, err := c.GenerateContextFilesystem()
 	if err != nil {
-		return nil, errors.New("(context::path::Reader)", fmt.Sprintf("Error opening '%s'", c.Path), err)
+		return nil, errors.New(errorContext, "Error packaging repository files", err)
 	}
+	return fs.Tar()
+}
 
-	reader, err := tar.Tar(context)
-	if err != nil {
-		return nil, errors.New("(context::path::Reader)", fmt.Sprintf("Error archieving '%s'", c.Path), err)
-	}
+func (c *PathBuildContext) GenerateContextFilesystem() (*filesystem.ContextFilesystem, error) {
+	fs := filesystem.NewContextFilesystem(afero.NewOsFs())
+	fs.RootPath = c.Path
 
-	return reader, nil
+	return fs, nil
 }

@@ -10,9 +10,9 @@ type BasicAuth struct {
 	Password string
 }
 
-func (a *BasicAuth) Auth() transport.AuthMethod {
+func (a *BasicAuth) Auth() (transport.AuthMethod, error) {
 	return &http.BasicAuth{
 		Username: a.Username,
 		Password: a.Password,
-	}
+	}, nil
 }

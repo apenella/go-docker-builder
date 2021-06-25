@@ -5,72 +5,146 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	errors "github.com/apenella/go-common-utils/error"
+	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
+	"github.com/docker/distribution/reference"
 	dockertypes "github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 )
 
+// DockerPushCmd is used to push images to docker registry
 type DockerPushCmd struct {
-	Writer            io.Writer
-	Context           context.Context
-	Cli               *client.Client
-	DockerPushOptions *DockerPushOptions
-	ExecPrefix        string
-	Response          types.Responser
+	// Cli is the docker client to use
+	Cli types.DockerClienter
+	// ImagePushOptions from docker sdk
+	ImagePushOptions *dockertypes.ImagePushOptions
+	// ImageName is the name of the image
+	ImageName string
+	// Tags is a list of the images to push
+	Tags []string
+	// Response manages the docker client output
+	Response types.Responser
+	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
+	UseNormalizedNamed bool
+	// RemoveAfterPush when is true the image from local is removed after push
+	RemoveAfterPush bool
 }
 
-func (p *DockerPushCmd) Run() error {
+// AddAuth append new tags to DockerBuilder
+func (p *DockerPushCmd) AddAuth(username, password string) error {
 
-	if p == nil {
-		return errors.New("(pusher:Run)", "DockerBuilder is nil")
+	if p.ImagePushOptions == nil {
+		p.ImagePushOptions = &dockertypes.ImagePushOptions{}
 	}
 
-	if p.Writer == nil {
-		p.Writer = os.Stdout
-	}
-
-	if p.Response == nil {
-		p.Response = &response.DefaultResponse{
-			Prefix: p.ExecPrefix,
-		}
-	}
-
-	pushOptions := dockertypes.ImagePushOptions{}
-
-	if p.DockerPushOptions.RegistryAuth != nil {
-		pushOptions.RegistryAuth = *p.DockerPushOptions.RegistryAuth
-	}
-
-	pushResponse, err := p.Cli.ImagePush(p.Context, p.DockerPushOptions.ImageName, pushOptions)
+	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
 	if err != nil {
-		return errors.New("(pusher:Run)", fmt.Sprintf("Error pushing image '%s'", p.DockerPushOptions.ImageName), err)
-	}
-	defer pushResponse.Close()
-
-	err = p.Response.Write(p.Writer, pushResponse)
-	if err != nil {
-		return errors.New("(builder:Run)", fmt.Sprintf("Error writing push response for '%s'", p.DockerPushOptions.ImageName), err)
+		return errors.New("(push::AddAuth)", "Error generating encoded user password auth configuration", err)
 	}
 
-	for _, tag := range p.DockerPushOptions.Tags {
-		pushResponse, err = p.Cli.ImagePush(p.Context, tag, pushOptions)
-		if err != nil {
-			return errors.New("(pusher:Run)", fmt.Sprintf("Error pushing image '%s'", tag), err)
+	p.ImagePushOptions.RegistryAuth = *auth
+	return nil
+}
+
+// AddTag append new tags to DockerBuilder
+func (p *DockerPushCmd) AddTag(tags ...string) error {
+	var err error
+	var named reference.Named
+
+	if p.Tags == nil {
+		p.Tags = []string{}
+	}
+
+	for _, tag := range tags {
+		exists := false
+
+		if p.UseNormalizedNamed {
+			named, err = reference.ParseNormalizedNamed(tag)
+			if err != nil {
+				return errors.New("(push::AddTag)", fmt.Sprintf("Error parsing to normalized named on '%s'", tag), err)
+			}
+			tag = named.String()
 		}
 
-		err = p.Response.Write(p.Writer, pushResponse)
-		if err != nil {
-			return errors.New("(builder:Run)", fmt.Sprintf("Error writing push response for '%s'", tag), err)
+		for _, t := range p.Tags {
+			if t == tag {
+				exists = true
+			}
+		}
+
+		if !exists {
+			p.Tags = append(p.Tags, tag)
 		}
 	}
 
 	return nil
 }
 
-func (p *DockerPushCmd) registryAuthenticationPrivilegedFunc() (string, error) {
-	fmt.Println("required authorization")
-	return *p.DockerPushOptions.RegistryAuth, nil
+// Run performs the push action
+func (p *DockerPushCmd) Run(ctx context.Context) error {
+
+	var err error
+	var pushResponse io.ReadCloser
+
+	if p == nil {
+		return errors.New("(push::Run)", "DockerPushCmd is undefined")
+	}
+
+	if p.ImagePushOptions == nil {
+		return errors.New("(push::Run)", "Image push options is undefined")
+	}
+
+	if p.Response == nil {
+		p.Response = response.NewDefaultResponse(
+			response.WithWriter(os.Stdout),
+		)
+	}
+
+	p.AddTag(p.ImageName)
+
+	for _, image := range p.Tags {
+		pushResponse, err = p.Cli.ImagePush(ctx, image, *p.ImagePushOptions)
+		if err != nil {
+			return errors.New("(push::Run)", fmt.Sprintf("Error pushing image '%s'", image), err)
+		}
+
+		err = p.Response.Print(pushResponse)
+		if err != nil {
+			return errors.New("(push::Run)", fmt.Sprintf("Error writing push response for '%s'", image), err)
+		}
+	}
+
+	if p.RemoveAfterPush {
+		for _, image := range p.Tags {
+			deleteResponseItems, err := p.Cli.ImageRemove(ctx, image, dockertypes.ImageRemoveOptions{
+				Force:         true,
+				PruneChildren: true,
+			})
+			if err != nil {
+				return errors.New("(push::Run)", fmt.Sprintf("Error removing '%s'", image), err)
+			}
+
+			for _, item := range deleteResponseItems {
+
+				str := ""
+				if item.Deleted != "" {
+					str = fmt.Sprintf("deleted: %s %s ", str, strings.TrimSpace(item.Deleted))
+				}
+
+				if item.Untagged != "" {
+					str = fmt.Sprintf("untagged: %s %s ", str, strings.TrimSpace(item.Untagged))
+				}
+
+				if str != "" {
+					p.Response.Fwriteln(str)
+				}
+			}
+
+		}
+	}
+
+	return nil
 }

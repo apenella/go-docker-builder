@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"os"
+	"fmt"
 	"strings"
 
 	"github.com/apenella/go-docker-builder/pkg/push"
@@ -23,24 +23,17 @@ func main() {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	dockerPushOptions := &push.DockerPushOptions{
+	dockerPush := &push.DockerPushCmd{
+		Cli:       dockerCli,
 		ImageName: strings.Join([]string{registry, namespace, imageName}, "/"),
 	}
 
 	user := "myregistryuser"
 	pass := "myregistrypass"
-	dockerPushOptions.AddAuth(user, pass)
+	dockerPush.AddAuth(user, pass)
 
-	dockerPusher := &push.DockerPushCmd{
-		Writer:            os.Stdout,
-		Cli:               dockerCli,
-		Context:           context.TODO(),
-		DockerPushOptions: dockerPushOptions,
-		ExecPrefix:        imageName,
-	}
-
-	err = dockerPusher.Run()
+	err = dockerPush.Run(context.TODO())
 	if err != nil {
-		panic("Error pushing '" + imageName + "'. " + err.Error())
+		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
 	}
 }

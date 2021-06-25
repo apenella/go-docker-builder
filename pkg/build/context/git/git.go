@@ -1,17 +1,21 @@
 package git
 
 import (
-	"archive/tar"
 	"bytes"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
+	"regexp"
 
 	errors "github.com/apenella/go-common-utils/error"
 	auth "github.com/apenella/go-docker-builder/pkg/auth/git"
+	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage/memory"
+	"github.com/spf13/afero"
 )
 
 // TODO:
@@ -19,23 +23,36 @@ import (
 
 // GitBuildContext defines a build context from a git repository
 type GitBuildContext struct {
+	// Path must be set when docker build context is located in a subpath inside the repository
+	Path string
 	// Repository which will be used as docker build context
 	Repository string
 	// Reference is the name of the branch to clone. By default is used 'master'
 	Reference string
-	// Dockerfile is the dockerfile placement inside the repository
-	Dockerfile string
 	// Auth
 	Auth auth.GitAuther
 }
 
 // Reader return a context reader
 func (c *GitBuildContext) Reader() (io.Reader, error) {
+	errorContext := "(context::git::Reader)"
+	fs, err := c.GenerateContextFilesystem()
+	if err != nil {
+		return nil, errors.New(errorContext, "Error packaging repository files", err)
+	}
+	return fs.Tar()
+}
 
-	var tarBuff bytes.Buffer
+func (c *GitBuildContext) GenerateContextFilesystem() (*filesystem.ContextFilesystem, error) {
+	var err error
+	fs := filesystem.NewContextFilesystem(afero.NewMemMapFs())
 
-	//aeromemfs := afero.NewMemMapFs()
+	// if c.Path != "" {
+	// 	fs.RootPath = c.Path
+	// }
+
 	gitstorage := memory.NewStorage()
+	errorContext := "(context::git::GenerateContextFilesystem)"
 
 	referenceName := plumbing.Master
 	if c.Reference != "" {
@@ -46,12 +63,13 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 		URL:           c.Repository,
 		ReferenceName: referenceName,
 		Depth:         1,
+		SingleBranch:  true,
 	}
 
 	if c.Auth != nil {
 		auth, err := c.Auth.Auth()
 		if err != nil {
-			return nil, errors.New("(context::git::Reader)", "Error getting authorization method", err)
+			return nil, errors.New(errorContext, "Error getting authorization method", err)
 		}
 
 		cloneOption.Auth = auth
@@ -59,61 +77,77 @@ func (c *GitBuildContext) Reader() (io.Reader, error) {
 
 	repo, err := git.Clone(gitstorage, nil, cloneOption)
 	if err != nil {
-		return nil, errors.New("(context::git::Reader)", fmt.Sprintf("Error cloning repository '%s'", c.Repository), err)
+		return nil, errors.New(errorContext, fmt.Sprintf("Error cloning repository '%s'", c.Repository), err)
 	}
 
 	referenceHead, err := repo.Head()
 	if err != nil {
-		return nil, errors.New("(context::git::Reader)", fmt.Sprintf("Error getting reference '%s' HEAD", referenceName.String()), err)
+		return nil, errors.New(errorContext, fmt.Sprintf("Error getting reference '%s' HEAD", referenceName.String()), err)
 	}
 
 	commit, err := repo.CommitObject(referenceHead.Hash())
 	if err != nil {
-		return nil, errors.New("(context::git::Reader)", fmt.Sprintf("Error getting commit '%s'", referenceHead.Hash().String()), err)
+		return nil, errors.New(errorContext, fmt.Sprintf("Error getting commit '%s'", referenceHead.Hash().String()), err)
 	}
 
 	filesIterator, err := commit.Files()
-	defer filesIterator.Close()
 	if err != nil {
-		return nil, errors.New("(context::git::Reader)", "Error getting files iterator")
+		return nil, errors.New(errorContext, "Error getting files iterator")
 	}
+	defer filesIterator.Close()
 
-	tw := tar.NewWriter(&tarBuff)
-	defer tw.Close()
+	subPath := c.Path != ""
+	subPathRegexp, _ := regexp.Compile(fmt.Sprintf("^%s", c.Path))
 
 	err = filesIterator.ForEach(func(file *object.File) error {
 
 		var buff bytes.Buffer
+		var fileContents string
+		var err error
+		var memfile afero.File
+		var mode os.FileMode
+		var relativePath string
 
-		fileContents, err := file.Contents()
+		subPathMatch := subPathRegexp.MatchString(file.Name)
+
+		// skip files when subpath is defined and its location does not match to subpath base
+		if subPath && !subPathMatch {
+			return nil
+		}
+
+		fileContents, err = file.Contents()
 		if err != nil {
-			return errors.New("(context::git::Reader)", fmt.Sprintf("Error achiving '%s' contents", file.Name), err)
+			return errors.New(errorContext, fmt.Sprintf("Error achiving '%s' contents", file.Name), err)
+		}
+		mode, err = file.Mode.ToOSFileMode()
+		if err != nil {
+			return errors.New(errorContext, fmt.Sprintf("Error converting file mode to '%s' on '%s'", file.Mode.String(), file.Name), err)
+		}
+
+		relativePath, err = filepath.Rel(c.Path, file.Name)
+		if err != nil {
+			return errors.New(errorContext, fmt.Sprintf("Error creating relative path on '%s' from '%s'", file.Name, c.Path), err)
+		}
+
+		memfile, err = fs.OpenFile(filepath.Join(fs.RootPath, relativePath), os.O_CREATE, mode)
+		if err != nil {
+			return errors.New("(Walk)", fmt.Sprintf("Error extracting '%s' from git repository", relativePath), err)
 		}
 
 		_, err = buff.WriteString(fileContents)
 		if err != nil {
-			return errors.New("(context::git::Reader)", fmt.Sprintf("Error writting '%s' contents to temporal buffer", file.Name), err)
+			return errors.New(errorContext, fmt.Sprintf("Error writting '%s' contents to temporal buffer", relativePath), err)
 		}
 
-		header := &tar.Header{
-			Name: file.Name,
-			Size: file.Size,
-			Mode: int64(file.Mode),
-		}
-
-		if err := tw.WriteHeader(header); err != nil {
-			return errors.New("(context::git::Reader)", fmt.Sprintf("Error writing '%s' header. ", file.Name), err)
-		}
-		// write file content into tar writer
-		fmt.Fprint(tw, buff.String())
+		io.Copy(memfile, io.Reader(&buff))
 
 		buff.Reset()
 
 		return nil
 	})
 	if err != nil {
-		return nil, errors.New("(context::git::Reader)", "Error packaging repository files", err)
+		return nil, errors.New(errorContext, "Error packaging repository files", err)
 	}
 
-	return bytes.NewReader(tarBuff.Bytes()), nil
+	return fs, nil
 }

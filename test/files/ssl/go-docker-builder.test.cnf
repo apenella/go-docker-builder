@@ -1,0 +1,18 @@
+[ req ]
+default_bits = 2048
+default_md = sha256
+distinguished_name=req_distinguished_name
+req_extensions = req_ext
+prompt = no
+
+[ req_distinguished_name ]
+organizationName    = go-docker-builder
+commonName = *.go-docker-builder.test
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = registry.go-docker-builder.test
+DNS.2 = auth.go-docker-builder.test
+DNS.3 = *..go-docker-builder.test
