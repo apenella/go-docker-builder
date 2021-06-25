@@ -1,7 +1,8 @@
 go-docker-builder
 =======
 
-`go-docker-builder` library it is wrapper over docker client SDK that provides a set of helper packages to manage the most common docker use cases such as build or push images.
+`go-docker-builder` library it is wrapper over docker client SDK that provides a set of packages that help to manage the most common docker use cases such as build or push images.
+
 It also manages docker registry autentication, prepares docker build context to be used by docker client SDK and it supports docker build context either from local path or git repository.
 
 
@@ -337,13 +338,31 @@ type TransformerFunc func(string) string
 ```
 
 ## Examples
-You could find examples about how to you build, push or pull docker images using `go-docker-build` on the [examples](https://github.com/apenella/go-docker-builder/tree/master/examples) repository folder.
+On folder [examples](https://github.com/apenella/go-docker-builder/tree/master/examples), you could find some `go-docker-build` examples. Among those examples you could find how to build images using distinct Docker build context locations, Docker registry or git authentications, etc.
 
-To run any example, it is provided an ephemeral environment running on a `docker-compose`. That environment is also used to run functional test. 
+To run any example, the repository is provided with some resources that let you to start an ephemeral environment where examples can run. The environments run on `docker-compose` and start a Docker registry, a git server and a client container where example runs. That environments are also used to run functional test.
+
+Each example is also provide by a `Makefile` which helps you to start the examples or tests.
+
+```shell
+❯ make help
+
+ Executing example build-and-push
+
+ help                 list allowed targets
+ start                start docker registry
+ cleanup              cleanup example environment
+ generate-certs       generate certificate for go-docker-builder.test
+ cleanup-certs        cleanup certificates
+ prepare              prepare docker images required to run the example or test
+ example              executes the examples
+ test                 executes functional test
+ logs                 show services logs
+ ```
 
 ## References
-- Here there is docker engine API specifications for building and image using it. https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
+- Docker engine API specifications for building an image: https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
 - Taring files strategy was inspired by: https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
 
 ## License
-go-docker-builder is available under [MIT](https://github.com/apenella/go-docker-builder/blob/master/LICENSE) license.
+`go-docker-builder` is available under [MIT](https://github.com/apenella/go-docker-builder/blob/master/LICENSE) license.

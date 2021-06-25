@@ -48,7 +48,7 @@ example: start prepare ## executes the examples
 	@docker-compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go -test
 	@docker-compose -f ../../test/docker-compose.yml down -v --remove-orphans
 
-test: start prepare ## executes the examples
+test: start prepare ## executes functional test
 	@echo
 	@echo " Test"
 	@echo
