@@ -23,7 +23,7 @@ import (
 
 // GitBuildContext defines a build context from a git repository
 type GitBuildContext struct {
-	// Path identify where is located the context inside the repository
+	// Path must be set when docker build context is located in a subpath inside the repository
 	Path string
 	// Repository which will be used as docker build context
 	Repository string

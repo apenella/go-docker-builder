@@ -32,13 +32,13 @@ type DockerBuildCmd struct {
 	ImageBuildOptions *dockertypes.ImageBuildOptions
 	// ImagePushOptions from docker sdk
 	ImagePushOptions *dockertypes.ImagePushOptions
-	// PushAfterBuild push image to registry after building
+	// PushAfterBuild when is true images are automatically pushed to registry after build
 	PushAfterBuild bool
 	// Response manages responses from docker client
 	Response types.Responser
 	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
 	UseNormalizedNamed bool
-	// RemoveAfterPush when is true the image from local is removed after push
+	// RemoveAfterPush when is true images are removed from local after push
 	RemoveAfterPush bool
 }
 
@@ -98,6 +98,7 @@ func (b *DockerBuildCmd) AddBuildArgs(arg string, value string) error {
 	return nil
 }
 
+// AddBuildContext include the docker build context. It supports to use several context which are merged before to start the image build
 func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBuildContexter) error {
 	var err error
 	errorContext := "(build:.AddBuilderContext)"
@@ -160,7 +161,6 @@ func (b *DockerBuildCmd) AddTags(tag string) error {
 func (b *DockerBuildCmd) Run(ctx context.Context) error {
 
 	var err error
-	// var contextReader io.Reader
 
 	if b == nil {
 		return errors.New("(build::Run)", "DockerBuildCmd is not defined")

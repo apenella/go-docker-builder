@@ -23,16 +23,16 @@ func main() {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	dockerPusher := &push.DockerPushCmd{
+	dockerPush := &push.DockerPushCmd{
 		Cli:       dockerCli,
 		ImageName: strings.Join([]string{registry, namespace, imageName}, "/"),
 	}
 
 	user := "myregistryuser"
 	pass := "myregistrypass"
-	dockerPusher.AddAuth(user, pass)
+	dockerPush.AddAuth(user, pass)
 
-	err = dockerPusher.Run(context.TODO())
+	err = dockerPush.Run(context.TODO())
 	if err != nil {
 		panic(fmt.Sprintf("Error building '%s'. %s", imageName, err.Error()))
 	}

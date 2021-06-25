@@ -1,242 +1,355 @@
 go-docker-builder
 =======
 
-`go-docker-builder` package simplifies the golang's docker client SDK basic operations usage. It lets to write your own golang code to pull, build and push docker images in a few lines. The package also manages the registy auth either on pull or push actions.
+`go-docker-builder` library it is wrapper over docker client SDK that provides a set of helper packages to manage the most common docker use cases such as build or push images.
+It also manages docker registry autentication, prepares docker build context to be used by docker client SDK and it supports docker build context either from local path or git repository.
 
-Another feature of the package is that it supports to build images from `path` either `git` contexts. 
-- **Path**: To build docker images from a local directory context definition.
-- **Git**: To build docker images from a git repository context definition.
-	Regarding git context, go-docker-builder also supports the auth to a git server by username/password, ssh agent or private key file.
 
-## Table of Contents
-- [Packages](#packages)
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Use cases](#use-cases)
+  - [Build](#build)
+    - [Context](#context)
+      - [Path](#path)
+      - [Git](#git)
+    - [Context filesystem](#context-filesystem)
+  - [Push](#push)
+  - [Copy](#copy)
+- [Authentication](#authentication)
+  - [Docker registry](#docker-registry)
+  - [Git server](#git-server)
+    - [Basic auth](#basic-auth)
+    - [SSH key](#ssh-key)
+    - [SSH agent](#ssh-agent)
+- [Response](#response)
 - [Examples](#examples)
+- [Packages](#packages)
+  - [Auth](#auth)
+  - [Build](#build-1)
+    - [Context](#context-1)
+  - [Common](#common)
+  - [Push](#push-1)
+  - [Response](#response-1)
+  - [Types](#types)
+- [Examples](#examples-1)
+  - [List of examples](#list-of-examples)
 - [References](#references)
 - [License](#license)
 
-## Packages
+<!-- /code_chunk_output -->
 
-### Auth
-On this folder are located the pakcages which manages auth operations. These packages simplify the docker and git auth methods.
+## Use cases
+`go-docker-builder` library has been written to provide an easy way to interactuate with docker client SDK on the use cases listed below:
 
-- files:
-```
-|-- docker
-|   |-- auth.go
-|   `-- auth_test.go
-`-- git
-    |-- auth.go
-    |-- basic
-    |   `-- basic_auth.go
-    |-- key
-    |   `-- key_auth.go
-    `-- sshagent
-        `-- sshagent_auth.go
-```
+- **Build**: build a docker images
+- **Push**: push a docker image to a docker registry
+- **Copy**: copy a docker image from one registry to another one
 
 ### Build
-On this folder is found the docker build logic.
+Package `build` purpose is to build docker images.
+To perform a build action must be created a `DockerBuildCmd` instance.
 
-- files:
-```
-.
-|-- build.go
-|-- buildOptions.go
-|-- buildOptions_test.go
-`-- context
-    |-- context.go
-    |-- git
-    |   `-- git.go
-    |-- path
-        `-- path.go
-```
-
-Build details are defined on `DockerBuildOption` struct, which is, mainly, a `"github.com/docker/docker/api/types"` `ImageBuildOptions`options struct subset.
 ```go
-type DockerBuildOptions struct {
+// DockerBuilderCmd
+type DockerBuildCmd struct {
+	// Cli is the docker api client
+	Cli types.DockerClienter
 	// ImageName is the name of the image
 	ImageName string
-	// Tags is a list of the image tags
-	Tags []string
-	// BuildArgs ia a list of arguments to set during the building
-	BuildArgs map[string]*string
-	// Dockerfile is the file name for dockerfile file
-	Dockerfile string
-	// PushAfterBuild push image to registry after building
+	// ImageBuildOptions from docker sdk
+	ImageBuildOptions *dockertypes.ImageBuildOptions
+	// ImagePushOptions from docker sdk
+	ImagePushOptions *dockertypes.ImagePushOptions
+	// PushAfterBuild when is true images are automatically pushed to registry after build
 	PushAfterBuild bool
-	// Auth required to be authenticated to docker registry
-	Auth map[string]dockertypes.AuthConfig
-	// BuildContext
-	DockerBuildContext context.DockerBuildContexter
-}
-```
-
-The `DockerBuildCmd` element is the responsible to run the docker build. On this struct there is `DockerPushOptions` attribute that contains the options to push images once its build is finished.
-```go
-type DockerBuildCmd struct {
-	// Writer to write the build output
-	Writer             io.Writer
-	// Context manages the build context
-	Context            context.Context
-	// Cli is the docker api client
-	Cli                *client.Client
-	// DockerBuildOptions are the options to build
-	DockerBuildOptions *DockerBuildOptions
-	// DockerPushOptions are the option to push
-	DockerPushOptions  *push.DockerPushOptions
-	// ExecPrefix defines a prefix to each output lines
-	ExecPrefix         string
 	// Response manages responses from docker client
-	Response           types.Responser
+	Response types.Responser
+	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
+	UseNormalizedNamed bool
+	// RemoveAfterPush when is true images are removed from local after push
+	RemoveAfterPush bool
 }
 ```
 
-`Response`attribute is `Responser` interface and manages docker cli responses.
+Below there is a recipe to build docker images using `go-docker-builder`:
+
+1. Create a docker client from docker client SDK
 ```go
-type Responser interface {
-	Write(io.Writer, io.ReadCloser) error
+dockerCli, err = client.NewClientWithOpts(client.FromEnv)
+if err != nil {
+	return err
+}
+```
+
+2. Give a name to the image
+```go
+registry := "registry.go-docker-builder.test"
+imageName := strings.Join([]string{registry, "alpine"}, "/")
+```
+
+3. In case you need a custom response, create a response object
+```go
+res := response.NewDefaultResponse(
+	response.WithTransformers(
+		transformer.Prepend("my-custom-response"),
+	),
+)
+```
+
+4. Create `DockerBuildCmd` instance
+```go
+dockerBuilder := &build.DockerBuildCmd{
+	Cli:       dockerCli,
+	ImageName: imageName,
+	Response:  res,
+}
+```
+
+5. Create a docker build context
+```go
+imageDefinitionPath := filepath.Join(".", "files")
+dockerBuildContext := &contextpath.PathBuildContext{
+	Path: imageDefinitionPath,
+}
+```
+
+6. Add the docker build Context to `DockerBuildCmd`
+```go
+err = dockerBuilder.AddBuildContext(dockerBuildContext)
+if err != nil {
+	return err
+}
+```
+
+7. Include extra docker image tags, in case are needed
+```go
+dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
+```
+
+8. Include authorization either for pull, push or both, when is required.
+```go
+err = dockerBuilder.AddAuth(username, password, registry)
+if err != nil {
+	return err
+}
+```
+
+9. Include build arguments, in case are needed
+```go
+err = dockerBuilder.AddBuildArgs("key", "value")
+if err != nil {
+	return err
+}
+```
+
+10. Start the build
+```go
+err = dockerBuilder.Run(context.TODO())
+if err != nil {
+	return err
 }
 ```
 
 #### Context
-On this build's subfolder are lacated the docker build context packages. Any docker build context implements the interface 
+Docker build context is a set of files required to build a docker image. `go-docker-builder` library supports two kind of sources for build context: `path` and `git`
 
+##### Path
+When files are located on local host, Docker build context must be created as `path`, and it is only required to set the local folder path where files are located.
+
+A `PathBuildContext` instance represents a Docker build context as path.
 ```go
-import "github.com/go-git/go-git/v5/plumbing/transport"
-
-type GitAuther interface {
-	Auth() (transport.AuthMethod, error)
+// PathBuildContext creates a build context from path
+type PathBuildContext struct {
+	// Path is context location on the local system
+	Path string
 }
 ```
 
-### Common
-On this folder are located common or shared packages.
-`Tar` package manages the tar object required by docker API to build images.
+##### Git
+When files are located on a git repository, Docker build context must be created as `git`.
 
-- files:
+A `GitBuildContext` instance represents a Docker build context as git.
+```go
+// GitBuildContext defines a build context from a git repository
+type GitBuildContext struct {
+	// Path must be set when docker build context is located in a subpath inside the repository
+	Path string
+	// Repository which will be used as docker build context
+	Repository string
+	// Reference is the name of the branch to clone. By default is used 'master'
+	Reference string
+	// Auth
+	Auth auth.GitAuther
+}
 ```
-.
-`-- tar
-    `-- tar.go
-```
+
+To define a `git` it is only required the `Repository` attribute, although it accepts other configurations such as the `Reference` name (branch, commit or tag), `Auth` which is used to be authenticated over git server or `Path` which let you to define as Docker build context base a subfolder inside the repository.
+
+`go-docker-builder` uses [go-git](https://github.com/go-git/go-git) library.
+
+#### Context filesystem
+Context filesystem has been created as an intermediate filesystem between the source files and Docker build context.
+
+Context filesystem, is build on top of [afero](https://github.com/spf13/afero). It supports to **tar** the entire filesystem and also to **join** multiple filesystems.
 
 ### Push
-On this folder is found the docker push logic.
+Package `push` purpose is to push Docker images to a Docker registry.
+To perform a push action must be created a `DockerPushBuildCmd` instance.
 
-- files:
-```
-.
-|-- push.go
-|-- pushOptions.go
-`-- pushOptions_test.go
-```
-
-When pushing a docker image to registry the struct below defines own to push the image.
 ```go
-// DockerBuilderOptions has an options set to build and image
-type DockerPushOptions struct {
+// DockerPushCmd is used to push images to docker registry
+type DockerPushCmd struct {
+	// Cli is the docker client to use
+	Cli types.DockerClienter
+	// ImagePushOptions from docker sdk
+	ImagePushOptions *dockertypes.ImagePushOptions
 	// ImageName is the name of the image
 	ImageName string
 	// Tags is a list of the images to push
 	Tags []string
-	// RegistryAuth is the base64 encoded credentials for the registry
-	RegistryAuth *string
+	// Response manages the docker client output
+	Response types.Responser
+	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
+	UseNormalizedNamed bool
+	// RemoveAfterPush when is true the image from local is removed after push
+	RemoveAfterPush bool
 }
 ```
 
-### Response
-On this folder is defined `DefaultResponse`, a `Responser` interface interface implementation.
+Below there is a recipe to build docker images using `go-docker-builder`:
 
-- files:
-```
-.
-`-- response.go
+1. Create a docker client from docker client SDK
+```go
+dockerCli, err = client.NewClientWithOpts(client.FromEnv)
+if err != nil {
+	return err
+}
 ```
 
-### Types
-On this folder there is a set of custom types for `go-docker-builder`.
-
-- files:
+2. Give a name to the image
+```go
+registry := "registry.go-docker-builder.test"
+imageName := strings.Join([]string{registry, "alpine"}, "/")
 ```
-.
-|-- responseBodyStreamAuxMessage.go
-|-- responseBodyStreamErrorDetailMessage.go
-|-- responseBodyStreamMessage.go
-`-- responser.go
+
+3. Create `DockerPushCmd` instance
+```go
+dockerPush := &push.DockerPushCmd{
+	Cli:       dockerCli,
+	ImageName: imageName,
+}
+```
+
+4. Add authorization, when is required
+```go
+user := "myregistryuser"
+pass := "myregistrypass"
+dockerPush.AddAuth(user, pass)
+```
+
+5. Push the image to Docker registry
+```go
+err = dockerPush.Run(context.TODO())
+if err != nil {
+	return err
+}
+```
+
+
+### Copy
+Package `copy` can be understand such a `push` use case variation. Its purpose is to push images either from local host or from a Docker registry to another Docker registry. It can be also used to copy images from one Docker registry namespace to another namespace. 
+To perform a copy action must be created a `DockerImageCopyCmd` instance.
+
+```go
+// DockerCopyImageCmd is used to copy images to docker registry. Copy image is understood as tag an existing image and push it to a docker registry
+type DockerImageCopyCmd struct {
+	// Cli is the docker client to use
+	Cli types.DockerClienter
+	// ImagePushOptions from docker sdk
+	ImagePullOptions *dockertypes.ImagePullOptions
+	// ImagePushOptions from docker sdk
+	ImagePushOptions *dockertypes.ImagePushOptions
+	// SourceImage is the name of the image to be copied
+	SourceImage string
+	// TargetImage is the name of the copied image
+	TargetImage string
+	// Tags is a copied images tags list
+	Tags []string
+	// UseNormalizedNamed when is true tags are transformed to a fully qualified reference
+	UseNormalizedNamed bool
+	// RemoteSource when is true the source image is pulled from registry before push it to its destination
+	RemoteSource bool
+	// RemoveAfterPush when is true the image from local is removed after push
+	RemoveAfterPush bool
+	// Response manages the docker client output
+	Response types.Responser
+}
+```
+
+Some cases where copy can be used are:
+- Copy one image from [dockerhub](https://hub.docker.com/) to a private Docker registry
+- When Docker images used on your staging environments needs to be promoted somewhere else before use them on production environment.
+
+## Authentication
+`go-docker-builder` library contains a bunch of packages to manage authentication either to docker registry or git server.
+
+### Docker registry
+Package `github.com/apenella/go-docker-builder/pkg/auth/docker` provides a set of functions to create the authentication items required by Docker registry. Docker registy may require authentication either for `push` or `pull` operations.
+
+Packages [build](#build), [push](#push) or [copy](#copy) already uses that package on its authentication methods, and is not necessary to use it directly.
+
+### Git server
+Git server authentication is needed when Docker build context is located on a git repository and the git server requires it authorize you for cloning any repository.
+
+`go-docker-builder` supports several git authentication methods such as `basic auth`, `ssh-key` or `ssh-agent`.
+
+All this authentication methods generates an `AuthMethod` (github.com/go-git/go-git/v5/plumbing/transport).
+
+#### Basic auth
+`Basic auth` requires a `username` and `password`. It have to be used when comunication is done through `http/s`.
+
+```go
+type BasicAuth struct {
+	Username string
+	Password string
+}
+```
+
+#### SSH key
+You can use an `ssh key` when comunication with git server is done over ssh. It requires your privete key location (`PkFile`). In case your key is being protected by password, you have to set it on `PkPassword`. Finally, when git user is not `git`, you can define it on `GitSSHUser`.
+```go
+type KeyAuth struct {
+	GitSSHUser string
+	PkFile     string
+	PkPassword string
+}
+```
+
+#### SSH agent
+To authenticate to git server, `ssh-agent` method uses the ssh agent running on you host. When git user is not `git`, you can define it on `GitSSHUser`.
+```go
+type SSHAgentAuth struct {
+	GitSSHUser string
+}
+```
+
+## Response
+To control how Docker output is sent to the user, `go-docker-build` provides `response` package.
+By default, [DockerBuildCmd](#build), [DockerPushCmd](#push) and [DockerCopyCmd](#copy) instances use a basic configuration of `response` that prints Docker output to `os.Stdout`. But you could customize a `reponse` instance and pass to them.
+
+`response` receives `ImageBuildResponse` or `ImagePushResponse` items, unmarshals into an struct and finally prepares a user-frendly output.
+When is defined, it could receive a list of transfromer functions to customize the Docker output coming from response items. That function must complain the type `TransformerFunc` defined on `github.com/apenella/go-common-utils/transformer/string`.
+```go
+// TransformerFunc is used to enrich or update messages before to be printed out
+type TransformerFunc func(string) string
 ```
 
 ## Examples
-You could find examples about how to you build, push or pull docker images using `go-docker-build` on the [exmples](https://github.com/apenella/go-docker-builder/tree/master/examples) repository folder.
+You could find examples about how to you build, push or pull docker images using `go-docker-build` on the [examples](https://github.com/apenella/go-docker-builder/tree/master/examples) repository folder.
 
-Each example is provided by a Makefile which starts the environment required by the test and runs the test.
-
-```
-.
-├── build-and-push
-│   ├── build-and-push.go
-│   ├── files
-│   │   └── Dockerfile
-│   └── Makefile
-├── build-git-context
-│   ├── build-git-context.go
-│   └── Makefile
-├── build-git-context-auth
-│   ├── build-git-context-auth.go
-│   └── Makefile
-├── build-path-context
-│   ├── build-path-context.go
-│   ├── files
-│   │   ├── Dockerfile
-│   │   └── etc
-│   │       └── config
-│   │           └── file.cfg
-│   └── Makefile
-├── copy-remote
-│   ├── copy-remote.go
-│   └── Makefile
-└── push
-    └── push.go
-```
-
-### List of examples
-
-- **build-and-push**: Build and push an image. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-and-push)
-- **build-git-context**: Build an images using a git repository as a context. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-git-context)
-On the snipped below, you could see how to run on of these examples.
-```sh
-apenella [go-docker-builder/examples/build-git-context] $ go run build.go
-registry/namespace/ubuntu ──  Step 1/5 : FROM alpine:3.9
-registry/namespace/ubuntu ──
-registry/namespace/ubuntu ──   ‣ Pulling from library/alpine
-registry/namespace/ubuntu ──   ‣ Digest: sha256:414e0518bb9228d35e4cd5165567fb91d26c6a214e9c95899e1e056fcd349011
-registry/namespace/ubuntu ──   ‣ Status: Image is up to date for alpine:3.9
-registry/namespace/ubuntu ──  ---> 78a2ce922f86
-registry/namespace/ubuntu ──  Step 2/5 : RUN apk add --no-cache lua5.3 lua-filesystem lua-lyaml lua-http
-registry/namespace/ubuntu ──
-registry/namespace/ubuntu ──  ---> Using cache
-registry/namespace/ubuntu ──  ---> 311d8b3d8000
-registry/namespace/ubuntu ──  Step 3/5 : COPY fetch-latest-releases.lua /usr/local/bin
-registry/namespace/ubuntu ──
-registry/namespace/ubuntu ──  ---> Using cache
-registry/namespace/ubuntu ──  ---> b320a9351508
-registry/namespace/ubuntu ──  Step 4/5 : VOLUME /out
-registry/namespace/ubuntu ──
-registry/namespace/ubuntu ──  ---> Using cache
-registry/namespace/ubuntu ──  ---> 435051cee5dd
-registry/namespace/ubuntu ──  Step 5/5 : ENTRYPOINT [ "/usr/local/bin/fetch-latest-releases.lua" ]
-registry/namespace/ubuntu ──
-registry/namespace/ubuntu ──  ---> Using cache
-registry/namespace/ubuntu ──  ---> 791db64c487e
-registry/namespace/ubuntu ──   ‣ sha256:791db64c487e19b418367522376205460718e414687128752af4c5259c4b6d00
-registry/namespace/ubuntu ──  Successfully built 791db64c487e
-registry/namespace/ubuntu ──  Successfully tagged registry/namespace/ubuntu:tag1
-registry/namespace/ubuntu ──  Successfully tagged registry/namespace/ubuntu:latest
-apenella [go-docker-builder/examples/build-git-context] $
-
-```
-- **build-git-context-auth**: Build an images using a git repository as a context and which required git server authorization. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-git-context-auth)
-- **build-path-context**: Build an images using a location folder as a context. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/build-path-context)
-- **push**: Push and image. [go to exmple](https://github.com/apenella/go-docker-builder/tree/master/examples/push)
+To run any example, it is provided an ephemeral environment running on a `docker-compose`. That environment is also used to run functional test. 
 
 ## References
 - Here there is docker engine API specifications for building and image using it. https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
