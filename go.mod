@@ -7,6 +7,7 @@ require (
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
+	github.com/apenella/go-ansible v1.1.0 // indirect
 	github.com/apenella/go-common-utils/error v0.0.0-20200917063805-34b0ed3c4ce1
 	github.com/apenella/go-common-utils/transformer/string v0.0.0-20210528133155-34ba915e28c8
 	github.com/docker/distribution v2.7.1+incompatible
@@ -21,7 +22,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/afero v1.6.0
 	github.com/stretchr/testify v1.7.0
-	github.com/testcontainers/testcontainers-go v0.11.0
+	github.com/testcontainers/testcontainers-go v0.11.0 // indirect
 	github.com/wk8/go-ordered-map v0.2.0
 	github.com/xanzy/ssh-agent v0.2.1
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect

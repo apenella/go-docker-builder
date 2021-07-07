@@ -38,6 +38,17 @@ type DockerImageCopyCmd struct {
 	Response types.Responser
 }
 
+// NewDockerImageCopyCmd return a DockerImageCopyCmd
+func NewDockerImageCopyCmd(cli types.DockerClienter, source, target string) *DockerImageCopyCmd {
+	return &DockerImageCopyCmd{
+		Cli:              cli,
+		SourceImage:      source,
+		TargetImage:      target,
+		ImagePullOptions: &dockertypes.ImagePullOptions{},
+		ImagePushOptions: &dockertypes.ImagePushOptions{},
+	}
+}
+
 // AddAuth adds the same auth to image pull options and image push options
 func (c *DockerImageCopyCmd) AddAuth(username, password string) error {
 	var err error

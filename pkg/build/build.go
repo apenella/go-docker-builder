@@ -42,6 +42,16 @@ type DockerBuildCmd struct {
 	RemoveAfterPush bool
 }
 
+// NewDockerBuildCmd return a DockerBuildCmd
+func NewDockerBuildCmd(cli types.DockerClienter, name string) *DockerBuildCmd {
+	return &DockerBuildCmd{
+		Cli:               cli,
+		ImageName:         name,
+		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
+		ImagePushOptions:  &dockertypes.ImagePushOptions{},
+	}
+}
+
 // AddAuth append new tags to DockerBuilder
 func (b *DockerBuildCmd) AddAuth(username, password, registry string) error {
 
