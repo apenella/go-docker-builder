@@ -11,10 +11,87 @@ import (
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	buildcontext "github.com/apenella/go-docker-builder/pkg/build/context"
 	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
+	"github.com/apenella/go-docker-builder/pkg/response"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestWithDockerfile(t *testing.T) {
+	t.Log("Testing WithDockerfile")
+	b := DockerBuildCmd{}
+	b.WithDockerfile("testdockerfile")
+
+	assert.Equal(t, "testdockerfile", b.ImageBuildOptions.Dockerfile)
+}
+func TestWithPushAfterBuild(t *testing.T) {
+	t.Log("Testing WithPushAfterBuild")
+	b := DockerBuildCmd{}
+	b.WithPushAfterBuild()
+
+	assert.Equal(t, true, b.PushAfterBuild)
+}
+func TestWithResponse(t *testing.T) {
+	t.Log("Testing WithResponse")
+	b := DockerBuildCmd{}
+	res := response.NewDefaultResponse()
+
+	b.WithResponse(res)
+
+	assert.Equal(t, res, b.Response)
+}
+func TestWithUseNormalizedNamed(t *testing.T) {
+	t.Log("Testing WithUseNormalizedNamed")
+	b := DockerBuildCmd{}
+	b.WithUseNormalizedNamed()
+
+	assert.Equal(t, true, b.UseNormalizedNamed)
+}
+func TestWithRemoveAfterPush(t *testing.T) {
+	t.Log("Testing WithRemoveAfterPush")
+	b := DockerBuildCmd{}
+	b.WithRemoveAfterPush()
+
+	assert.Equal(t, true, b.RemoveAfterPush)
+}
+
+func TestAddPushAuth(t *testing.T) {
+
+	type args struct {
+		username string
+		password string
+	}
+	tests := []struct {
+		desc           string
+		dockerBuildCmd *DockerBuildCmd
+		args           *args
+		res            string
+		err            error
+	}{
+		{
+			desc:           "Testing add push auth",
+			dockerBuildCmd: &DockerBuildCmd{},
+			args: &args{
+				username: "username",
+				password: "password",
+			},
+			res: "eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			t.Log(test.desc)
+
+			err := test.dockerBuildCmd.AddPushAuth(test.args.username, test.args.password)
+			if err != nil {
+				assert.Equal(t, test.err, err)
+			} else {
+				assert.Equal(t, test.res, test.dockerBuildCmd.ImagePushOptions.RegistryAuth, "Unexpected auth result")
+			}
+		})
+	}
+}
 
 func TestAddAuth(t *testing.T) {
 
@@ -32,7 +109,7 @@ func TestAddAuth(t *testing.T) {
 		res            map[string]dockertypes.AuthConfig
 	}{
 		{
-			desc:           "Test add user-password auth",
+			desc:           "Testing add user-password auth",
 			dockerBuildCmd: &DockerBuildCmd{},
 			args: &args{
 				username: "user",
@@ -48,7 +125,7 @@ func TestAddAuth(t *testing.T) {
 			},
 		},
 		{
-			desc:           "Test add invalid user-password auth",
+			desc:           "Testing add invalid user-password auth",
 			dockerBuildCmd: &DockerBuildCmd{},
 			args: &args{
 				username: "",
@@ -88,7 +165,7 @@ func TestAddBuildArgs(t *testing.T) {
 		err            error
 	}{
 		{
-			desc:           "Test add argument to nil BuildArgs object",
+			desc:           "Testing add argument to nil BuildArgs object",
 			dockerBuildCmd: &DockerBuildCmd{},
 			args: &args{
 				arg:   "argument",
@@ -97,7 +174,7 @@ func TestAddBuildArgs(t *testing.T) {
 			err: nil,
 		},
 		{
-			desc: "Test add an existing argument",
+			desc: "Testing add an existing argument",
 			dockerBuildCmd: &DockerBuildCmd{
 				ImageBuildOptions: &dockertypes.ImageBuildOptions{
 					BuildArgs: map[string]*string{
@@ -172,10 +249,47 @@ func TestAddBuildContext(t *testing.T) {
 	}
 }
 
+func TestAddLabel(t *testing.T) {
+
+	type args struct {
+		label string
+		value string
+	}
+
+	tests := []struct {
+		desc           string
+		dockerBuildCmd *DockerBuildCmd
+		args           *args
+		res            map[string]string
+		err            error
+	}{
+		{
+			desc:           "Testing add a label",
+			dockerBuildCmd: &DockerBuildCmd{},
+			args: &args{
+				label: "l1",
+				value: "v1",
+			},
+			res: map[string]string{
+				"l1": "v1",
+			},
+			err: nil,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.desc, func(t *testing.T) {
+			t.Log(test.desc)
+
+			test.dockerBuildCmd.AddLabel(test.args.label, test.args.value)
+			assert.Equal(t, test.res, test.dockerBuildCmd.ImageBuildOptions.Labels)
+		})
+	}
+}
+
 func TestAddTags(t *testing.T) {
 
 	type args struct {
-		tag string
+		tags []string
 	}
 
 	tests := []struct {
@@ -186,23 +300,23 @@ func TestAddTags(t *testing.T) {
 		err            error
 	}{
 		{
-			desc:           "Test add new tag",
+			desc:           "Testing add new tags",
 			dockerBuildCmd: &DockerBuildCmd{},
 			args: &args{
-				tag: "new_tag",
+				tags: []string{"new_tag", "another_new_tag"},
 			},
-			res: []string{"new_tag"},
+			res: []string{"new_tag", "another_new_tag"},
 			err: nil,
 		},
 		{
-			desc: "Test add new tag with normalized named",
+			desc: "Testing add tag with normalized named",
 			dockerBuildCmd: &DockerBuildCmd{
 				UseNormalizedNamed: true,
 			},
 			args: &args{
-				tag: "new_tag",
+				tags: []string{"image:tag"},
 			},
-			res: []string{"docker.io/library/new_tag"},
+			res: []string{"docker.io/library/image:tag"},
 			err: nil,
 		},
 	}
@@ -210,7 +324,7 @@ func TestAddTags(t *testing.T) {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Log(test.desc)
 
-			test.dockerBuildCmd.AddTags(test.args.tag)
+			test.dockerBuildCmd.AddTags(test.args.tags...)
 			assert.Equal(t, test.res, test.dockerBuildCmd.ImageBuildOptions.Tags)
 		})
 	}
@@ -249,7 +363,6 @@ func TestRun(t *testing.T) {
 			},
 			err: errors.New("(build::Run)", "Docker build context is not defined"),
 		},
-
 		{
 			desc: "Testing build an image",
 			dockerBuildCmd: &DockerBuildCmd{

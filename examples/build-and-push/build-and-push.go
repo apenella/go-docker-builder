@@ -13,7 +13,6 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/build"
 	contextpath "github.com/apenella/go-docker-builder/pkg/build/context/path"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -53,15 +52,20 @@ func buildAndPush(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	dockerBuilder := &build.DockerBuildCmd{
-		Cli:               dockerCli,
-		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
-		ImagePushOptions:  &dockertypes.ImagePushOptions{},
-		PushAfterBuild:    true,
-		RemoveAfterPush:   true,
-		ImageName:         imageName,
-		Response:          res,
-	}
+	dockerBuilder := build.NewDockerBuildCmd(dockerCli, imageName).
+		WithPushAfterBuild().
+		WithRemoveAfterPush().
+		WithResponse(res)
+
+	// dockerBuilder := &build.DockerBuildCmd{
+	// 	Cli:               dockerCli,
+	// 	ImageBuildOptions: &dockertypes.ImageBuildOptions{},
+	// 	ImagePushOptions:  &dockertypes.ImagePushOptions{},
+	// 	PushAfterBuild:    true,
+	// 	RemoveAfterPush:   true,
+	// 	ImageName:         imageName,
+	// 	Response:          res,
+	// }
 
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
 

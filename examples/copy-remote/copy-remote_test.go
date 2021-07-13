@@ -20,9 +20,11 @@ func TestCopyRemote(t *testing.T) {
 	}
 
 	expected := `3.13: digest
-<HASH>: Pushed
+<HASH>: Mounted from alpine/alpine
 Digest: sha256
 Status: Downloaded newer image for base-registry.go-docker-builder.test
+three: digest
+latest: digest
 `
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 

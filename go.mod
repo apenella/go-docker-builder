@@ -27,4 +27,5 @@ require (
 	github.com/xanzy/ssh-agent v0.2.1
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 	gotest.tools v2.2.0+incompatible
+	k8s.io/kubernetes v1.13.0 // indirect
 )
