@@ -301,12 +301,9 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 						dockerPush.ImagePushOptions.RegistryAuth = *registry_host_build_auth
 					}
 				} else {
-					dockerPush.ImagePushOptions.PrivilegeFunc = func() (string, error) {
-						return registry_host_auth.Auth, nil
-					}
+					dockerPush.ImagePushOptions.PrivilegeFunc = generateDefaultImagePushOptionsPrivilegeFunc(registry_host_auth.Auth)
 				}
 			}
-
 		}
 
 		err = dockerPush.Run(ctx)
@@ -316,4 +313,10 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func generateDefaultImagePushOptionsPrivilegeFunc(auth string) dockertypes.RequestPrivilegeFunc {
+	return func() (string, error) {
+		return auth, nil
+	}
 }

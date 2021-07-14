@@ -415,6 +415,57 @@ func TestRun(t *testing.T) {
 				return mock.AssertNumberOfCalls(t, "ImageBuild", 1) && mock.AssertNumberOfCalls(t, "ImagePush", 1)
 			},
 		},
+
+		{
+			desc: "Testing build and push an image and removing after push",
+			dockerBuildCmd: &DockerBuildCmd{
+				ImageName: "myregistry.test/image:tag",
+				ImageBuildOptions: &dockertypes.ImageBuildOptions{
+					Context: ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
+					AuthConfigs: map[string]dockertypes.AuthConfig{
+						"myregistry.test": {
+							Username: "username",
+							Password: "password",
+						},
+					},
+				},
+				ImagePushOptions: &dockertypes.ImagePushOptions{
+					// RegistryAuth:  "eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9",
+					// PrivilegeFunc: func() (string, error) { return "", nil },
+				},
+				PushAfterBuild:  true,
+				RemoveAfterPush: true,
+			},
+			err: &errors.Error{},
+			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerBuildCmd) {
+				o := dockertypes.ImageBuildOptions{
+					Tags:       []string{cmd.ImageName},
+					Dockerfile: DefaultDockerfile,
+					Context:    ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
+					AuthConfigs: map[string]dockertypes.AuthConfig{
+						"myregistry.test": {
+							Username: "username",
+							Password: "password",
+						},
+					},
+				}
+				mock.On("ImageBuild", ctx, cmd.ImageBuildOptions.Context, o).Return(
+					dockertypes.ImageBuildResponse{
+						Body: ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
+					}, nil)
+
+				mock.On("ImagePush", ctx, cmd.ImageName, dockertypes.ImagePushOptions{
+					RegistryAuth: "eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9",
+				}).Return(ioutil.NopCloser(io.Reader(&bytes.Buffer{})), nil)
+				mock.On("ImageRemove", ctx, cmd.ImageName, dockertypes.ImageRemoveOptions{
+					Force:         true,
+					PruneChildren: true,
+				}).Return([]dockertypes.ImageDeleteResponseItem{}, nil)
+			},
+			assertFunc: func(mock *mockclient.DockerClient) bool {
+				return mock.AssertNumberOfCalls(t, "ImageBuild", 1) && mock.AssertNumberOfCalls(t, "ImagePush", 1)
+			},
+		},
 	}
 
 	for _, test := range tests {
