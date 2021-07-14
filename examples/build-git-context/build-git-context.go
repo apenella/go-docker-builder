@@ -48,16 +48,6 @@ func buildGitContext(w io.Writer) error {
 		WithRemoveAfterPush().
 		WithResponse(res)
 
-	// dockerBuilder := &build.DockerBuildCmd{
-	// 	Cli:               dockerCli,
-	// 	ImageName:         imageName,
-	// 	ImageBuildOptions: &dockertypes.ImageBuildOptions{},
-	// 	ImagePushOptions:  &dockertypes.ImagePushOptions{},
-	// 	PushAfterBuild:    true,
-	// 	RemoveAfterPush:   true,
-	// 	Response:          res,
-	// }
-
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "a-tag"}, ":"),
 		strings.Join([]string{imageName, "b-tag"}, ":"),
 		strings.Join([]string{imageName, "z-tag"}, ":"))
