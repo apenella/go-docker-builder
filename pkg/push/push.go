@@ -82,8 +82,8 @@ func (p *DockerPushCmd) AddAuth(username, password string) error {
 	return nil
 }
 
-// AddTag append new tags to DockerBuilder
-func (p *DockerPushCmd) AddTag(tags ...string) error {
+// AddTags append new tags to DockerBuilder
+func (p *DockerPushCmd) AddTags(tags ...string) error {
 	var err error
 	var named reference.Named
 
@@ -97,7 +97,7 @@ func (p *DockerPushCmd) AddTag(tags ...string) error {
 		if p.UseNormalizedNamed {
 			named, err = reference.ParseNormalizedNamed(tag)
 			if err != nil {
-				return errors.New("(push::AddTag)", fmt.Sprintf("Error parsing to normalized named on '%s'", tag), err)
+				return errors.New("(push::AddTags)", fmt.Sprintf("Error parsing to normalized named on '%s'", tag), err)
 			}
 			tag = named.String()
 		}
@@ -136,7 +136,7 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 		)
 	}
 
-	p.AddTag(p.ImageName)
+	p.AddTags(p.ImageName)
 
 	for _, image := range p.Tags {
 

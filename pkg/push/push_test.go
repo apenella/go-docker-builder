@@ -131,7 +131,7 @@ func TestAddTags(t *testing.T) {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Log(test.desc)
 
-			test.dockerPushCmd.AddTag(test.args.tag...)
+			test.dockerPushCmd.AddTags(test.args.tag...)
 
 			assert.Equal(t, test.res, test.dockerPushCmd.Tags)
 		})
