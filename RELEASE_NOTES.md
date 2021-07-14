@@ -1,6 +1,6 @@
 # RELEASE NOTES
 
-## [Undefined]
+## [0.5.0]
 
 ### Added
 - Include constructors on `build`, `push` and `copy` packages
@@ -8,7 +8,8 @@
 - On `build` package new method to add labels
 
 ### Changed
-- On package `copy`, `AddTag` method has been renamed to `AddTags` 
+- **BREAKING CHANGES**: On package `copy`, `AddTag` method has been renamed to `AddTags`
+- **BREAKING CHANGES**: On pacakge `push`, `AddTag` method has been renamed to `AddTags`
 
 ### Fixed
 - On `push` packages, tag images defined on `Tags` attribute before push them
