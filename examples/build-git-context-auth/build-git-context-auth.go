@@ -16,7 +16,6 @@ import (
 	//auth "github.com/apenella/go-docker-builder/pkg/auth/git/basic"
 	"github.com/apenella/go-docker-builder/pkg/build"
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
-	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -66,14 +65,12 @@ func buildGitContextAuth(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	dockerBuilder := &build.DockerBuildCmd{
-		Cli: dockerCli,
-		ImageBuildOptions: &dockertypes.ImageBuildOptions{
-			Dockerfile: "Dockerfile.custom",
-		},
-		ImageName: imageName,
-		Response:  res,
-	}
+	dockerBuilder := build.NewDockerBuildCmd(dockerCli, imageName).
+		WithDockerfile("Dockerfile.custom").
+		WithPushAfterBuild().
+		WithRemoveAfterPush().
+		WithResponse(res)
+
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "custom"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "git@gitserver:/git/repos/go-docker-builder-alpine.git",

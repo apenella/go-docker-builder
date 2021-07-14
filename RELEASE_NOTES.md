@@ -1,16 +1,15 @@
 # RELEASE NOTES
 
-## [0.4.0]
+## [0.5.0]
 
 ### Added
-- Image copy package
-- New intermediate filesystem to manage the build docker context. Build context filesystems let you to join multiple context before start an image build and tar itself.
-- Included examples for new use cases
-- Included functinal test
+- Include constructors on `build`, `push` and `copy` packages
+- Include `WithXXX`methods to set attributes on `build`, `push` and `copy` instances
+- On `build` package new method to add labels
 
 ### Changed
-- Response writer to manage push all pull responses
-- git context support to create a build context from a repository subfolder
+- **BREAKING CHANGES**: On package `copy`, `AddTag` method has been renamed to `AddTags`
+- **BREAKING CHANGES**: On pacakge `push`, `AddTag` method has been renamed to `AddTags`
 
-### Removed
-- remove common package
+### Fixed
+- On `push` packages, tag images defined on `Tags` attribute before push them

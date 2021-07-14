@@ -12,7 +12,6 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/build"
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -44,19 +43,15 @@ func buildGitContext(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	dockerBuilder := &build.DockerBuildCmd{
-		Cli:               dockerCli,
-		ImageName:         imageName,
-		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
-		ImagePushOptions:  &dockertypes.ImagePushOptions{},
-		PushAfterBuild:    true,
-		RemoveAfterPush:   true,
-		Response:          res,
-	}
+	dockerBuilder := build.NewDockerBuildCmd(dockerCli, imageName).
+		WithPushAfterBuild().
+		WithRemoveAfterPush().
+		WithResponse(res)
 
-	dockerBuilder.AddTags(strings.Join([]string{imageName, "a-tag"}, ":"))
-	dockerBuilder.AddTags(strings.Join([]string{imageName, "b-tag"}, ":"))
-	dockerBuilder.AddTags(strings.Join([]string{imageName, "z-tag"}, ":"))
+	dockerBuilder.AddTags(strings.Join([]string{imageName, "a-tag"}, ":"),
+		strings.Join([]string{imageName, "b-tag"}, ":"),
+		strings.Join([]string{imageName, "z-tag"}, ":"))
+
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "https://github.com/alpinelinux/docker-alpine.git",
 		Reference:  "v3.13",

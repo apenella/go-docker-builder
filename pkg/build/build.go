@@ -42,6 +42,51 @@ type DockerBuildCmd struct {
 	RemoveAfterPush bool
 }
 
+// NewDockerBuildCmd return a DockerBuildCmd
+func NewDockerBuildCmd(cli types.DockerClienter, name string) *DockerBuildCmd {
+	return &DockerBuildCmd{
+		Cli:               cli,
+		ImageName:         name,
+		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
+		ImagePushOptions:  &dockertypes.ImagePushOptions{},
+	}
+}
+
+// WithDockerfile set responser attribute to DockerBuildCmd
+func (b *DockerBuildCmd) WithDockerfile(dockerfile string) *DockerBuildCmd {
+	if b.ImageBuildOptions == nil {
+		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+	}
+
+	b.ImageBuildOptions.Dockerfile = dockerfile
+
+	return b
+}
+
+// WithPushAfterBuild set to push image automatically after its build
+func (b *DockerBuildCmd) WithPushAfterBuild() *DockerBuildCmd {
+	b.PushAfterBuild = true
+	return b
+}
+
+// WithResponse set responser attribute to DockerBuildCmd
+func (b *DockerBuildCmd) WithResponse(res types.Responser) *DockerBuildCmd {
+	b.Response = res
+	return b
+}
+
+// WithUseNormalizedNamed set to use normalized named to DockerBuildCmd
+func (b *DockerBuildCmd) WithUseNormalizedNamed() *DockerBuildCmd {
+	b.UseNormalizedNamed = true
+	return b
+}
+
+// WithRemoveAfterPush set to remove source image once the image is pushed
+func (c *DockerBuildCmd) WithRemoveAfterPush() *DockerBuildCmd {
+	c.RemoveAfterPush = true
+	return c
+}
+
 // AddAuth append new tags to DockerBuilder
 func (b *DockerBuildCmd) AddAuth(username, password, registry string) error {
 
@@ -136,8 +181,24 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 	return nil
 }
 
+// AddLabel append new tags to DockerBuilder
+func (b *DockerBuildCmd) AddLabel(label string, value string) error {
+
+	if b.ImageBuildOptions == nil {
+		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+	}
+
+	if b.ImageBuildOptions.Labels == nil {
+		b.ImageBuildOptions.Labels = map[string]string{}
+	}
+
+	b.ImageBuildOptions.Labels[label] = value
+
+	return nil
+}
+
 // AddTags append new tags to DockerBuilder
-func (b *DockerBuildCmd) AddTags(tag string) error {
+func (b *DockerBuildCmd) AddTags(tags ...string) error {
 
 	if b.ImageBuildOptions == nil {
 		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
@@ -147,11 +208,13 @@ func (b *DockerBuildCmd) AddTags(tag string) error {
 		b.ImageBuildOptions.Tags = []string{}
 	}
 
-	if b.UseNormalizedNamed {
-		normalized_tag, _ := reference.ParseNormalizedNamed(tag)
-		tag = normalized_tag.String()
+	for _, tag := range tags {
+		if b.UseNormalizedNamed {
+			normalized_tag, _ := reference.ParseNormalizedNamed(tag)
+			tag = normalized_tag.String()
+		}
+		b.ImageBuildOptions.Tags = append(b.ImageBuildOptions.Tags, tag)
 	}
-	b.ImageBuildOptions.Tags = append(b.ImageBuildOptions.Tags, tag)
 
 	return nil
 }
@@ -238,12 +301,9 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 						dockerPush.ImagePushOptions.RegistryAuth = *registry_host_build_auth
 					}
 				} else {
-					dockerPush.ImagePushOptions.PrivilegeFunc = func() (string, error) {
-						return registry_host_auth.Auth, nil
-					}
+					dockerPush.ImagePushOptions.PrivilegeFunc = generateDefaultImagePushOptionsPrivilegeFunc(registry_host_auth.Auth)
 				}
 			}
-
 		}
 
 		err = dockerPush.Run(ctx)
@@ -253,4 +313,10 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func generateDefaultImagePushOptionsPrivilegeFunc(auth string) dockertypes.RequestPrivilegeFunc {
+	return func() (string, error) {
+		return auth, nil
+	}
 }

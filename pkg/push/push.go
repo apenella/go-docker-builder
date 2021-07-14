@@ -33,6 +33,39 @@ type DockerPushCmd struct {
 	RemoveAfterPush bool
 }
 
+// NewDockerPushCmd return a DockerPushCmd
+func NewDockerPushCmd(cli types.DockerClienter, name string) *DockerPushCmd {
+	return &DockerPushCmd{
+		Cli:              cli,
+		ImageName:        name,
+		ImagePushOptions: &dockertypes.ImagePushOptions{},
+	}
+}
+
+// WithTags set tags to DockerPushCmd
+func (p *DockerPushCmd) WithTags(tags []string) *DockerPushCmd {
+	p.Tags = tags
+	return p
+}
+
+// WithResponse set responser attribute to DockerPushCmd
+func (p *DockerPushCmd) WithResponse(res types.Responser) *DockerPushCmd {
+	p.Response = res
+	return p
+}
+
+// WithRemoveAfterPush set to remove source image once the image is pushed
+func (p *DockerPushCmd) WithRemoveAfterPush() *DockerPushCmd {
+	p.RemoveAfterPush = true
+	return p
+}
+
+// WithUseNormalizedNamed set to use normalized named to DockerPushCmd
+func (p *DockerPushCmd) WithUseNormalizedNamed() *DockerPushCmd {
+	p.UseNormalizedNamed = true
+	return p
+}
+
 // AddAuth append new tags to DockerBuilder
 func (p *DockerPushCmd) AddAuth(username, password string) error {
 
@@ -49,8 +82,8 @@ func (p *DockerPushCmd) AddAuth(username, password string) error {
 	return nil
 }
 
-// AddTag append new tags to DockerBuilder
-func (p *DockerPushCmd) AddTag(tags ...string) error {
+// AddTags append new tags to DockerBuilder
+func (p *DockerPushCmd) AddTags(tags ...string) error {
 	var err error
 	var named reference.Named
 
@@ -64,7 +97,7 @@ func (p *DockerPushCmd) AddTag(tags ...string) error {
 		if p.UseNormalizedNamed {
 			named, err = reference.ParseNormalizedNamed(tag)
 			if err != nil {
-				return errors.New("(push::AddTag)", fmt.Sprintf("Error parsing to normalized named on '%s'", tag), err)
+				return errors.New("(push::AddTags)", fmt.Sprintf("Error parsing to normalized named on '%s'", tag), err)
 			}
 			tag = named.String()
 		}
@@ -103,9 +136,17 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 		)
 	}
 
-	p.AddTag(p.ImageName)
+	p.AddTags(p.ImageName)
 
 	for _, image := range p.Tags {
+
+		if image != p.ImageName {
+			err = p.Cli.ImageTag(ctx, p.ImageName, image)
+			if err != nil {
+				return errors.New("(push::Run)", fmt.Sprintf("Error tagging image '%s' to '%s'", p.ImageName, image), err)
+			}
+		}
+
 		pushResponse, err = p.Cli.ImagePush(ctx, image, *p.ImagePushOptions)
 		if err != nil {
 			return errors.New("(push::Run)", fmt.Sprintf("Error pushing image '%s'", image), err)
@@ -142,7 +183,6 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 					p.Response.Fwriteln(str)
 				}
 			}
-
 		}
 	}
 

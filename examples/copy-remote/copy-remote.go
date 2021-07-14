@@ -10,7 +10,6 @@ import (
 	transformer "github.com/apenella/go-common-utils/transformer/string"
 	"github.com/apenella/go-docker-builder/pkg/copy"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockertypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
@@ -44,15 +43,13 @@ func copyRemote(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	copy := &copy.DockerImageCopyCmd{
-		Cli:              dockerCli,
-		SourceImage:      sourceImage,
-		TargetImage:      targetImage,
-		ImagePullOptions: &dockertypes.ImagePullOptions{},
-		ImagePushOptions: &dockertypes.ImagePushOptions{},
-		RemoteSource:     true,
-		Response:         res,
-	}
+	copy := copy.NewDockerImageCopyCmd(dockerCli, sourceImage, targetImage).
+		WithRemoteSource().
+		WithRemoveAfterPush().
+		WithResponse(res)
+
+	copy.AddTags("registry.go-docker-builder.test/alpine/alpine:three",
+		"registry.go-docker-builder.test/alpine/alpine:latest")
 
 	err = copy.AddPushAuth(targetRegistryUsername, targetRegistryPassword)
 	if err != nil {

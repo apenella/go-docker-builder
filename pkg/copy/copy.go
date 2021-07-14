@@ -38,6 +38,47 @@ type DockerImageCopyCmd struct {
 	Response types.Responser
 }
 
+// NewDockerImageCopyCmd return a DockerImageCopyCmd
+func NewDockerImageCopyCmd(cli types.DockerClienter, source, target string) *DockerImageCopyCmd {
+	return &DockerImageCopyCmd{
+		Cli:              cli,
+		SourceImage:      source,
+		TargetImage:      target,
+		ImagePullOptions: &dockertypes.ImagePullOptions{},
+		ImagePushOptions: &dockertypes.ImagePushOptions{},
+	}
+}
+
+// WithTags set tags to DockerImageCopyCmd
+func (c *DockerImageCopyCmd) WithTags(tags []string) *DockerImageCopyCmd {
+	c.Tags = tags
+	return c
+}
+
+// WithRemoteSource set to use remote source image to DockerImageCopyCmd
+func (c *DockerImageCopyCmd) WithRemoteSource() *DockerImageCopyCmd {
+	c.RemoteSource = true
+	return c
+}
+
+// WithRemoveAfterPush set to remove source image once the image is pushed
+func (c *DockerImageCopyCmd) WithRemoveAfterPush() *DockerImageCopyCmd {
+	c.RemoveAfterPush = true
+	return c
+}
+
+// WithResponse set responser attribute to DockerImageCopyCmd
+func (c *DockerImageCopyCmd) WithResponse(res types.Responser) *DockerImageCopyCmd {
+	c.Response = res
+	return c
+}
+
+// WithUseNormalizedNamed set to use normalized named to DockerImageCopyCmd
+func (c *DockerImageCopyCmd) WithUseNormalizedNamed() *DockerImageCopyCmd {
+	c.UseNormalizedNamed = true
+	return c
+}
+
 // AddAuth adds the same auth to image pull options and image push options
 func (c *DockerImageCopyCmd) AddAuth(username, password string) error {
 	var err error
@@ -88,7 +129,7 @@ func (c *DockerImageCopyCmd) AddPushAuth(username, password string) error {
 }
 
 // AddTag add a new copied image tag to tags list
-func (c *DockerImageCopyCmd) AddTag(tag ...string) {
+func (c *DockerImageCopyCmd) AddTags(tag ...string) {
 
 	if c.Tags == nil {
 		c.Tags = []string{}

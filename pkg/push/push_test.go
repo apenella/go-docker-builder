@@ -9,9 +9,42 @@ import (
 
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
+	"github.com/apenella/go-docker-builder/pkg/response"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestWithTags(t *testing.T) {
+	t.Log("Testing WithTags")
+	p := DockerPushCmd{}
+	p.WithTags([]string{"tag1", "tag2"})
+
+	assert.Equal(t, []string{"tag1", "tag2"}, p.Tags)
+}
+func TestWithResponse(t *testing.T) {
+	t.Log("Testing WithResponse")
+	p := DockerPushCmd{}
+
+	res := response.NewDefaultResponse()
+
+	p.WithResponse(res)
+
+	assert.Equal(t, res, p.Response)
+}
+func TestWithRemoveAfterPush(t *testing.T) {
+	t.Log("Testing WithRemoveAfterPush")
+	p := DockerPushCmd{}
+	p.WithRemoveAfterPush()
+
+	assert.Equal(t, true, p.RemoveAfterPush)
+}
+func TestWithUseNormalizedNamed(t *testing.T) {
+	t.Log("Testing WithUseNormalizedNamed")
+	p := DockerPushCmd{}
+	p.WithUseNormalizedNamed()
+
+	assert.Equal(t, true, p.UseNormalizedNamed)
+}
 
 func TestAddAuth(t *testing.T) {
 
@@ -37,6 +70,7 @@ func TestAddAuth(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			t.Log(test.name)
 			cmd := &DockerPushCmd{}
 			err := cmd.AddAuth(test.args.username, test.args.password)
 			if err != nil {
@@ -97,7 +131,7 @@ func TestAddTags(t *testing.T) {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Log(test.desc)
 
-			test.dockerPushCmd.AddTag(test.args.tag...)
+			test.dockerPushCmd.AddTags(test.args.tag...)
 
 			assert.Equal(t, test.res, test.dockerPushCmd.Tags)
 		})
@@ -166,7 +200,6 @@ func TestRun(t *testing.T) {
 			},
 			err: &errors.Error{},
 		},
-
 		{
 			desc: "Testing push a single image with auth",
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
@@ -191,6 +224,8 @@ func TestRun(t *testing.T) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
 				mock.On("ImagePush", ctx, "tag1", *cmd.ImagePushOptions).Return(reader, nil)
 				mock.On("ImagePush", ctx, "tag2", *cmd.ImagePushOptions).Return(reader, nil)
+				mock.On("ImageTag", ctx, cmd.ImageName, "tag1").Return(nil)
+				mock.On("ImageTag", ctx, cmd.ImageName, "tag2").Return(nil)
 				cmd.Cli = mock
 			},
 			pushOptions: dockertypes.ImagePushOptions{},

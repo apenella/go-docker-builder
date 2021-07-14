@@ -9,9 +9,48 @@ import (
 
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
+	"github.com/apenella/go-docker-builder/pkg/response"
 	dockertypes "github.com/docker/docker/api/types"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestWithTags(t *testing.T) {
+	t.Log("Testing WithTags")
+
+	c := DockerImageCopyCmd{}
+	c.WithTags([]string{"tag1", "tag2"})
+	assert.Equal(t, []string{"tag1", "tag2"}, c.Tags)
+}
+func TestWithRemoteSource(t *testing.T) {
+	t.Log("Testing WithRemoteSource")
+
+	c := DockerImageCopyCmd{}
+	c.WithRemoteSource()
+	assert.Equal(t, true, c.RemoteSource)
+}
+func TestWithRemoveAfterPush(t *testing.T) {
+	t.Log("Testing WithRemoveAfterPush")
+
+	c := DockerImageCopyCmd{}
+	c.WithRemoveAfterPush()
+	assert.Equal(t, true, c.RemoveAfterPush)
+}
+func TestWithResponse(t *testing.T) {
+	t.Log("Testing WithResponse")
+
+	res := response.NewDefaultResponse()
+
+	c := DockerImageCopyCmd{}
+	c.WithResponse(res)
+	assert.Equal(t, res, c.Response)
+}
+func TestWithUseNormalizedNamed(t *testing.T) {
+	t.Log("Testing WithUseNormalizedNamed")
+
+	c := DockerImageCopyCmd{}
+	c.WithUseNormalizedNamed()
+	assert.Equal(t, true, c.UseNormalizedNamed)
+}
 
 func TestAddPullAuth(t *testing.T) {
 
@@ -37,6 +76,7 @@ func TestAddPullAuth(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
+			t.Log(test.desc)
 			cmd := &DockerImageCopyCmd{}
 			err := cmd.AddPullAuth(test.args.username, test.args.password)
 			if err != nil {
@@ -72,6 +112,7 @@ func TestAddPushAuth(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
+			t.Log(test.desc)
 			cmd := &DockerImageCopyCmd{}
 			err := cmd.AddPushAuth(test.args.username, test.args.password)
 			if err != nil {
@@ -107,6 +148,7 @@ func TestAddAuth(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
+			t.Log(test.desc)
 			cmd := &DockerImageCopyCmd{}
 			err := cmd.AddAuth(test.args.username, test.args.password)
 			if err != nil {
@@ -119,7 +161,7 @@ func TestAddAuth(t *testing.T) {
 	}
 }
 
-func TestAddTag(t *testing.T) {
+func TestAddTags(t *testing.T) {
 
 	tests := []struct {
 		desc string
@@ -135,8 +177,9 @@ func TestAddTag(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
+			t.Log(test.desc)
 			cmd := &DockerImageCopyCmd{}
-			cmd.AddTag(test.tags...)
+			cmd.AddTags(test.tags...)
 
 			assert.Equal(t, len(test.res), len(cmd.Tags), "Unexpected auth result")
 		})
