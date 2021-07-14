@@ -57,16 +57,6 @@ func buildAndPush(w io.Writer) error {
 		WithRemoveAfterPush().
 		WithResponse(res)
 
-	// dockerBuilder := &build.DockerBuildCmd{
-	// 	Cli:               dockerCli,
-	// 	ImageBuildOptions: &dockertypes.ImageBuildOptions{},
-	// 	ImagePushOptions:  &dockertypes.ImagePushOptions{},
-	// 	PushAfterBuild:    true,
-	// 	RemoveAfterPush:   true,
-	// 	ImageName:         imageName,
-	// 	Response:          res,
-	// }
-
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
 
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)

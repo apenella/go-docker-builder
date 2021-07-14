@@ -71,15 +71,6 @@ func buildGitContextAuth(w io.Writer) error {
 		WithRemoveAfterPush().
 		WithResponse(res)
 
-	// dockerBuilder := &build.DockerBuildCmd{
-	// 	Cli: dockerCli,
-	// 	ImageBuildOptions: &dockertypes.ImageBuildOptions{
-	// 		Dockerfile: "Dockerfile.custom",
-	// 	},
-	// 	ImageName: imageName,
-	// 	Response:  res,
-	// }
-
 	dockerBuilder.AddTags(strings.Join([]string{imageName, "custom"}, ":"))
 	dockerBuildContext := &gitcontext.GitBuildContext{
 		Repository: "git@gitserver:/git/repos/go-docker-builder-alpine.git",

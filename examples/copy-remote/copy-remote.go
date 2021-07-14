@@ -48,16 +48,6 @@ func copyRemote(w io.Writer) error {
 		WithRemoveAfterPush().
 		WithResponse(res)
 
-	// copy := &copy.DockerImageCopyCmd{
-	// 	Cli:              dockerCli,
-	// 	SourceImage:      sourceImage,
-	// 	TargetImage:      targetImage,
-	// 	ImagePullOptions: &dockertypes.ImagePullOptions{},
-	// 	ImagePushOptions: &dockertypes.ImagePushOptions{},
-	// 	RemoteSource:     true,
-	// 	Response:         res,
-	// }
-
 	copy.AddTags("registry.go-docker-builder.test/alpine/alpine:three",
 		"registry.go-docker-builder.test/alpine/alpine:latest")
 

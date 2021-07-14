@@ -84,15 +84,6 @@ func buildAndPushJoinContext(w io.Writer) error {
 		WithRemoveAfterPush().
 		WithResponse(res)
 
-	// dockerBuilder := &build.DockerBuildCmd{
-	// 	Cli:              dockerCli,
-	// 	ImagePushOptions: &dockertypes.ImagePushOptions{},
-	// 	PushAfterBuild:   true,
-	// 	RemoveAfterPush:  true,
-	// 	ImageName:        imageName,
-	// 	Response:         res,
-	// }
-
 	err = dockerBuilder.AddAuth(registryUsername, registryPassword, registry)
 	if err != nil {
 		return errors.New("buildAndPushJoinContext", "Error adding registry auth", err)
