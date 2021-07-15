@@ -1,7 +1,7 @@
 go-docker-builder
 =======
 
-`go-docker-builder` library it is wrapper over docker client SDK that provides a set of packages that help to manage the most common docker use cases such as build or push images.
+`go-docker-builder` library is a wrapper over docker client SDK that provides a set of packages that help to manage the most common docker use cases such as build or push images.
 
 It also manages docker registry autentication, prepares docker build context to be used by docker client SDK and supports docker build context either from local path or git repository.
 
