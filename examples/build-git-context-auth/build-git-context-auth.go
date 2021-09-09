@@ -65,7 +65,8 @@ func buildGitContextAuth(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	dockerBuilder := build.NewDockerBuildCmd(dockerCli, imageName).
+	dockerBuilder := build.NewDockerBuildCmd(dockerCli).
+		WithImageName(imageName).
 		WithDockerfile("Dockerfile.custom").
 		WithPushAfterBuild().
 		WithRemoveAfterPush().

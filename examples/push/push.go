@@ -23,10 +23,9 @@ func main() {
 		panic("Error on docker client creation. " + err.Error())
 	}
 
-	dockerPush := &push.DockerPushCmd{
-		Cli:       dockerCli,
-		ImageName: strings.Join([]string{registry, namespace, imageName}, "/"),
-	}
+	dockerPush := push.NewDockerPushCmd(dockerCli).
+		WithImageName(strings.Join([]string{registry, namespace, imageName}, "/")).
+		WithRemoveAfterPush()
 
 	user := "myregistryuser"
 	pass := "myregistrypass"

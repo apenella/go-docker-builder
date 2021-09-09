@@ -34,12 +34,17 @@ type DockerPushCmd struct {
 }
 
 // NewDockerPushCmd return a DockerPushCmd
-func NewDockerPushCmd(cli types.DockerClienter, name string) *DockerPushCmd {
+func NewDockerPushCmd(cli types.DockerClienter) *DockerPushCmd {
 	return &DockerPushCmd{
 		Cli:              cli,
-		ImageName:        name,
 		ImagePushOptions: &dockertypes.ImagePushOptions{},
 	}
+}
+
+// WithImageName set to push image automatically after its build
+func (p *DockerPushCmd) WithImageName(name string) *DockerPushCmd {
+	p.ImageName = name
+	return p
 }
 
 // WithTags set tags to DockerPushCmd
@@ -124,6 +129,10 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 
 	if p == nil {
 		return errors.New("(push::Run)", "DockerPushCmd is undefined")
+	}
+
+	if p.ImageName == "" {
+		return errors.New("(push::Run)", "Image name is undefined")
 	}
 
 	if p.ImagePushOptions == nil {

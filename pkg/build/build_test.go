@@ -415,7 +415,6 @@ func TestRun(t *testing.T) {
 				return mock.AssertNumberOfCalls(t, "ImageBuild", 1) && mock.AssertNumberOfCalls(t, "ImagePush", 1)
 			},
 		},
-
 		{
 			desc: "Testing build and push an image and removing after push",
 			dockerBuildCmd: &DockerBuildCmd{
@@ -429,12 +428,9 @@ func TestRun(t *testing.T) {
 						},
 					},
 				},
-				ImagePushOptions: &dockertypes.ImagePushOptions{
-					// RegistryAuth:  "eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9",
-					// PrivilegeFunc: func() (string, error) { return "", nil },
-				},
-				PushAfterBuild:  true,
-				RemoveAfterPush: true,
+				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				PushAfterBuild:   true,
+				RemoveAfterPush:  true,
 			},
 			err: &errors.Error{},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerBuildCmd) {

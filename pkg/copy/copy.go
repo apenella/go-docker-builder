@@ -39,19 +39,29 @@ type DockerImageCopyCmd struct {
 }
 
 // NewDockerImageCopyCmd return a DockerImageCopyCmd
-func NewDockerImageCopyCmd(cli types.DockerClienter, source, target string) *DockerImageCopyCmd {
+func NewDockerImageCopyCmd(cli types.DockerClienter) *DockerImageCopyCmd {
 	return &DockerImageCopyCmd{
 		Cli:              cli,
-		SourceImage:      source,
-		TargetImage:      target,
 		ImagePullOptions: &dockertypes.ImagePullOptions{},
 		ImagePushOptions: &dockertypes.ImagePushOptions{},
 	}
 }
 
+// WithSourceImage set tags to DockerImageCopyCmd
+func (c *DockerImageCopyCmd) WithSourceImage(source string) *DockerImageCopyCmd {
+	c.SourceImage = source
+	return c
+}
+
 // WithTags set tags to DockerImageCopyCmd
 func (c *DockerImageCopyCmd) WithTags(tags []string) *DockerImageCopyCmd {
 	c.Tags = tags
+	return c
+}
+
+// WithTargetImage set tags to DockerImageCopyCmd
+func (c *DockerImageCopyCmd) WithTargetImage(target string) *DockerImageCopyCmd {
+	c.TargetImage = target
 	return c
 }
 
