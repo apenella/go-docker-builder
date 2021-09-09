@@ -43,10 +43,9 @@ type DockerBuildCmd struct {
 }
 
 // NewDockerBuildCmd return a DockerBuildCmd
-func NewDockerBuildCmd(cli types.DockerClienter, name string) *DockerBuildCmd {
+func NewDockerBuildCmd(cli types.DockerClienter) *DockerBuildCmd {
 	return &DockerBuildCmd{
 		Cli:               cli,
-		ImageName:         name,
 		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
 		ImagePushOptions:  &dockertypes.ImagePushOptions{},
 	}
@@ -60,6 +59,12 @@ func (b *DockerBuildCmd) WithDockerfile(dockerfile string) *DockerBuildCmd {
 
 	b.ImageBuildOptions.Dockerfile = dockerfile
 
+	return b
+}
+
+// WithImageName set to push image automatically after its build
+func (b *DockerBuildCmd) WithImageName(name string) *DockerBuildCmd {
+	b.ImageName = name
 	return b
 }
 

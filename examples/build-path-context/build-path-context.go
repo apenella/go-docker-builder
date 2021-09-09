@@ -46,7 +46,8 @@ func buildPathContext(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	dockerBuilder := build.NewDockerBuildCmd(dockerCli, imageName).
+	dockerBuilder := build.NewDockerBuildCmd(dockerCli).
+		WithImageName(imageName).
 		WithPushAfterBuild().
 		WithRemoveAfterPush().
 		WithResponse(res)

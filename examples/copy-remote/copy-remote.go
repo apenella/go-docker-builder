@@ -43,7 +43,9 @@ func copyRemote(w io.Writer) error {
 		response.WithWriter(w),
 	)
 
-	copy := copy.NewDockerImageCopyCmd(dockerCli, sourceImage, targetImage).
+	copy := copy.NewDockerImageCopyCmd(dockerCli).
+		WithSourceImage(sourceImage).
+		WithTargetImage(targetImage).
 		WithRemoteSource().
 		WithRemoveAfterPush().
 		WithResponse(res)

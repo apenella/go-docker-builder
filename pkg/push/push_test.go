@@ -157,10 +157,19 @@ func TestRun(t *testing.T) {
 			err:           errors.New("(push::Run)", "DockerPushCmd is undefined"),
 		},
 		{
+			desc:        "Testing error when ImageName is undefined",
+			pushOptions: dockertypes.ImagePushOptions{},
+			dockerPushCmd: &DockerPushCmd{
+				ImagePushOptions: nil,
+			},
+			err: errors.New("(push::Run)", "Image name is undefined"),
+		},
+		{
 			desc:        "Testing error when ImagePushOptions is undefined",
 			pushOptions: dockertypes.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImagePushOptions: nil,
+				ImageName:        "name",
 			},
 			err: errors.New("(push::Run)", "Image push options is undefined"),
 		},
