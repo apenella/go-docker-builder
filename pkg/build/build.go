@@ -32,6 +32,8 @@ type DockerBuildCmd struct {
 	ImageBuildOptions *dockertypes.ImageBuildOptions
 	// ImagePushOptions from docker sdk
 	ImagePushOptions *dockertypes.ImagePushOptions
+	// PullParentImage if true pull parent image
+	PullParentImage bool
 	// PushAfterBuild when is true images are automatically pushed to registry after build
 	PushAfterBuild bool
 	// Response manages responses from docker client
@@ -68,6 +70,12 @@ func (b *DockerBuildCmd) WithImageName(name string) *DockerBuildCmd {
 	return b
 }
 
+// WithPullParentImage set to pull parent image
+func (b *DockerBuildCmd) WithPullParentImage() *DockerBuildCmd {
+	b.PullParentImage = true
+	return b
+}
+
 // WithPushAfterBuild set to push image automatically after its build
 func (b *DockerBuildCmd) WithPushAfterBuild() *DockerBuildCmd {
 	b.PushAfterBuild = true
@@ -87,9 +95,9 @@ func (b *DockerBuildCmd) WithUseNormalizedNamed() *DockerBuildCmd {
 }
 
 // WithRemoveAfterPush set to remove source image once the image is pushed
-func (c *DockerBuildCmd) WithRemoveAfterPush() *DockerBuildCmd {
-	c.RemoveAfterPush = true
-	return c
+func (b *DockerBuildCmd) WithRemoveAfterPush() *DockerBuildCmd {
+	b.RemoveAfterPush = true
+	return b
 }
 
 // AddAuth append new tags to DockerBuilder
@@ -151,7 +159,7 @@ func (b *DockerBuildCmd) AddBuildArgs(arg string, value string) error {
 // AddBuildContext include the docker build context. It supports to use several context which are merged before to start the image build
 func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBuildContexter) error {
 	var err error
-	errorContext := "(build:.AddBuilderContext)"
+	errorContext := "(build::AddBuilderContext)"
 	dockercontext := filesystem.NewContextFilesystem(afero.NewMemMapFs())
 
 	if b.ImageBuildOptions == nil {
@@ -215,8 +223,8 @@ func (b *DockerBuildCmd) AddTags(tags ...string) error {
 
 	for _, tag := range tags {
 		if b.UseNormalizedNamed {
-			normalized_tag, _ := reference.ParseNormalizedNamed(tag)
-			tag = normalized_tag.String()
+			normalizedTag, _ := reference.ParseNormalizedNamed(tag)
+			tag = normalizedTag.String()
 		}
 		b.ImageBuildOptions.Tags = append(b.ImageBuildOptions.Tags, tag)
 	}
@@ -289,24 +297,24 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 		// in case that build auth is set configure it on push image
 		if b.ImageBuildOptions.AuthConfigs != nil {
 			named, _ := reference.ParseNormalizedNamed(b.ImageName)
-			registry_host := reference.Domain(named)
+			registryHost := reference.Domain(named)
 
-			registry_host_auth, ok := b.ImageBuildOptions.AuthConfigs[registry_host]
+			registryHostAuth, ok := b.ImageBuildOptions.AuthConfigs[registryHost]
 
 			if ok {
 				if dockerPush.ImagePushOptions.RegistryAuth == "" {
-					auth.GenerateEncodedUserPasswordAuthConfig(registry_host_auth.Username, registry_host_auth.Password)
-					if registry_host_auth.Auth != "" {
-						dockerPush.ImagePushOptions.RegistryAuth = registry_host_auth.Auth
+					auth.GenerateEncodedUserPasswordAuthConfig(registryHostAuth.Username, registryHostAuth.Password)
+					if registryHostAuth.Auth != "" {
+						dockerPush.ImagePushOptions.RegistryAuth = registryHostAuth.Auth
 					} else {
-						registry_host_build_auth, err := auth.GenerateEncodedUserPasswordAuthConfig(registry_host_auth.Username, registry_host_auth.Password)
+						registryHostBuildAuth, err := auth.GenerateEncodedUserPasswordAuthConfig(registryHostAuth.Username, registryHostAuth.Password)
 						if err != nil {
 							return errors.New("(build::Run)", "Error encoding username and password", err)
 						}
-						dockerPush.ImagePushOptions.RegistryAuth = *registry_host_build_auth
+						dockerPush.ImagePushOptions.RegistryAuth = *registryHostBuildAuth
 					}
 				} else {
-					dockerPush.ImagePushOptions.PrivilegeFunc = generateDefaultImagePushOptionsPrivilegeFunc(registry_host_auth.Auth)
+					dockerPush.ImagePushOptions.PrivilegeFunc = generateDefaultImagePushOptionsPrivilegeFunc(registryHostAuth.Auth)
 				}
 			}
 		}

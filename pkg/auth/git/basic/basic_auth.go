@@ -10,6 +10,15 @@ type BasicAuth struct {
 	Password string
 }
 
+// NewBasicAuth returns a new BasicAuth with the given username and password
+func NewBasicAuth(username, password string) *BasicAuth {
+	return &BasicAuth{
+		Username: username,
+		Password: password,
+	}
+}
+
+// Auth return a transport.AuthMethod created from BasicAuth
 func (a *BasicAuth) Auth() (transport.AuthMethod, error) {
 	return &http.BasicAuth{
 		Username: a.Username,

@@ -11,6 +11,12 @@ type SSHAgentAuth struct {
 	GitSSHUser string
 }
 
+// NewSSHAgentAuth returns a new SSHAgentAuth
+func NewSSHAgentAuth(gitSSHUser string) *SSHAgentAuth {
+	return &SSHAgentAuth{GitSSHUser: gitSSHUser}
+}
+
+// Auth returns a new transport.AuthMethod created from the SSHAgentAuth
 func (a *SSHAgentAuth) Auth() (transport.AuthMethod, error) {
 
 	if a.GitSSHUser == "" {
