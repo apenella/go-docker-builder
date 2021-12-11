@@ -14,6 +14,16 @@ type KeyAuth struct {
 	PkPassword string
 }
 
+// NewKeyAuth returns a new KeyAuth
+func NewKeyAuth(gitSSHUser, pkFile, pkPassword string) *KeyAuth {
+	return &KeyAuth{
+		GitSSHUser: gitSSHUser,
+		PkFile:     pkFile,
+		PkPassword: pkPassword,
+	}
+}
+
+// Auth returns a transport.AuthMethod created from the KeyAuth
 func (a *KeyAuth) Auth() (transport.AuthMethod, error) {
 
 	if a.GitSSHUser == "" {

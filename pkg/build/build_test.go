@@ -24,6 +24,23 @@ func TestWithDockerfile(t *testing.T) {
 
 	assert.Equal(t, "testdockerfile", b.ImageBuildOptions.Dockerfile)
 }
+
+func TestWithImageName(t *testing.T) {
+	t.Log("Testing WithImageName")
+	b := DockerBuildCmd{}
+	b.WithImageName("image_name")
+
+	assert.Equal(t, "image_name", b.ImageName)
+}
+
+func TestWithPullParentImage(t *testing.T) {
+	t.Log("Testing WithPullParentImage")
+	b := DockerBuildCmd{}
+	b.WithPullParentImage()
+
+	assert.Equal(t, true, b.PullParentImage)
+}
+
 func TestWithPushAfterBuild(t *testing.T) {
 	t.Log("Testing WithPushAfterBuild")
 	b := DockerBuildCmd{}
@@ -205,6 +222,9 @@ func TestAddBuildArgs(t *testing.T) {
 }
 
 func TestAddBuildContext(t *testing.T) {
+
+	errContext := "(build::AddBuilderContext)"
+
 	tests := []struct {
 		desc              string
 		dockerBuildCmd    *DockerBuildCmd
@@ -213,10 +233,11 @@ func TestAddBuildContext(t *testing.T) {
 		err               error
 	}{
 		{
-			desc:           "Testing error when build context is not defined",
-			dockerBuildCmd: &DockerBuildCmd{},
-			buildContext:   nil,
-			err:            errors.New("(build:.AddBuilderContext)", "Docker build context is not defined"),
+			desc:              "Testing error when build context is not defined",
+			dockerBuildCmd:    &DockerBuildCmd{},
+			buildContext:      nil,
+			prepareAssertFunc: nil,
+			err:               errors.New(errContext, "Docker build context is not defined"),
 		},
 		{
 			desc:           "Testing add docker build context",
