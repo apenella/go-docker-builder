@@ -8,7 +8,7 @@ require (
 	github.com/apenella/go-common-utils/error v0.0.0-20210528133155-34ba915e28c8
 	github.com/apenella/go-common-utils/transformer/string v0.0.0-20210528133155-34ba915e28c8
 	github.com/containerd/containerd v1.5.7 // indirect
-	github.com/docker/distribution v2.7.1+incompatible
+	github.com/docker/distribution v2.8.0+incompatible
 	github.com/docker/docker v20.10.10+incompatible
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/go-git/go-git/v5 v5.4.2
