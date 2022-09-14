@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	dockertypes "github.com/docker/docker/api/types"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 // func TestAddUserPasswordRegistryAuth(t *testing.T) {
