@@ -7,6 +7,6 @@
 - Include constructor on git auth methods
 
 ### Changed
-- Use go 1.19
+- Use go 1.18
 - Use docker compose v2 to start testing stack
 - Update testing docker images version
