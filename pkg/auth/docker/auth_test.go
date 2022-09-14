@@ -4,49 +4,8 @@ import (
 	"testing"
 
 	dockertypes "github.com/docker/docker/api/types"
-	"gotest.tools/assert"
+	"github.com/stretchr/testify/assert"
 )
-
-// func TestAddUserPasswordRegistryAuth(t *testing.T) {
-
-// 	type args struct {
-// 		username      string
-// 		password      string
-// 		serverAddress string
-// 	}
-// 	tests := []struct {
-// 		name    string
-// 		options *DockerPushOptions
-// 		args    *args
-// 		err     error
-// 		res     string
-// 	}{
-// 		{
-// 			name: "Test add user-password auth",
-// 			options: &DockerPushOptions{
-// 				ImageName:    "test image",
-// 				RegistryAuth: nil,
-// 			},
-// 			args: &args{
-// 				username:      "user",
-// 				password:      "AqSwd3Fr",
-// 				serverAddress: "localhost",
-// 			},
-// 			err: nil,
-// 			res: "eyJ1c2VybmFtZSI6InVzZXIiLCJwYXNzd29yZCI6IkFxU3dkM0ZyIiwic2VydmVyYWRkcmVzcyI6ImxvY2FsaG9zdCJ9",
-// 		},
-// 	}
-// 	for _, test := range tests {
-// 		t.Run(test.name, func(t *testing.T) {
-// 			err := test.options.AddUserPasswordRegistryAuth(test.args.username, test.args.password, test.args.serverAddress)
-// 			if err != nil {
-// 				assert.Equal(t, test.err, err)
-// 			} else {
-// 				assert.Equal(t, test.res, *test.options.RegistryAuth, "Unexpected auth result")
-// 			}
-// 		})
-// 	}
-// }
 
 func TestEncodeAuthConfig(t *testing.T) {
 	type args struct {

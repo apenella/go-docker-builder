@@ -19,13 +19,15 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    
-    - name: Setup Go
-      uses: actions/setup-go@v2
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - run: git fetch --force --tags
+
+    - uses: actions/setup-go@v3
       with:
         go-version: ^1.19
+        cache: true
 
     - name: Run unitary tests
       run: |
