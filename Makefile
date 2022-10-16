@@ -43,4 +43,4 @@ unit-test: ## Run unitary test
 	@echo
 	@echo " Run unit test"
 	@echo
-	go test ./pkg/... -v -cover -count=1
+	go test ./pkg/... -cover -count=1

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.7.1]
+
+### Fixed
+- Existing labels could not be overwritten
+
 ## [0.7.0]
 
 ### Added

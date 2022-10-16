@@ -296,13 +296,33 @@ func TestAddLabel(t *testing.T) {
 			},
 			err: nil,
 		},
+		{
+			desc: "Testing error adding an existing a label",
+			dockerBuildCmd: &DockerBuildCmd{
+				ImageBuildOptions: &dockertypes.ImageBuildOptions{
+					Labels: map[string]string{
+						"l1": "v1",
+					},
+				},
+			},
+			args: &args{
+				label: "l1",
+				value: "v1",
+			},
+			res: nil,
+			err: errors.New("(build::AddLabel)", "Label 'l1' already defined"),
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Log(test.desc)
 
-			test.dockerBuildCmd.AddLabel(test.args.label, test.args.value)
-			assert.Equal(t, test.res, test.dockerBuildCmd.ImageBuildOptions.Labels)
+			err := test.dockerBuildCmd.AddLabel(test.args.label, test.args.value)
+			if err != nil {
+				assert.Equal(t, test.err, err)
+			} else {
+				assert.Equal(t, test.res, test.dockerBuildCmd.ImageBuildOptions.Labels)
+			}
 		})
 	}
 }
