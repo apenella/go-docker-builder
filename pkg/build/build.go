@@ -194,7 +194,7 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 	return nil
 }
 
-// AddLabel append new tags to DockerBuilder
+// AddLabel append new tags to DockerBuilder. Returns an error when adding an existing label
 func (b *DockerBuildCmd) AddLabel(label string, value string) error {
 
 	if b.ImageBuildOptions == nil {
