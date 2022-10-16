@@ -52,7 +52,7 @@ test: start prepare ## executes the examples
 	@echo
 	@echo " Test"
 	@echo
-	@docker compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go test -v . -count=1
+	@docker compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go test . -count=1
 	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
 
 logs: ## show services logs

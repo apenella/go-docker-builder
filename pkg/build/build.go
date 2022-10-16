@@ -136,7 +136,7 @@ func (b *DockerBuildCmd) AddPushAuth(username, password string) error {
 	return nil
 }
 
-// AddBuildArgs append new tags to DockerBuilder
+// AddBuildArgs append new tags to DockerBuilder. Returns an error when adding an existing argument
 func (b *DockerBuildCmd) AddBuildArgs(arg string, value string) error {
 
 	if b.ImageBuildOptions == nil {
@@ -203,6 +203,11 @@ func (b *DockerBuildCmd) AddLabel(label string, value string) error {
 
 	if b.ImageBuildOptions.Labels == nil {
 		b.ImageBuildOptions.Labels = map[string]string{}
+	}
+
+	_, exists := b.ImageBuildOptions.Labels[label]
+	if exists {
+		return errors.New("(build::AddLabel)", fmt.Sprintf("Label '%s' already defined", label))
 	}
 
 	b.ImageBuildOptions.Labels[label] = value
