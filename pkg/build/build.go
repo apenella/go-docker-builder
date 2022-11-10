@@ -228,7 +228,10 @@ func (b *DockerBuildCmd) AddTags(tags ...string) error {
 
 	for _, tag := range tags {
 		if b.UseNormalizedNamed {
-			normalizedTag, _ := reference.ParseNormalizedNamed(tag)
+			normalizedTag, err := reference.ParseNormalizedNamed(tag)
+			if err != nil {
+				return errors.New("(build::AddTags)", fmt.Sprintf("Tag '%s' could not be normalized", tag), err)
+			}
 			tag = normalizedTag.String()
 		}
 		b.ImageBuildOptions.Tags = append(b.ImageBuildOptions.Tags, tag)

@@ -1,6 +1,6 @@
 # RELEASE NOTES
 
-## [0.7.1]
+## [0.7.2]
 
 ### Fixed
-- Existing labels could not be overwritten
+- In docker build command, before adding a new tag validate that is normalized
