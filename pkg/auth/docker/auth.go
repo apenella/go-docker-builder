@@ -30,14 +30,6 @@ func GenerateAuthConfig(username, password string) (*dockertypes.AuthConfig, err
 // GenerateUserPasswordAuthConfig return an AuthConfig to identify to docker registry using user-password credentials
 func GenerateUserPasswordAuthConfig(username, password string) (*dockertypes.AuthConfig, error) {
 
-	if username == "" {
-		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Username must be provided")
-	}
-
-	if password == "" {
-		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Password must be provided")
-	}
-
 	authConfig := &dockertypes.AuthConfig{
 		Username: username,
 		Password: password,

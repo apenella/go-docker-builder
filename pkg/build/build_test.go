@@ -141,18 +141,6 @@ func TestAddAuth(t *testing.T) {
 				},
 			},
 		},
-		{
-			desc:           "Testing add invalid user-password auth",
-			dockerBuildCmd: &DockerBuildCmd{},
-			args: &args{
-				username: "",
-				password: "AqSwd3Fr",
-				registry: "registry",
-			},
-			err: errors.New("(build::AddAuth)", "Error generation user password auth configuration", errors.New(
-				"(auth::GenerateUserPasswordAuthConfig)", "Username must be provided")),
-			res: map[string]dockertypes.AuthConfig{},
-		},
 	}
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
