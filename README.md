@@ -3,44 +3,45 @@ go-docker-builder
 
 `go-docker-builder` library is a wrapper over docker client SDK that provides a set of packages that help to manage the most common docker use cases such as build or push images.
 
-It also manages docker registry autentication, prepares docker build context to be used by docker client SDK and supports docker build context either from local path or git repository.
+It also manages docker registry authentication, prepares docker build context to be used by docker client SDK and supports docker build context either from the local path or git repository.
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
-- [Use cases](#use-cases)
-  - [Build](#build)
-    - [Context](#context)
-      - [Path](#path)
-      - [Git](#git)
-    - [Context filesystem](#context-filesystem)
-  - [Push](#push)
-  - [Copy](#copy)
-- [Authentication](#authentication)
-  - [Docker registry](#docker-registry)
-  - [Git server](#git-server)
-    - [Basic auth](#basic-auth)
-    - [SSH key](#ssh-key)
-    - [SSH agent](#ssh-agent)
-- [Response](#response)
-- [Examples](#examples)
-- [References](#references)
-- [License](#license)
+- [go-docker-builder](#go-docker-builder)
+	- [Use cases](#use-cases)
+		- [Build](#build)
+			- [Context](#context)
+				- [Path](#path)
+				- [Git](#git)
+			- [Context filesystem](#context-filesystem)
+		- [Push](#push)
+		- [Copy](#copy)
+	- [Authentication](#authentication)
+		- [Docker registry](#docker-registry)
+		- [Git server](#git-server)
+			- [Basic auth](#basic-auth)
+			- [SSH key](#ssh-key)
+			- [SSH agent](#ssh-agent)
+	- [Response](#response)
+	- [Examples](#examples)
+	- [References](#references)
+	- [License](#license)
 
 <!-- /code_chunk_output -->
 
 ## Use cases
-`go-docker-builder` library has been written to provide an easy way to interactuate with docker client SDK on the use cases listed below:
+`go-docker-builder` library is a wrapper for Docker client SDK that simplifies its usage for the most common use cases. The cover use cases are:
 
 - **Build**: build a docker images
 - **Push**: push a docker image to a docker registry
 - **Copy**: copy a docker image from one Docker registry to another one
 
 ### Build
-Package `build` purpose is to build docker images.
-To perform a build action, must be created a `DockerBuildCmd` instance.
+The `build` package's purpose is to build docker images.
+To perform a build action you must create a `DockerBuildCmd` instance.
 
 ```go
 // DockerBuilderCmd
@@ -66,7 +67,7 @@ type DockerBuildCmd struct {
 
 Below there is a recipe to build docker images using `go-docker-builder`:
 
-1. Create a docker client from docker client SDK
+1. Create a docker client from the Docker client SDK
 ```go
 dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 if err != nil {
@@ -114,12 +115,12 @@ if err != nil {
 }
 ```
 
-7. Include extra docker image tags, in case are needed
+7. Include extra docker image tags, when you need them
 ```go
 dockerBuilder.AddTags(strings.Join([]string{imageName, "tag1"}, ":"))
 ```
 
-8. Include authorization either for pull, push or both, when is required.
+8. Include authorization either for pull, push or both
 ```go
 err = dockerBuilder.AddAuth(username, password, registry)
 if err != nil {
@@ -127,7 +128,7 @@ if err != nil {
 }
 ```
 
-9. Include build arguments, in case are needed
+9. Include build arguments, when you need them
 ```go
 err = dockerBuilder.AddBuildArgs("key", "value")
 if err != nil {
@@ -135,7 +136,7 @@ if err != nil {
 }
 ```
 
-10. Start the build
+10.  Start the Docker image build
 ```go
 err = dockerBuilder.Run(context.TODO())
 if err != nil {
@@ -144,12 +145,12 @@ if err != nil {
 ```
 
 #### Context
-Docker build context is a set of files required to build a docker image. `go-docker-builder` library supports two kind of sources to create the Docker build context: `path` and `git`
+The Docker build context is a set of files required to create a docker image. `go-docker-builder` library supports two kinds of sources to create the Docker build context: `path` and `git`
 
 ##### Path
-When files are located on local host, Docker build context must be created as `path`, and it is only required to define the local folder where files are located.
+When files are located on your localhost, the Docker build context must be created as `path`, and it is only required to define the local folder where files are located.
 
-A `PathBuildContext` instance represents a Docker build context as path.
+A `PathBuildContext` instance represents a Docker build context as the path.
 ```go
 // PathBuildContext creates a build context from path
 type PathBuildContext struct {
@@ -159,7 +160,7 @@ type PathBuildContext struct {
 ```
 
 ##### Git
-When files are located on a git repository, Docker build context must be created as `git`.
+When files are located on a git repository, the Docker build context must be created as `git`.
 
 A `GitBuildContext` instance represents a Docker build context as git.
 ```go
@@ -176,18 +177,18 @@ type GitBuildContext struct {
 }
 ```
 
-To define a `git` Docker build context, the only required attribute is `Repository`, although it accepts other configurations such as the `Reference` name (branch, commit or tag), `Auth` which is used to be authenticated over git server or `Path` which let you to define as Docker build context base a subfolder inside the repository.
+To define a `git` Docker build context, the only required attribute is `Repository`, although it accepts other configurations such as the `Reference` name (branch, commit or tag), `Auth` which is used to be authenticated over the git server or `Path` which let you define as Docker build context base a subfolder inside the repository.
 
 `go-docker-builder` uses [go-git](https://github.com/go-git/go-git) library to manage `git` Docker build context.
 
 #### Context filesystem
 Context filesystem has been created as an intermediate filesystem between the source files and Docker build context.
 
-Context filesystem, is build on top of [afero](https://github.com/spf13/afero) filesystem. It supports to **tar** the entire filesystem and also to **join** multiple filesystems.
+Context filesystem is built on top of an [afero](https://github.com/spf13/afero) filesystem. It supports **taring** the entire filesystem and also **joining** multiple filesystems.
 
 ### Push
 Package `push` purpose is to push Docker images to a Docker registry.
-To perform a push action, must be created a `DockerPushBuildCmd` instance.
+To perform a push action you must create a `DockerPushBuildCmd` instance.
 
 ```go
 // DockerPushCmd is used to push images to docker registry
@@ -211,7 +212,7 @@ type DockerPushCmd struct {
 
 Below there is a recipe to build docker images using `go-docker-builder`:
 
-1. Create a docker client from docker client SDK
+1. Create a docker client from Docker client SDK
 ```go
 dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 if err != nil {
@@ -240,7 +241,7 @@ pass := "myregistrypass"
 dockerPush.AddAuth(user, pass)
 ```
 
-5. Push the image to Docker registry
+5. Push the image to the Docker registry
 ```go
 err = dockerPush.Run(context.TODO())
 if err != nil {
@@ -250,8 +251,8 @@ if err != nil {
 
 
 ### Copy
-Package `copy` can be understand such a `push` use case variation. Its purpose is to push images either from local host or from a Docker registry to another Docker registry. It can be also used to copy images from one Docker registry namespace to another namespace. 
-To perform a copy action, must be created a `DockerImageCopyCmd` instance.
+The `copy` package can be understood as such a `push` use case variation. Its purpose is to push images either from your localhost or from a Docker registry to another Docker registry. It can be also used to copy images from one Docker registry namespace to another namespace. 
+To perform a copy action you must create a `DockerImageCopyCmd` instance.
 
 ```go
 // DockerCopyImageCmd is used to copy images to docker registry. Copy image is understood as tag an existing image and push it to a docker registry
@@ -279,27 +280,27 @@ type DockerImageCopyCmd struct {
 }
 ```
 
-Some cases where copy can be used are:
-- Copy one image from [dockerhub](https://hub.docker.com/) to a private Docker registry
-- When Docker images used on your staging environments needs to be promoted somewhere else before use them on production environment.
+You can use the `copy` package when:
+- You need to copy one image from [dockerhub](https://hub.docker.com/) to a private Docker registry
+- The Docker images you use on your staging environments need to be promoted somewhere else before using them in the production environment.
 
 ## Authentication
-`go-docker-builder` library contains a bunch of packages to manage authentication either to docker registry or git server.
+`go-docker-builder` library contains a bunch of packages to manage authentication either to the Docker registry or the git server.
 
 ### Docker registry
-Package `github.com/apenella/go-docker-builder/pkg/auth/docker` provides a set of functions to create the authentication items required by Docker registry. Docker registy may require authentication either for `push` or `pull` operations.
+Package `github.com/apenella/go-docker-builder/pkg/auth/docker` provides a set of functions to create the authentication items required by the Docker registry. The Docker registry may require authentication either for `push` or `pull` operations.
 
-Packages [build](#build), [push](#push) or [copy](#copy) already uses that package on its authentication methods, and is not necessary to use it directly.
+Packages [build](#build), [push](#push) or [copy](#copy) already use that package on its authentication methods, and is not necessary to use it directly.
 
 ### Git server
-Git server authentication is needed when Docker build context is located on a git repository and the git server requires it authorize you for cloning any repository.
+Git server authentication is needed when the Docker build context is located on a git repository and the git server requires it to authorize you for cloning any repository.
 
 `go-docker-builder` supports several git authentication methods such as `basic auth`, `ssh-key` or `ssh-agent`.
 
-All this authentication methods generates an `AuthMethod` (github.com/go-git/go-git/v5/plumbing/transport).
+All these authorization methods generate an `AuthMethod` (github.com/go-git/go-git/v5/plumbing/transport).
 
 #### Basic auth
-`Basic auth` requires a `username` and `password`. It have to be used when comunication is done through `http/s`.
+`Basic auth` requires a `username` and `password`. It must be used when communication is done through `http/s`.
 
 ```go
 type BasicAuth struct {
@@ -309,7 +310,7 @@ type BasicAuth struct {
 ```
 
 #### SSH key
-You can use an `ssh key` when comunication to git server is done over ssh. It requires your privete key location (`PkFile`). In case your key is being protected by password, you have to set it on `PkPassword` attribute. Finally, when git user is not `git`, you can define it on `GitSSHUser` attribute.
+You can use an `ssh key` when want to connect to the git server over SSH. It requires your private key location (`PkFile`). In case your key is being protected by a password, you have to set it on `PkPassword` attribute. Finally, when the git user is not `git`, you can define it on `GitSSHUser` attribute.
 ```go
 type KeyAuth struct {
 	GitSSHUser string
@@ -319,7 +320,7 @@ type KeyAuth struct {
 ```
 
 #### SSH agent
-To authenticate to git server, `ssh-agent` method uses the ssh agent running on you host. When git user is not `git`, you can define it on `GitSSHUser` attribute.
+To authenticate to the git server, `ssh-agent` method uses the SSH agent running on your host. When your SSH user is not `git`, you can define it on `GitSSHUser` attribute.
 ```go
 type SSHAgentAuth struct {
 	GitSSHUser string
@@ -328,10 +329,10 @@ type SSHAgentAuth struct {
 
 ## Response
 To control how Docker output is sent to the user, `go-docker-build` provides `response` package.
-By default, [DockerBuildCmd](#build), [DockerPushCmd](#push) and [DockerCopyCmd](#copy) instances use a basic configuration of `response` that prints Docker output to `os.Stdout`. But you could customize docker client SDK response, defining your own `response` instance, and pass it to them.
+By default, [DockerBuildCmd](#build), [DockerPushCmd](#push) and [DockerCopyCmd](#copy) instances use a basic configuration of `response` that prints Docker output to `os.Stdout`. But you could customize the Docker client SDK response, define your `response` instance, and pass it to them.
 
-`response` receives `ImageBuildResponse` or `ImagePushResponse` items, unmarshals into an struct and finally prepares a user-frendly output.
-To customize the Docker output coming from response items, it could receive a list of transfromer functions. That function must complain the type `TransformerFunc` defined on `github.com/apenella/go-common-utils/transformer/string`.
+`response` receives `ImageBuildResponse` or `ImagePushResponse` items, unmarshals into a struct and finally prepares a user-friendly output.
+To customize the Docker output coming from response items, it could receive a list of transformer functions. That function must complain the type `TransformerFunc` defined on `github.com/apenella/go-common-utils/transformer/string`.
 
 ```go
 // TransformerFunc is used to enrich or update messages before to be printed out
@@ -359,11 +360,10 @@ dockerBuilder := &build.DockerBuildCmd{
 ```
 
 ## Examples
-On folder [examples](https://github.com/apenella/go-docker-builder/tree/master/examples), you could find some `go-docker-build` examples. Among those examples you could find how to build images using distinct Docker build context, how to authenticate to Docker registry or git server, etc.
+On folder [examples](https://github.com/apenella/go-docker-builder/tree/master/examples), you could find some `go-docker-build` examples. Among those examples, you could find how to build images using distinct Docker build context, how to authenticate to Docker registry or git server, etc.
 
-To run any example, the repository is provided with some resources that let you to start an ephemeral environment where examples can run. Each environments run on `docker compose` and starts a Docker registry, a git server and a client container where example runs. That environments are also used to run functional test.
-
-Each example is also provide by a `Makefile` which helps you to start the examples or tests.
+To run any example, the repository is provided with some resources that let you start an ephemeral environment where examples can run. Each environment runs on `docker compose` and starts a Docker registry, a git server and a client container where the example runs. Those environments are also used to run the functional test.
+Each example is also provided by a `Makefile` which helps you to start the examples or tests.
 
 ```shell
 ❯ make help
@@ -383,7 +383,7 @@ Each example is also provide by a `Makefile` which helps you to start the exampl
 
 ## References
 - Docker engine API specifications for building an image: https://docs.docker.com/engine/api/v1.39/#operation/ImageBuild
-- Taring files strategy was inspired by: https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
+- The used taring files strategy is inspired by: https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
 
 ## License
 `go-docker-builder` is available under [MIT](https://github.com/apenella/go-docker-builder/blob/master/LICENSE) license.
