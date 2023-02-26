@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.7.5]
+### Fixed
+- Revert github.com/docker/docker to v20.10.23+incompatible to fix compatibility with Docker API 1.41
+
 ## [0.7.4]
 ### Changed
 - Bump up golang.org/x/text to v0.7.0. It fixes [CVE-2022-32149](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32149)
