@@ -1,6 +1,6 @@
 # RELEASE NOTES
 
-## Undefined
+## [0.7.4]
 ### Changed
 - Bump up golang.org/x/text to v0.7.0. It fixes [CVE-2022-32149](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32149)
 - Bump up github.com/apenella/go-common-utils/transformer/string to v0.0.0-20221227202648-5452d804e940
