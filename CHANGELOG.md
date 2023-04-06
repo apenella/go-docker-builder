@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.7.6]
+### Fixed
+- Bump up github.com/docker/docker to 20.10.24 to fix CVE-2023-28841, CVE-2023-28840, and CVE-2023-28842
+
 ## [0.7.5]
 ### Fixed
 - Revert github.com/docker/docker to v20.10.23+incompatible to fix compatibility with Docker API 1.41
