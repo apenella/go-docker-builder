@@ -7,7 +7,7 @@ require (
 	github.com/ahmetb/go-cursor v0.0.0-20131010032410-8136607ea412
 	github.com/apenella/go-common-utils/error v0.0.0-20221227202648-5452d804e940
 	github.com/apenella/go-common-utils/transformer/string v0.0.0-20221227202648-5452d804e940
-	github.com/docker/distribution v2.8.1+incompatible
+	github.com/docker/distribution v2.8.2+incompatible
 	github.com/docker/docker v20.10.24+incompatible
 	github.com/go-git/go-git/v5 v5.5.2
 	github.com/spf13/afero v1.9.4
