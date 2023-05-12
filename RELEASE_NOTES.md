@@ -1,5 +1,6 @@
 # RELEASE NOTES
 
-## [0.7.5]
+## [0.7.7]
 ### Fixed
-- Revert github.com/docker/docker to v20.10.23+incompatible to fix compatibility with Docker API 1.41
+- Bump github.com/docker/distribution from 2.8.1+incompatible to 2.8.2+incompatible
+- Bump github.com/cloudflare/circl from 1.3.2 to 1.3.3 (indirect dependency)
