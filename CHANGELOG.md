@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.7.7]
+### Fixed
+- Bump github.com/docker/distribution from 2.8.1+incompatible to 2.8.2+incompatible
+- Bump github.com/cloudflare/circl from 1.3.2 to 1.3.3 (indirect dependency)
+
 ## [0.7.6]
 ### Fixed
 - Bump up github.com/docker/docker to 20.10.24 to fix CVE-2023-28841, CVE-2023-28840, and CVE-2023-28842
