@@ -38,7 +38,7 @@ func TestWithPullParentImage(t *testing.T) {
 	b := DockerBuildCmd{}
 	b.WithPullParentImage()
 
-	assert.Equal(t, true, b.PullParentImage)
+	assert.Equal(t, true, b.ImageBuildOptions.PullParent)
 }
 
 func TestWithPushAfterBuild(t *testing.T) {
