@@ -72,7 +72,11 @@ func (b *DockerBuildCmd) WithImageName(name string) *DockerBuildCmd {
 
 // WithPullParentImage set to pull parent image
 func (b *DockerBuildCmd) WithPullParentImage() *DockerBuildCmd {
-	b.PullParentImage = true
+	if b.ImageBuildOptions == nil {
+		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+	}
+
+	b.ImageBuildOptions.PullParent = true
 	return b
 }
 

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.7.8]
+### Fixed
+- WithPullParentImage set to true ImageBuildOptions.PullParent
+
 ## [0.7.7]
 ### Fixed
 - Bump github.com/docker/distribution from 2.8.1+incompatible to 2.8.2+incompatible
