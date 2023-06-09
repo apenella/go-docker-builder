@@ -204,6 +204,7 @@ func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
 		Tags:               c.Tags,
 		ImagePushOptions:   c.ImagePushOptions,
 		UseNormalizedNamed: c.UseNormalizedNamed,
+		RemoveAfterPush:    c.RemoveAfterPush,
 	}
 
 	err = push.Run(ctx)
