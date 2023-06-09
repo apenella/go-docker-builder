@@ -17,7 +17,7 @@ cleanup: ## cleanup example environment
 	@echo
 	@echo " Cleanup environment"
 	@echo
-	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans --timeout 3
 
 generate-certs: cleanup-certs ## generate certificate for go-docker-builder.test
 	@echo
@@ -46,14 +46,14 @@ example: start prepare ## executes the examples
 	@echo " Example"
 	@echo
 	@docker compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go -test
-	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans --timeout 3
 
 test: start prepare ## executes functional test
 	@echo
 	@echo " Test"
 	@echo
 	@docker compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go test . -count=1
-	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans --timeout 3
 
 logs: ## show services logs
 	@echo

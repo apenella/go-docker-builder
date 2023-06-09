@@ -17,7 +17,7 @@ cleanup: ## cleanup example environment
 	@echo
 	@echo " Cleanup environment"
 	@echo
-	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans --timeout 3
 
 generate-keys: cleanup-keys ## generate an ssh key pair required to autheneticate to git server
 	@echo
@@ -62,14 +62,14 @@ example: start prepare ## executes the examples
 	@echo " Example"
 	@echo
 	@docker compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go run ${EXAMPLE}.go
-	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans --timeout 3
 
 test: start prepare ## executes the examples
 	@echo
 	@echo " Test"
 	@echo
 	@docker compose -f ../../test/docker-compose.yml run -w /app/examples/${EXAMPLE} client go test . -count=1
-	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans
+	@docker compose -f ../../test/docker-compose.yml down -v --remove-orphans --timeout 3
 
 logs: ## show services logs
 	@docker compose -f ../../test/docker-compose.yml logs

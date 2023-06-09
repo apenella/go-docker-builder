@@ -33,7 +33,7 @@ func buildGitContext(w io.Writer) error {
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		return errors.New("BuildGitContext", "Error on docker client creation", err)
+		return errors.New("buildGitContext", "Error on docker client creation", err)
 	}
 
 	res := response.NewDefaultResponse(
@@ -60,17 +60,17 @@ func buildGitContext(w io.Writer) error {
 	}
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
-		return errors.New("BuildGitContext", "Error adding build docker context", err)
+		return errors.New("buildGitContext", "Error adding build docker context", err)
 	}
 
 	err = dockerBuilder.AddAuth(username, password, registry)
 	if err != nil {
-		return errors.New("BuildGitContext", "Error adding registry auth", err)
+		return errors.New("buildGitContext", "Error adding registry auth", err)
 	}
 
 	err = dockerBuilder.Run(context.TODO())
 	if err != nil {
-		return errors.New("BuildGitContext", fmt.Sprintf("Error building '%s'", imageName), err)
+		return errors.New("buildGitContext", fmt.Sprintf("Error building '%s'", imageName), err)
 	}
 
 	return nil
