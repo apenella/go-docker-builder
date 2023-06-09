@@ -60,7 +60,7 @@ func copyRemote(w io.Writer) error {
 
 	err = copy.Run(context.TODO())
 	if err != nil {
-		return errors.New("buildAndPushJoinContext", fmt.Sprintf("Error copying '%s' to '%s'", sourceImage, targetImage), err)
+		return errors.New("copyRemote", fmt.Sprintf("Error copying '%s' to '%s'", sourceImage, targetImage), err)
 	}
 
 	return nil

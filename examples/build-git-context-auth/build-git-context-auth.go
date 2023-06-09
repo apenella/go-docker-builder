@@ -36,7 +36,7 @@ func buildGitContextAuth(w io.Writer) error {
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		return errors.New("BuildGitContextAuth", "Error on docker client creation", err)
+		return errors.New("buildGitContextAuth", "Error on docker client creation", err)
 	}
 
 	// authenticate to git server using a key
@@ -82,12 +82,12 @@ func buildGitContextAuth(w io.Writer) error {
 
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
-		return errors.New("BuildGitContextAuth", "Error adding build docker context", err)
+		return errors.New("buildGitContextAuth", "Error adding build docker context", err)
 	}
 
 	err = dockerBuilder.Run(context.TODO())
 	if err != nil {
-		return errors.New("BuildGitContextAuth", fmt.Sprintf("Error building '%s'", imageName), err)
+		return errors.New("buildGitContextAuth", fmt.Sprintf("Error building '%s'", imageName), err)
 	}
 
 	return nil
