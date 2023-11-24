@@ -1,6 +1,7 @@
 # RELEASE NOTES
 
-## [0.7.8]
+## [0.7.9] - 2023-24-01
+
 ### Fixed
-- On build use case, WithPullParentImage set to true ImageBuildOptions.PullParent
-- On copy use case, set the remove after push parameter
+
+- Fixed a bug that caused the library returns an error when the build context contains a symlink.

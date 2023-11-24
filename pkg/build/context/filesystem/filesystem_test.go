@@ -17,9 +17,7 @@ func TestTar(t *testing.T) {
 
 func TestJoin(t *testing.T) {
 	var err error
-	var fs1, fs2, fs3 *ContextFilesystem
-
-	_ = fs3
+	var fs1, fs2, fs3, fsres *ContextFilesystem
 
 	errorContext := "(filesystem::Join)"
 
@@ -28,6 +26,9 @@ func TestJoin(t *testing.T) {
 
 	fs2 = NewContextFilesystem(afero.NewOsFs())
 	fs2.RootPath = filepath.Join("test", "fs2")
+
+	fs3 = NewContextFilesystem(afero.NewOsFs())
+	fs3.RootPath = filepath.Join("test", "fs3")
 
 	tests := []struct {
 		desc        string
@@ -45,8 +46,8 @@ func TestJoin(t *testing.T) {
 			desc:        "Testing error when joining and existing file without allowing file override",
 			filesystems: []*ContextFilesystem{fs1, fs2},
 			override:    false,
-			err: errors.New(errorContext, "Error joinnig context filesystem",
-				errors.New(errorContext, "File '/dir1/d1f1.txt' already on destination filesystem")),
+			err: errors.New("(filesystem::join)", "Error joinnig context filesystem",
+				errors.New("(filesystem::join)", "File '/dir1/d1f1.txt' already on destination filesystem")),
 		},
 		{
 			desc:        "Testing join filesystem",
@@ -70,16 +71,7 @@ func TestJoin(t *testing.T) {
 					if err != nil {
 						return errors.New("Testing join filesystem", fmt.Sprintf("Error during test. Walk trough '%s'", file))
 					}
-
 					resultFiles[file] = struct{}{}
-
-					// if !fi.IsDir() {
-					// 	f, _ := fs3.Fs.Open(file)
-					// 	fmt.Println(file)
-					// 	io.Copy(os.Stdout, f)
-					// 	fmt.Println()
-					// }
-
 					return nil
 				})
 				if err != nil {
@@ -107,16 +99,61 @@ func TestJoin(t *testing.T) {
 				assert.Equal(t, expectedContent, content)
 			},
 		},
+		{
+			desc:        "Testing join filesystem with symlinks",
+			filesystems: []*ContextFilesystem{fs3},
+			override:    true,
+			err:         &errors.Error{},
+			assertFunc: func(t *testing.T, fs *ContextFilesystem) {
+
+				resultFiles := map[string]struct{}{}
+				expectedFiles := map[string]struct{}{
+					"/":                         {},
+					"/dir1":                     {},
+					"/dir1/conf":                {},
+					"/dir1/conf/file.conf":      {},
+					"/dir1/conf/gfile.conf":     {},
+					"/dir1/global":              {},
+					"/dir1/global/gfile.conf":   {},
+					"/dir1/src":                 {},
+					"/dir1/src/conf":            {},
+					"/dir1/src/conf/file.conf":  {},
+					"/dir1/src/conf/gfile.conf": {},
+				}
+
+				err = afero.Walk(fs, fs.RootPath, func(file string, fi os.FileInfo, err error) error {
+
+					if err != nil {
+						return errors.New("Testing join filesystem with symlinks", fmt.Sprintf("Error during test. Walk trough '%s'", file))
+					}
+
+					resultFiles[file] = struct{}{}
+
+					return nil
+				})
+				if err != nil {
+					t.Fatal(err.Error())
+				}
+
+				for efile := range expectedFiles {
+					_, exists := resultFiles[efile]
+					assert.True(t, exists, fmt.Sprintf("Expected file '%s' does not exists", efile))
+					delete(resultFiles, efile)
+				}
+
+				assert.Empty(t, resultFiles, fmt.Sprintf("Results contains unexpected file '%v'", resultFiles))
+			},
+		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.desc, func(t *testing.T) {
-			fs3, err = Join(test.override, test.filesystems...)
+			fsres, err = Join(test.override, test.filesystems...)
 
 			if err != nil {
 				assert.Equal(t, test.err, err)
 			} else {
-				test.assertFunc(t, fs3)
+				test.assertFunc(t, fsres)
 			}
 
 		})

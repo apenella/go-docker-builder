@@ -122,73 +122,107 @@ func Join(forceOverride bool, filesystem ...*ContextFilesystem) (*ContextFilesys
 			return nil, errors.New(errorContext, "Error trying join a nil filesystem")
 		}
 
-		err = afero.Walk(fs.Fs, fs.RootPath, func(file string, fi os.FileInfo, err error) error {
-			var src, dest afero.File
-
-			if err != nil {
-				return errors.New(errorContext, fmt.Sprintf("Error walking through file '%s", file), err)
-			}
-
-			// Extrat relative file relative path to fs.RootPath
-			// example: when root path is /test/fs1 and file is /test/fs1/dir1/f1.txt, the relative path is /dir1/f1.txt
-			relativePath, _ := filepath.Rel(fs.RootPath, file)
-			if err != nil {
-				return errors.New(errorContext, fmt.Sprintf("Unable to achive relative path for '%s'", file), err)
-			}
-
-			memfile := filepath.Join(memfs.RootPath, relativePath)
-
-			if fi.IsDir() {
-				_, err = memfs.Fs.Stat(memfile)
-				if os.IsNotExist(err) {
-
-					memfs.Fs.MkdirAll(memfile, fi.Mode())
-				}
-			} else {
-				_, err = memfs.Fs.Stat(memfile)
-				if os.IsNotExist(err) {
-					dest, err = memfs.Fs.OpenFile(memfile, os.O_CREATE, fi.Mode())
-					if err != nil {
-						return errors.New(errorContext, fmt.Sprintf("Error creating file '%s' on destination filesystem", memfile), err)
-					}
-				} else {
-					// When file already exists and the join is not force it fails
-					if !forceOverride {
-						return errors.New(errorContext, fmt.Sprintf("File '%s' already on destination filesystem", memfile))
-					}
-
-					dest, err = memfs.Fs.OpenFile(memfile, os.O_RDWR, fi.Mode())
-					if err != nil {
-						return errors.New(errorContext, fmt.Sprintf("Error opening '%s' on destination filesystem", memfile), err)
-					}
-
-					// truncate the existing file
-					err = dest.Truncate(0)
-					if err != nil {
-						return errors.New(errorContext, fmt.Sprintf("Error truncating '%s' on destination filesystem", memfile), err)
-					}
-				}
-
-				src, err = fs.Fs.Open(file)
-				if err != nil {
-					return errors.New(errorContext, fmt.Sprintf("Error openning source file '%s'", file), err)
-				}
-
-				if _, err := io.Copy(dest, src); err != nil {
-					return errors.New(errorContext, fmt.Sprintf("Error copying '%s' into destination filesystem", memfile), err)
-				}
-				// manually close here after each file operation; defering would cause each file close
-				// to wait until all operations have completed.
-				src.Close()
-				dest.Close()
-
-			}
-			return nil
-		})
+		// fs.Fs is the source filesystem while memfs is the destination filesystem
+		err = join(fs.Fs, fs.RootPath, memfs, memfs.RootPath, forceOverride)
 		if err != nil {
-			return nil, errors.New(errorContext, "Error joinnig context filesystem", err)
+			return nil, err
 		}
 	}
 
 	return memfs, nil
+}
+
+func join(srcFs afero.Fs, srcFsRootPath string, destFs afero.Fs, destFsRootPath string, forceOverride bool) error {
+	errorContext := "(filesystem::join)"
+
+	err := afero.Walk(srcFs, srcFsRootPath, func(file string, fi os.FileInfo, err error) error {
+		var srcFile, destFile afero.File
+
+		if err != nil {
+			return errors.New(errorContext, fmt.Sprintf("Error walking through file '%s", file), err)
+		}
+
+		// Extract relative file relative path to fs.RootPath
+		// example: when root path is /test/fs1 and file is /test/fs1/dir1/f1.txt, the relative path is dir1/f1.txt
+		relativePath, _ := filepath.Rel(srcFsRootPath, file)
+		if err != nil {
+			return errors.New(errorContext, fmt.Sprintf("Unable to achive relative path for '%s'", file), err)
+		}
+
+		memfile := filepath.Join(destFsRootPath, relativePath)
+
+		if fi.IsDir() {
+			_, err = destFs.Stat(memfile)
+			if os.IsNotExist(err) {
+				err = destFs.MkdirAll(memfile, fi.Mode())
+				if err != nil {
+					return errors.New(errorContext, fmt.Sprintf("Error creating directory '%s' on destination filesystem", memfile), err)
+				}
+			}
+
+			return nil
+		}
+
+		if fi.Mode()&os.ModeSymlink != 0 {
+
+			symlinkTarget, err := os.Readlink(file)
+			if err != nil {
+				return err
+			}
+			fileDir := filepath.Dir(file)
+			symlinkTarget = filepath.Join(fileDir, symlinkTarget)
+
+			return join(srcFs, symlinkTarget, destFs, memfile, forceOverride)
+
+		}
+
+		if fi.Mode().IsRegular() {
+			_, err = destFs.Stat(memfile)
+			if os.IsNotExist(err) {
+				destFile, err = destFs.OpenFile(memfile, os.O_CREATE, fi.Mode())
+				if err != nil {
+					return errors.New(errorContext, fmt.Sprintf("Error creating file '%s' on destination filesystem", memfile), err)
+				}
+			} else {
+				// When file already exists and the join is not force it fails
+				if !forceOverride {
+					return errors.New(errorContext, fmt.Sprintf("File '%s' already on destination filesystem", memfile))
+				}
+
+				destFile, err = destFs.OpenFile(memfile, os.O_RDWR, fi.Mode())
+				if err != nil {
+					return errors.New(errorContext, fmt.Sprintf("Error opening '%s' on destination filesystem", memfile), err)
+				}
+
+				// truncate the existing file
+				err = destFile.Truncate(0)
+				if err != nil {
+					return errors.New(errorContext, fmt.Sprintf("Error truncating '%s' on destination filesystem", memfile), err)
+				}
+			}
+
+			srcFile, err = srcFs.Open(file)
+			if err != nil {
+				return errors.New(errorContext, fmt.Sprintf("Error openning source file '%s'", file), err)
+			}
+
+			if _, err := io.Copy(destFile, srcFile); err != nil {
+				return errors.New(errorContext, fmt.Sprintf("Error copying '%s' into destination filesystem", memfile), err)
+			}
+
+			// manually close here after each file operation; defering would cause each file close to wait until all operations have completed.
+			srcFile.Close()
+			destFile.Close()
+
+			return nil
+		}
+		return nil
+	})
+
+	// evaluate error after walk
+	if err != nil {
+		return errors.New(errorContext, "Error joinnig context filesystem", err)
+	}
+
+	return nil
 }
