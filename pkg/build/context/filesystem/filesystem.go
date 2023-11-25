@@ -151,6 +151,7 @@ func join(srcFs afero.Fs, srcFsRootPath string, destFs afero.Fs, destFsRootPath 
 
 		memfile := filepath.Join(destFsRootPath, relativePath)
 
+		// When file is a directory, create it on destination filesystem
 		if fi.IsDir() {
 			_, err = destFs.Stat(memfile)
 			if os.IsNotExist(err) {
@@ -163,6 +164,7 @@ func join(srcFs afero.Fs, srcFsRootPath string, destFs afero.Fs, destFsRootPath 
 			return nil
 		}
 
+		// When file is a symlink, create the target files on destination filesystem
 		if fi.Mode()&os.ModeSymlink != 0 {
 
 			symlinkTarget, err := os.Readlink(file)
@@ -176,9 +178,12 @@ func join(srcFs afero.Fs, srcFsRootPath string, destFs afero.Fs, destFsRootPath 
 
 		}
 
+		// When file is a regular file, create it on destination filesystem
 		if fi.Mode().IsRegular() {
+
 			_, err = destFs.Stat(memfile)
 			if os.IsNotExist(err) {
+				// When file does not exists, create it
 				destFile, err = destFs.OpenFile(memfile, os.O_CREATE, fi.Mode())
 				if err != nil {
 					return errors.New(errorContext, fmt.Sprintf("Error creating file '%s' on destination filesystem", memfile), err)
@@ -201,11 +206,13 @@ func join(srcFs afero.Fs, srcFsRootPath string, destFs afero.Fs, destFsRootPath 
 				}
 			}
 
+			// open source file
 			srcFile, err = srcFs.Open(file)
 			if err != nil {
 				return errors.New(errorContext, fmt.Sprintf("Error openning source file '%s'", file), err)
 			}
 
+			// copy source file into destination filesystem
 			if _, err := io.Copy(destFile, srcFile); err != nil {
 				return errors.New(errorContext, fmt.Sprintf("Error copying '%s' into destination filesystem", memfile), err)
 			}
