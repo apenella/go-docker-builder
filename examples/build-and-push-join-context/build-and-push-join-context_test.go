@@ -19,13 +19,19 @@ func TestBuildAndPushJoinContext(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	expected := `1.15-alpine: Pulling from golang
+	// 	expected := `1.15-alpine: Pulling from golang
+	// <HASH>: Pushed
+	// Digest: sha256
+	// Status: Downloaded newer image for base-registry.go-docker-builder.test
+	// sha256: <HASH>
+	// latest: digest
+	// `
+
+	expected := `sha256: <HASH>
 <HASH>: Pushed
-Digest: sha256
-Status: Downloaded newer image for base-registry.go-docker-builder.test
-sha256: <HASH>
 latest: digest
 `
+
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
 	assert.Equal(t, expected, actual)

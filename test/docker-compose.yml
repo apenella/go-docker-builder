@@ -3,8 +3,6 @@ services:
 
   base-registry:
     image: registry:2
-    ports:
-      - 5000:5000
     restart: always
     volumes:
       - ssl:/ssl:ro
@@ -16,8 +14,6 @@ services:
             
   registry:
     image: registry:2
-    ports:
-      - 443:443
     restart: always
     environment:
       - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
@@ -42,8 +38,6 @@ services:
   dockerauth:
     image: cesanta/docker_auth:1
     restart: always
-    ports:
-      - "5001:5001"
     volumes:
       - ./docker_auth:/config:ro
       - ssl:/ssl:ro
@@ -60,6 +54,10 @@ services:
       context: client
     working_dir: /app
     privileged: true
+    command:
+      - tail
+      - -f
+      - /dev/null
     environment:
       - GIT_KEYS=/git/keys
       - CGO_ENABLED=0
@@ -68,8 +66,6 @@ services:
       - ..:/app
       - ssh:/root/.ssh
       - ./client/daemon.json:/etc/docker/daemon.json
-    # depends_on:
-    #   - gitserver
 
   gitserver:
     build:
@@ -83,6 +79,16 @@ services:
       default:
         aliases:
           - gitserver.go-docker-builder.test
+    deploy:
+      resources:
+        limits:
+          memory: 10M
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost","80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   openssh:
     build:
@@ -93,6 +99,10 @@ services:
     volumes:
       - ssh:/ssh
     command: ["--help"]
+    deploy:
+      resources:
+        limits:
+          memory: 10M
 
   openssl:
     build:
@@ -104,6 +114,10 @@ services:
       - ssl:/ssl
       - ./files/ssl:/root/ssl
     command: ["version"]
+    deploy:
+      resources:
+        limits:
+          memory: 10M
 
 volumes:
   ssh:

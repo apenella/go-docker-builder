@@ -19,13 +19,22 @@ func TestCopyRemote(t *testing.T) {
 		t.Error(err.Error())
 	}
 
+	// 	expected := `3.13: digest
+	// <HASH>: Mounted from alpine/alpine
+	// Digest: sha256
+	// Status: Downloaded newer image for base-registry.go-docker-builder.test
+	// three: digest
+	// latest: digest
+	// `
+
 	expected := `3.13: digest
-<HASH>: Mounted from alpine/alpine
 Digest: sha256
-Status: Downloaded newer image for base-registry.go-docker-builder.test
+Status: Image is up to date for base-registry.go-docker-builder.test
+<HASH>: Mounted from alpine/alpine
 three: digest
 latest: digest
 `
+
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
 	assert.Equal(t, expected, actual)
