@@ -17,6 +17,7 @@ WORKDIR $GOPATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY wait-for-dockerd.sh /usr/local/bin/wait-for-dockerd.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["go","version"]

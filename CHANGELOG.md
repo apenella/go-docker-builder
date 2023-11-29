@@ -8,6 +8,7 @@
 
 ### Changed
 
+- On the examples, start the client container once and execute actions on it.
 - Bump github.com/docker/docker from v20.10+incompatible to v24.0.7+incompatible
 - Bump github.com/docker/distribution from v2.8.2+incompatible to v2.8.3+incompatible
 - Bump github.com/go-git/go-git/v5 from v5.6.1 to v5.10.0

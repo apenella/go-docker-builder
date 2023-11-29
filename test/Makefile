@@ -6,7 +6,7 @@ start: cleanup generate-keys generate-certs ## start docker registry
 	docker compose up --detach --build registry base-registry gitserver
 
 cleanup: cleanup-certs ## cleanup example environment
-	docker compose down --volume --remove-orphans --timeout 3
+	docker compose down --volumes --remove-orphans --timeout 3
 
 generate-keys: cleanup-keys ## generate an ssh key pair required to autheneticate to git server
 	@docker compose run --rm openssh -t rsa -q -N "password" -f id_rsa -C "apenella@go-docker-builder.test"

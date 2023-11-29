@@ -33,6 +33,8 @@ func buildGitContextAuth(w io.Writer) error {
 
 	registry := "registry.go-docker-builder.test"
 	imageName := strings.Join([]string{registry, "alpine"}, "/")
+	username := "admin"
+	password := "admin"
 
 	dockerCli, err = client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
@@ -83,6 +85,11 @@ func buildGitContextAuth(w io.Writer) error {
 	err = dockerBuilder.AddBuildContext(dockerBuildContext)
 	if err != nil {
 		return errors.New("buildGitContextAuth", "Error adding build docker context", err)
+	}
+
+	err = dockerBuilder.AddAuth(username, password, registry)
+	if err != nil {
+		return errors.New("buildGitContextAuth", "Error adding registry auth", err)
 	}
 
 	err = dockerBuilder.Run(context.TODO())

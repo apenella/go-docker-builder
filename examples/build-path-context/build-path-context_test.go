@@ -18,12 +18,21 @@ func TestBuildPathContext(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	expected := `3.13: Pulling from alpine
-<HASH>: Pull complete
-Digest: sha256
-Status: Downloaded newer image for base-registry.go-docker-builder.test
-sha256: <HASH>
+	// 	expected := `3.13: Pulling from alpine
+	// <HASH>: Layer already exists
+	// Digest: sha256
+	// Status: Downloaded newer image for base-registry.go-docker-builder.test
+	// sha256: <HASH>
+	// tag1: digest
+	// latest: digest
+	// `
+
+	expected := `sha256: <HASH>
+<HASH>: Layer already exists
+tag1: digest
+latest: digest
 `
+
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
 	assert.Equal(t, expected, actual)
