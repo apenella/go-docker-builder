@@ -1,6 +1,6 @@
 # go-docker-builder
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Test](https://github.com/apenella/go-docker-builder/actions/workflows/ci.yml/badge.svg) [![Go Reference](https://pkg.go.dev/badge/github.com/apenella/go-docker-builder.svg)](https://pkg.go.dev/github.com/apenella/go-docker-builder)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Test](https://github.com/apenella/go-docker-builder/actions/workflows/ci.yaml/badge.svg) [![Go Reference](https://pkg.go.dev/badge/github.com/apenella/go-docker-builder.svg)](https://pkg.go.dev/github.com/apenella/go-docker-builder)
 
 The `go-docker-builder` library serves as a wrapper over the Docker Client SDK, offering a collection of packages to simplify the development workflow for common Docker use cases, including image building, pushing or authentication to Docker registries.
 
