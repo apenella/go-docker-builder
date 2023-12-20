@@ -1,33 +1,43 @@
 # go-docker-builder
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Test](https://github.com/apenella/go-docker-builder/actions/workflows/ci.yml/badge.svg) [![Go Reference](https://pkg.go.dev/badge/github.com/apenella/go-docker-builder.svg)](https://pkg.go.dev/github.com/apenella/go-docker-builder)
+
 The `go-docker-builder` library serves as a wrapper over the Docker Client SDK, offering a collection of packages to simplify the development workflow for common Docker use cases, including image building, pushing or authentication to Docker registries.
 
 This library not only handles Docker registry authentication but also prepares the Docker build context for use with the Docker Client SDK. It supports build context sourced either from the local path or a Git repository.
 
 - [go-docker-builder](#go-docker-builder)
-	- [Use cases](#use-cases)
-		- [Build](#build)
-			- [Context](#context)
-				- [Path](#path)
-				- [Git](#git)
-			- [Context filesystem](#context-filesystem)
-		- [Push](#push)
-		- [Copy](#copy)
-	- [Authentication](#authentication)
-		- [Docker registry](#docker-registry)
-		- [Git server](#git-server)
-			- [Basic auth](#basic-auth)
-			- [SSH key](#ssh-key)
-			- [SSH agent](#ssh-agent)
-	- [Response](#response)
-	- [Examples](#examples)
-	- [References](#references)
-	- [License](#license)
+  - [Install](#install)
+  - [Use cases](#use-cases)
+    - [Build](#build)
+      - [Context](#context)
+        - [Path](#path)
+        - [Git](#git)
+      - [Context filesystem](#context-filesystem)
+    - [Push](#push)
+    - [Copy](#copy)
+  - [Authentication](#authentication)
+    - [Docker registry](#docker-registry)
+    - [Git server](#git-server)
+      - [Basic auth](#basic-auth)
+      - [SSH key](#ssh-key)
+      - [SSH agent](#ssh-agent)
+  - [Response](#response)
+  - [Examples](#examples)
+  - [References](#references)
+  - [License](#license)
 
+## Install
+
+To install the latest stable version of go-docker-builder, run the following command:
+
+```sh
+go get -u github.com/apenella/go-docker-builder@v0.8.1
+```
 
 ## Use cases
 
-`go-docker-builder` library provides you with the packages to resolve the following use cases are:
+`go-docker-builder` library provides you with the packages to resolve the following use cases:
 
 - **Build**: Build a docker images
 - **Push**: Push a docker image to a docker registry
