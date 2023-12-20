@@ -1,14 +1,20 @@
 # CHANGELOG
 
+## [0.8.1] - 2023-20-12
+
+### Changed
+
+- Bump golang.org/x/crypto from 0.14.0 to 0.17.0
+
 ## [0.8.0] - 2023-27-01
 
 ### Fixed
 
-- Fixed a bug that caused the library returns an error when the build context contains a symlink.
+- Fixed a bug that caused the library to return an error when the build context contains a symlink.
 
 ### Changed
 
-- On the examples, start the client container once and execute actions on it.
+- In the examples, start the client container once and execute actions on it.
 - Bump github.com/docker/docker from v20.10+incompatible to v24.0.7+incompatible
 - Bump github.com/docker/distribution from v2.8.2+incompatible to v2.8.3+incompatible
 - Bump github.com/go-git/go-git/v5 from v5.6.1 to v5.10.0
@@ -19,8 +25,8 @@
 
 ### Fixed
 
-- On build use case, WithPullParentImage set to true ImageBuildOptions.PullParent
-- On copy use case, set the remove after push parameter
+- On the build use case, WithPullParentImage is set to true ImageBuildOptions.PullParent
+- On the copy use case, set the remove after the push parameter
 
 ## [0.7.7]
 
@@ -64,7 +70,7 @@ thub.com/apenella/go-common-utils/error v0.0.0-20221227202648-5452d804e940
 
 ### Fixed
 
-- In docker build command, before adding a new tag validate that is normalized 
+- On the build command, validate that the tag is normalized before adding it to the image name
 
 ## [0.7.1]
 
@@ -76,63 +82,62 @@ thub.com/apenella/go-common-utils/error v0.0.0-20221227202648-5452d804e940
 
 ### Added
 
-- Include `WithPullParentImage` method to set wether to pull the parent image on `build` instances
+- Include `WithPullParentImage` method to set whether to pull the parent image on `build` instances
 - Include constructor on git auth methods
 
 ### Changed
 
 - Use go 1.19
-- Use docker compose v2 to start testing stack
+- Use Docker Compose v2 to start testing the stack
 - Update testing docker images version
 
 ## [0.6.0]
 
 ### Added
 
-- Include `WithImageName` method to set image name attribute on `build` instances
-- Include `WithSourceImage` method to set source image attriubte on `copy` instances
-- Include `WithTargetImage` method to set target image attriubte on `copy` instances
-- Include `WithImageName` method to set image name attribute on `push` instances
+- Include `WithImageName` method to set the image name attribute on `build` instances
+- Include `WithSourceImage` method to set the source image attribute on `copy` instances
+- Include `WithTargetImage` method to set the target image attribute on `copy` instances
+- Include `WithImageName` method to set the image name attribute on `push` instances
 
 ### Changed
 
 - **BREAKING CHANGES**: On package `build`, `NewDockerBuildCmd` has changed its signature to `NewDockerBuildCmd(cli types.DockerClienter) *DockerBuildCmd`
 - **BREAKING CHANGES**: On package `copy`, `NewDockerImageCopyCmd` has changed its signature to `NewDockerImageCopyCmd(cli types.DockerClienter) *DockerImageCopyCmd`
-- **BREAKING CHANGES**: On pacakge `push`, `NewDockerPushCmd` has changed its signature to `NewDockerPushCmd(cli types.DockerClienter) *DockerPushCmd`
+- **BREAKING CHANGES**: On package `push`, `NewDockerPushCmd` has changed its signature to `NewDockerPushCmd(cli types.DockerClienter) *DockerPushCmd`
 
 ## [0.5.0]
 
 ### Added
 
 - Include constructors on `build`, `push` and `copy` packages
-- Include `WithXXX`methods to set attributes on `build`, `push` and `copy` instances
-- On `build` package new method to add labels
+- Include `WithXXX` methods to set attributes on the `build`, `push` and `copy` instances
+- On the `build` package new method to add labels
 
 ### Changed
 
 - **BREAKING CHANGES**: On package `copy`, `AddTag` method has been renamed to `AddTags`
-- **BREAKING CHANGES**: On pacakge `push`, `AddTag` method has been renamed to `AddTags`
+- **BREAKING CHANGES**: On package `push`, `AddTag` method has been renamed to `AddTags`
 
 ### Fixed
 
-- On `push` packages, tag images defined on `Tags` attribute before push them
+- On `push` packages, tag images defined on `Tags` attribute before pushing them
 
 ## [0.4.0]
 
 ### Added
 
 - Image copy package
-- New intermediate filesystem to manage the build docker context. Build context filesystems let you to join multiple context before start an image build and tar itself.
+- New intermediate filesystem to manage the build docker context. Build context filesystems let you join multiple contexts before starting an image build and tar itself.
 - Included examples for new use cases
-- Included resources for run examples and tests
-- Included functinal test
--
+- Included resources for running examples and tests
+- Included functional test
 
 ### Changed
 
-- Package for moking has been moved to internal/mock
-- Response writer to manage push all pull responses
-- git context support to create a build context from a repository subfolder
+- The package for mocking has been moved to internal/mock
+- Response writer to manage to push all pull responses
+- Git context support to create a build context from a repository subfolder
 
 ### Removed
 
