@@ -1,6 +1,6 @@
 # RELEASE NOTES
 
-## [unreleased]
+## [0.8.3] - 2024-01-09
 
 ### Changed
 
