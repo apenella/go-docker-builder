@@ -1,7 +1,7 @@
 # RELEASE NOTES
 
-## [0.8.3] - 2024-01-09
+## [unreleased]
 
 ### Changed
 
-- Bumps github.com/cloudflare/circl from 1.3.3 to 1.3.7.
+- Bumps github.com/docker/docker from 24.0.7+incompatible to 24.0.9+incompatible.
