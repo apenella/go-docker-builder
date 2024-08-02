@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	errors "github.com/apenella/go-common-utils/error"
-	dockertypes "github.com/docker/docker/api/types"
+	dockerregistrytypes "github.com/docker/docker/api/types/registry"
 )
 
 // GenerateUserPasswordAuthConfig return an AuthConfig to identify to docker registry using base64 auth credentials
-func GenerateAuthConfig(username, password string) (*dockertypes.AuthConfig, error) {
+func GenerateAuthConfig(username, password string) (*dockerregistrytypes.AuthConfig, error) {
 
 	if username == "" {
 		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Username must be provided")
@@ -20,7 +20,7 @@ func GenerateAuthConfig(username, password string) (*dockertypes.AuthConfig, err
 		return nil, errors.New("(auth::GenerateUserPasswordAuthConfig)", "Password must be provided")
 	}
 
-	authConfig := &dockertypes.AuthConfig{
+	authConfig := &dockerregistrytypes.AuthConfig{
 		Auth: base64.URLEncoding.EncodeToString([]byte(strings.Join([]string{username, password}, ":"))),
 	}
 
@@ -28,9 +28,9 @@ func GenerateAuthConfig(username, password string) (*dockertypes.AuthConfig, err
 }
 
 // GenerateUserPasswordAuthConfig return an AuthConfig to identify to docker registry using user-password credentials
-func GenerateUserPasswordAuthConfig(username, password string) (*dockertypes.AuthConfig, error) {
+func GenerateUserPasswordAuthConfig(username, password string) (*dockerregistrytypes.AuthConfig, error) {
 
-	authConfig := &dockertypes.AuthConfig{
+	authConfig := &dockerregistrytypes.AuthConfig{
 		Username: username,
 		Password: password,
 	}
@@ -42,7 +42,7 @@ func GenerateUserPasswordAuthConfig(username, password string) (*dockertypes.Aut
 func GenerateEncodedUserPasswordAuthConfig(username, password string) (*string, error) {
 
 	var err error
-	var auth *dockertypes.AuthConfig
+	var auth *dockerregistrytypes.AuthConfig
 	var encodedAuth *string
 
 	auth, err = GenerateUserPasswordAuthConfig(username, password)
@@ -58,7 +58,7 @@ func GenerateEncodedUserPasswordAuthConfig(username, password string) (*string, 
 	return encodedAuth, nil
 }
 
-func encodeAuthConfig(authConfig *dockertypes.AuthConfig) (*string, error) {
+func encodeAuthConfig(authConfig *dockerregistrytypes.AuthConfig) (*string, error) {
 
 	encodedJSON, err := json.Marshal(authConfig)
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockertypes "github.com/docker/docker/api/types"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -145,20 +145,20 @@ func TestRun(t *testing.T) {
 	tests := []struct {
 		desc              string
 		dockerPushCmd     *DockerPushCmd
-		pushOptions       dockertypes.ImagePushOptions
+		pushOptions       dockerimagetypes.PushOptions
 		prepareAssertFunc func(context.Context, *mockclient.DockerClient, *DockerPushCmd)
 		assertFunc        func(*mockclient.DockerClient) bool
 		err               error
 	}{
 		{
 			desc:          "Testing error when DockerPushCmd is undefined",
-			pushOptions:   dockertypes.ImagePushOptions{},
+			pushOptions:   dockerimagetypes.PushOptions{},
 			dockerPushCmd: nil,
 			err:           errors.New("(push::Run)", "DockerPushCmd is undefined"),
 		},
 		{
 			desc:        "Testing error when ImageName is undefined",
-			pushOptions: dockertypes.ImagePushOptions{},
+			pushOptions: dockerimagetypes.PushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImagePushOptions: nil,
 			},
@@ -166,7 +166,7 @@ func TestRun(t *testing.T) {
 		},
 		{
 			desc:        "Testing error when ImagePushOptions is undefined",
-			pushOptions: dockertypes.ImagePushOptions{},
+			pushOptions: dockerimagetypes.PushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImagePushOptions: nil,
 				ImageName:        "name",
@@ -177,7 +177,7 @@ func TestRun(t *testing.T) {
 			desc: "Testing push a single image",
 			dockerPushCmd: &DockerPushCmd{
 				ImageName:        "test_image",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
@@ -193,15 +193,15 @@ func TestRun(t *testing.T) {
 			desc: "Testing push a single image with remove after push",
 			dockerPushCmd: &DockerPushCmd{
 				ImageName:        "test_image",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 				RemoveAfterPush:  true,
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
-				mock.On("ImageRemove", ctx, cmd.ImageName, dockertypes.ImageRemoveOptions{
+				mock.On("ImageRemove", ctx, cmd.ImageName, dockerimagetypes.RemoveOptions{
 					Force:         true,
 					PruneChildren: true,
-				}).Return([]dockertypes.ImageDeleteResponseItem{}, nil)
+				}).Return([]dockerimagetypes.DeleteResponse{}, nil)
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
@@ -215,10 +215,10 @@ func TestRun(t *testing.T) {
 				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
 				cmd.Cli = mock
 			},
-			pushOptions: dockertypes.ImagePushOptions{},
+			pushOptions: dockerimagetypes.PushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImageName: "test_image",
-				ImagePushOptions: &dockertypes.ImagePushOptions{
+				ImagePushOptions: &dockerimagetypes.PushOptions{
 					RegistryAuth: "auth",
 				},
 			},
@@ -237,11 +237,11 @@ func TestRun(t *testing.T) {
 				mock.On("ImageTag", ctx, cmd.ImageName, "tag2").Return(nil)
 				cmd.Cli = mock
 			},
-			pushOptions: dockertypes.ImagePushOptions{},
+			pushOptions: dockerimagetypes.PushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImageName:        "test_image",
 				Tags:             []string{"tag1", "tag2"},
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImagePush", 3)

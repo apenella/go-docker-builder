@@ -11,7 +11,7 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
-	dockertypes "github.com/docker/docker/api/types"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 )
 
 // DockerCopyImageCmd is used to copy images to docker registry. Copy image is understood as tag an existing image and push it to a docker registry
@@ -19,9 +19,9 @@ type DockerImageCopyCmd struct {
 	// Cli is the docker client to use
 	Cli types.DockerClienter
 	// ImagePushOptions from docker sdk
-	ImagePullOptions *dockertypes.ImagePullOptions
+	ImagePullOptions *dockerimagetypes.PullOptions
 	// ImagePushOptions from docker sdk
-	ImagePushOptions *dockertypes.ImagePushOptions
+	ImagePushOptions *dockerimagetypes.PushOptions
 	// SourceImage is the name of the image to be copied
 	SourceImage string
 	// TargetImage is the name of the copied image
@@ -42,8 +42,8 @@ type DockerImageCopyCmd struct {
 func NewDockerImageCopyCmd(cli types.DockerClienter) *DockerImageCopyCmd {
 	return &DockerImageCopyCmd{
 		Cli:              cli,
-		ImagePullOptions: &dockertypes.ImagePullOptions{},
-		ImagePushOptions: &dockertypes.ImagePushOptions{},
+		ImagePullOptions: &dockerimagetypes.PullOptions{},
+		ImagePushOptions: &dockerimagetypes.PushOptions{},
 	}
 }
 
@@ -110,7 +110,7 @@ func (c *DockerImageCopyCmd) AddAuth(username, password string) error {
 func (c *DockerImageCopyCmd) AddPullAuth(username, password string) error {
 
 	if c.ImagePullOptions == nil {
-		c.ImagePullOptions = &dockertypes.ImagePullOptions{}
+		c.ImagePullOptions = &dockerimagetypes.PullOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -126,7 +126,7 @@ func (c *DockerImageCopyCmd) AddPullAuth(username, password string) error {
 func (c *DockerImageCopyCmd) AddPushAuth(username, password string) error {
 
 	if c.ImagePushOptions == nil {
-		c.ImagePushOptions = &dockertypes.ImagePushOptions{}
+		c.ImagePushOptions = &dockerimagetypes.PushOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)

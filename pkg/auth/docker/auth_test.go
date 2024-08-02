@@ -3,13 +3,13 @@ package auth
 import (
 	"testing"
 
-	dockertypes "github.com/docker/docker/api/types"
+	dockerregistrytypes "github.com/docker/docker/api/types/registry"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestEncodeAuthConfig(t *testing.T) {
 	type args struct {
-		authConfig *dockertypes.AuthConfig
+		authConfig *dockerregistrytypes.AuthConfig
 	}
 	tests := []struct {
 		name string

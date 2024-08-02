@@ -5,6 +5,7 @@ import (
 	"io"
 
 	dockertypes "github.com/docker/docker/api/types"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -25,22 +26,22 @@ func (client *DockerClient) ImageBuild(ctx context.Context, buildContext io.Read
 }
 
 // ImagePull is a mock method to pull docker images from registry
-func (client *DockerClient) ImagePull(ctx context.Context, ref string, options dockertypes.ImagePullOptions) (io.ReadCloser, error) {
+func (client *DockerClient) ImagePull(ctx context.Context, ref string, options dockerimagetypes.PullOptions) (io.ReadCloser, error) {
 	args := client.Mock.Called(ctx, ref, options)
 	return args.Get(0).(io.ReadCloser), args.Error(1)
 }
 
 // ImagePush is a mock method to push docker images to registry
-func (client *DockerClient) ImagePush(ctx context.Context, image string, options dockertypes.ImagePushOptions) (io.ReadCloser, error) {
+func (client *DockerClient) ImagePush(ctx context.Context, image string, options dockerimagetypes.PushOptions) (io.ReadCloser, error) {
 	args := client.Mock.Called(ctx, image, options)
 	return args.Get(0).(io.ReadCloser), args.Error(1)
 }
 
 // ImageRemove is a mock method to remove docker images locally
-func (client *DockerClient) ImageRemove(ctx context.Context, imageID string, options dockertypes.ImageRemoveOptions) ([]dockertypes.ImageDeleteResponseItem, error) {
+func (client *DockerClient) ImageRemove(ctx context.Context, imageID string, options dockerimagetypes.RemoveOptions) ([]dockerimagetypes.DeleteResponse, error) {
 	args := client.Mock.Called(ctx, imageID, options)
 
-	return args.Get(0).([]dockertypes.ImageDeleteResponseItem), args.Error(1)
+	return args.Get(0).([]dockerimagetypes.DeleteResponse), args.Error(1)
 }
 
 // ImageTag is a mock method to tag docker images
