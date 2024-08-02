@@ -12,8 +12,10 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
-	"github.com/docker/distribution/reference"
+	"github.com/distribution/reference"
 	dockertypes "github.com/docker/docker/api/types"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
+	dockerregistrytypes "github.com/docker/docker/api/types/registry"
 	"github.com/spf13/afero"
 )
 
@@ -31,7 +33,7 @@ type DockerBuildCmd struct {
 	// ImageBuildOptions from docker sdk
 	ImageBuildOptions *dockertypes.ImageBuildOptions
 	// ImagePushOptions from docker sdk
-	ImagePushOptions *dockertypes.ImagePushOptions
+	ImagePushOptions *dockerimagetypes.PushOptions
 	// PullParentImage if true pull parent image
 	PullParentImage bool
 	// PushAfterBuild when is true images are automatically pushed to registry after build
@@ -49,7 +51,7 @@ func NewDockerBuildCmd(cli types.DockerClienter) *DockerBuildCmd {
 	return &DockerBuildCmd{
 		Cli:               cli,
 		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
-		ImagePushOptions:  &dockertypes.ImagePushOptions{},
+		ImagePushOptions:  &dockerimagetypes.PushOptions{},
 	}
 }
 
@@ -112,7 +114,7 @@ func (b *DockerBuildCmd) AddAuth(username, password, registry string) error {
 	}
 
 	if b.ImageBuildOptions.AuthConfigs == nil {
-		b.ImageBuildOptions.AuthConfigs = map[string]dockertypes.AuthConfig{}
+		b.ImageBuildOptions.AuthConfigs = map[string]dockerregistrytypes.AuthConfig{}
 	}
 
 	authConfig, err := auth.GenerateUserPasswordAuthConfig(username, password)
@@ -128,7 +130,7 @@ func (b *DockerBuildCmd) AddAuth(username, password, registry string) error {
 func (b *DockerBuildCmd) AddPushAuth(username, password string) error {
 
 	if b.ImagePushOptions == nil {
-		b.ImagePushOptions = &dockertypes.ImagePushOptions{}
+		b.ImagePushOptions = &dockerimagetypes.PushOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -341,7 +343,7 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 }
 
 func generateDefaultImagePushOptionsPrivilegeFunc(auth string) dockertypes.RequestPrivilegeFunc {
-	return func() (string, error) {
+	return func(context.Context) (string, error) {
 		return auth, nil
 	}
 }

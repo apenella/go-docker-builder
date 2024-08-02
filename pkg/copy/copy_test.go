@@ -10,7 +10,7 @@ import (
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockertypes "github.com/docker/docker/api/types"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -229,7 +229,7 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
 				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(nil)
@@ -246,7 +246,7 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
 				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(errors.New("(test)", "Error tagging"))
@@ -264,7 +264,7 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
 				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(nil)
@@ -283,7 +283,7 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 				RemoteSource:     true,
 			},
 			err: errors.New("(copy::Run)", "Image pull options is undefined"),
@@ -293,8 +293,8 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
-				ImagePullOptions: &dockertypes.ImagePullOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePullOptions: &dockerimagetypes.PullOptions{},
 				RemoteSource:     true,
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {

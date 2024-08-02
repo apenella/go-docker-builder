@@ -11,8 +11,8 @@ import (
 	auth "github.com/apenella/go-docker-builder/pkg/auth/docker"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
-	"github.com/docker/distribution/reference"
-	dockertypes "github.com/docker/docker/api/types"
+	"github.com/distribution/reference"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
 )
 
 // DockerPushCmd is used to push images to docker registry
@@ -20,7 +20,7 @@ type DockerPushCmd struct {
 	// Cli is the docker client to use
 	Cli types.DockerClienter
 	// ImagePushOptions from docker sdk
-	ImagePushOptions *dockertypes.ImagePushOptions
+	ImagePushOptions *dockerimagetypes.PushOptions
 	// ImageName is the name of the image
 	ImageName string
 	// Tags is a list of the images to push
@@ -37,7 +37,7 @@ type DockerPushCmd struct {
 func NewDockerPushCmd(cli types.DockerClienter) *DockerPushCmd {
 	return &DockerPushCmd{
 		Cli:              cli,
-		ImagePushOptions: &dockertypes.ImagePushOptions{},
+		ImagePushOptions: &dockerimagetypes.PushOptions{},
 	}
 }
 
@@ -75,7 +75,7 @@ func (p *DockerPushCmd) WithUseNormalizedNamed() *DockerPushCmd {
 func (p *DockerPushCmd) AddAuth(username, password string) error {
 
 	if p.ImagePushOptions == nil {
-		p.ImagePushOptions = &dockertypes.ImagePushOptions{}
+		p.ImagePushOptions = &dockerimagetypes.PushOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -169,7 +169,7 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 
 	if p.RemoveAfterPush {
 		for _, image := range p.Tags {
-			deleteResponseItems, err := p.Cli.ImageRemove(ctx, image, dockertypes.ImageRemoveOptions{
+			deleteResponseItems, err := p.Cli.ImageRemove(ctx, image, dockerimagetypes.RemoveOptions{
 				Force:         true,
 				PruneChildren: true,
 			})

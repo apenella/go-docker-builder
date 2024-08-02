@@ -13,6 +13,8 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/build/context/filesystem"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	dockertypes "github.com/docker/docker/api/types"
+	dockerimagetypes "github.com/docker/docker/api/types/image"
+	dockerregistrytypes "github.com/docker/docker/api/types/registry"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -123,7 +125,7 @@ func TestAddAuth(t *testing.T) {
 		buildOptions   *dockertypes.ImageBuildOptions
 		args           *args
 		err            error
-		res            map[string]dockertypes.AuthConfig
+		res            map[string]dockerregistrytypes.AuthConfig
 	}{
 		{
 			desc:           "Testing add user-password auth",
@@ -134,7 +136,7 @@ func TestAddAuth(t *testing.T) {
 				registry: "registry",
 			},
 			err: nil,
-			res: map[string]dockertypes.AuthConfig{
+			res: map[string]dockerregistrytypes.AuthConfig{
 				"registry": {
 					Username: "user",
 					Password: "AqSwd3Fr",
@@ -423,7 +425,7 @@ func TestRun(t *testing.T) {
 				ImageBuildOptions: &dockertypes.ImageBuildOptions{
 					Context: ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
 				},
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 				PushAfterBuild:   true,
 			},
 			err: &errors.Error{},
@@ -450,14 +452,14 @@ func TestRun(t *testing.T) {
 				ImageName: "myregistry.test/image:tag",
 				ImageBuildOptions: &dockertypes.ImageBuildOptions{
 					Context: ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
-					AuthConfigs: map[string]dockertypes.AuthConfig{
+					AuthConfigs: map[string]dockerregistrytypes.AuthConfig{
 						"myregistry.test": {
 							Username: "username",
 							Password: "password",
 						},
 					},
 				},
-				ImagePushOptions: &dockertypes.ImagePushOptions{},
+				ImagePushOptions: &dockerimagetypes.PushOptions{},
 				PushAfterBuild:   true,
 				RemoveAfterPush:  true,
 			},
@@ -467,7 +469,7 @@ func TestRun(t *testing.T) {
 					Tags:       []string{cmd.ImageName},
 					Dockerfile: DefaultDockerfile,
 					Context:    ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
-					AuthConfigs: map[string]dockertypes.AuthConfig{
+					AuthConfigs: map[string]dockerregistrytypes.AuthConfig{
 						"myregistry.test": {
 							Username: "username",
 							Password: "password",
@@ -479,13 +481,13 @@ func TestRun(t *testing.T) {
 						Body: ioutil.NopCloser(io.Reader(&bytes.Buffer{})),
 					}, nil)
 
-				mock.On("ImagePush", ctx, cmd.ImageName, dockertypes.ImagePushOptions{
+				mock.On("ImagePush", ctx, cmd.ImageName, dockerimagetypes.PushOptions{
 					RegistryAuth: "eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGFzc3dvcmQiOiJwYXNzd29yZCJ9",
 				}).Return(ioutil.NopCloser(io.Reader(&bytes.Buffer{})), nil)
-				mock.On("ImageRemove", ctx, cmd.ImageName, dockertypes.ImageRemoveOptions{
+				mock.On("ImageRemove", ctx, cmd.ImageName, dockerimagetypes.RemoveOptions{
 					Force:         true,
 					PruneChildren: true,
-				}).Return([]dockertypes.ImageDeleteResponseItem{}, nil)
+				}).Return([]dockerimagetypes.DeleteResponse{}, nil)
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImageBuild", 1) && mock.AssertNumberOfCalls(t, "ImagePush", 1)
