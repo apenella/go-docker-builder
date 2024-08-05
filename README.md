@@ -32,7 +32,7 @@ This library not only handles Docker registry authentication but also prepares t
 To install the latest stable version of go-docker-builder, run the following command:
 
 ```sh
-go get -u github.com/apenella/go-docker-builder@v0.8.4
+go get -u github.com/apenella/go-docker-builder@v0.9.0
 ```
 
 ## Use cases
