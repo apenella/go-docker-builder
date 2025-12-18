@@ -8,7 +8,7 @@ require (
 	github.com/apenella/go-common-utils/error v0.0.0-20221227202648-5452d804e940
 	github.com/apenella/go-common-utils/transformer/string v0.0.0-20221227202648-5452d804e940
 	github.com/distribution/reference v0.6.0
-	github.com/docker/docker v27.1.1+incompatible
+	github.com/docker/docker v28.0.0+incompatible
 	github.com/go-git/go-git/v5 v5.14.0
 	github.com/spf13/afero v1.14.0
 	github.com/stretchr/testify v1.10.0
