@@ -9,9 +9,9 @@ require (
 	github.com/apenella/go-common-utils/transformer/string v0.0.0-20221227202648-5452d804e940
 	github.com/distribution/reference v0.6.0
 	github.com/docker/docker v28.0.0+incompatible
-	github.com/go-git/go-git/v5 v5.14.0
-	github.com/spf13/afero v1.14.0
-	github.com/stretchr/testify v1.10.0
+	github.com/go-git/go-git/v5 v5.16.4
+	github.com/spf13/afero v1.15.0
+	github.com/stretchr/testify v1.11.1
 	github.com/wk8/go-ordered-map v1.0.0
 	github.com/xanzy/ssh-agent v0.3.3
 )
