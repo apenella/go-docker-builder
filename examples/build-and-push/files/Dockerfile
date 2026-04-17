@@ -1,4 +1,4 @@
-FROM base-registry.go-docker-builder.test:5000/alpine:3.13
+FROM base-registry.go-docker-builder.test:5000/alpine:3.23
 
 RUN apk update \
     && apk upgrade

@@ -47,10 +47,10 @@ prepare: start ## Prepares Docker images required to run the example or test
 	@echo
 
 	@echo " [$(EXAMPLE)]$(GREEN) Pulling Docker images$(NC)"
-	@$(DOCKER_COMPOSE_VERSION) --project-name $(EXAMPLE) --file ../../test/docker-compose.yml exec client sh -c 'docker pull base-registry.go-docker-builder.test:5000/alpine:3.13 \
-		|| ( docker pull alpine:3.13 \
-		&& docker tag alpine:3.13 base-registry.go-docker-builder.test:5000/alpine:3.13 \
-		&& docker push base-registry.go-docker-builder.test:5000/alpine:3.13)'
+	@$(DOCKER_COMPOSE_VERSION) --project-name $(EXAMPLE) --file ../../test/docker-compose.yml exec client sh -c 'docker pull base-registry.go-docker-builder.test:5000/alpine:3.23 \
+		|| ( docker pull alpine:3.23 \
+		&& docker tag alpine:3.23 base-registry.go-docker-builder.test:5000/alpine:3.23 \
+		&& docker push base-registry.go-docker-builder.test:5000/alpine:3.23)'
 
 example: prepare ## Executes the examples
 	@echo

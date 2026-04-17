@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.23
 
 ARG git_dir="/git"
 ARG repos_dir="${git_dir}/repos"
