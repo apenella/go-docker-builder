@@ -1,6 +1,13 @@
 # CHANGELOG
 
-## [v0.11.0] (2026-01-14)
+## [v0.12.0] 2026-04-17
+
+### Changed
+
+- Bumps Golang 1.25
+- Bump Alpine, Golang and Python version used on examples and testing stacks
+
+## [v0.11.0] 2026-01-14
 
 ### Changed
 
