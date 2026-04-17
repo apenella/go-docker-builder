@@ -25,8 +25,8 @@ func copyRemote(w io.Writer) error {
 	var err error
 	var dockerCli *client.Client
 
-	sourceImage := "base-registry.go-docker-builder.test:5000/alpine:3.13"
-	targetImage := "registry.go-docker-builder.test/alpine:3.13"
+	sourceImage := "base-registry.go-docker-builder.test:5000/alpine:3.23"
+	targetImage := "registry.go-docker-builder.test/alpine:3.23"
 
 	targetRegistryUsername := "admin"
 	targetRegistryPassword := "admin"

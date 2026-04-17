@@ -27,7 +27,7 @@ func TestCopyRemote(t *testing.T) {
 	// latest: digest
 	// `
 
-	expected := `3.13: digest
+	expected := `3.23: digest
 Digest: sha256
 Status: Image is up to date for base-registry.go-docker-builder.test
 <HASH>: Mounted from alpine/alpine
