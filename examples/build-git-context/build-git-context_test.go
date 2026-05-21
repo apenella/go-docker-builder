@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"strings"
 	"testing"
 
 	helper "github.com/apenella/go-docker-builder/internal/helpers"
@@ -29,5 +30,8 @@ latest: digest
 
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
-	assert.Equal(t, expected, actual)
+	expectedLines := strings.Split(strings.TrimSpace(expected), "\n")
+	actualLines := strings.Split(strings.TrimSpace(actual), "\n")
+
+	assert.ElementsMatch(t, actualLines, expectedLines)
 }

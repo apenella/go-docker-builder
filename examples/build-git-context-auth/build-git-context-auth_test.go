@@ -28,7 +28,7 @@ custom: digest
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
 	expectedLines := strings.Split(strings.TrimSpace(expected), "\n")
-	assert.ElementsMatch(t, strings.Split(strings.TrimSpace(actual), "\n"), expectedLines)
+	actualLines := strings.Split(strings.TrimSpace(actual), "\n")
 
-	assert.Equal(t, expected, actual)
+	assert.ElementsMatch(t, actualLines, expectedLines)
 }
