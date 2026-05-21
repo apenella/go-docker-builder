@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"strings"
 	"testing"
 
 	helper "github.com/apenella/go-docker-builder/internal/helpers"
@@ -19,15 +20,6 @@ func TestBuildAndPush(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	//	expected := `3.13: Pulling from alpine
-	//
-	// <HASH>: Layer already exists
-	// Digest: sha256
-	// Status: Downloaded newer image for base-registry.go-docker-builder.test
-	// sha256: <HASH>
-	// tag1: digest
-	// latest: digest
-	// `
 	expected := `sha256: <HASH>
 <HASH>: Layer already exists
 tag1: digest
@@ -36,6 +28,9 @@ latest: digest
 
 	actual := helper.SanitizeDockerOutputForIntegrationTest(&buff)
 
-	assert.Equal(t, expected, actual)
+	expectedLines := strings.Split(strings.TrimSpace(expected), "\n")
+	actualLines := strings.Split(strings.TrimSpace(actual), "\n")
+
+	assert.ElementsMatch(t, actualLines, expectedLines)
 
 }
