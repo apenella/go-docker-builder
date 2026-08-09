@@ -9,7 +9,7 @@ require (
 	github.com/apenella/go-common-utils/transformer/string v0.0.0-20221227202648-5452d804e940
 	github.com/distribution/reference v0.6.0
 	github.com/docker/docker v28.0.0+incompatible
-	github.com/go-git/go-git/v5 v5.19.1
+	github.com/go-git/go-git/v5 v5.19.2
 	github.com/spf13/afero v1.15.0
 	github.com/stretchr/testify v1.11.1
 	github.com/wk8/go-ordered-map v1.0.0
@@ -57,10 +57,10 @@ require (
 	go.opentelemetry.io/otel/sdk v1.43.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v1.43.0 // indirect
 	go.opentelemetry.io/otel/trace v1.43.0 // indirect
-	golang.org/x/crypto v0.50.0 // indirect
-	golang.org/x/net v0.53.0 // indirect
-	golang.org/x/sys v0.43.0 // indirect
-	golang.org/x/text v0.36.0 // indirect
+	golang.org/x/crypto v0.53.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/text v0.39.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
