@@ -4,14 +4,13 @@ import (
 	"context"
 	"io"
 
-	dockertypes "github.com/docker/docker/api/types"
-	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 )
 
 type DockerClienter interface {
-	ImageBuild(ctx context.Context, buildContext io.Reader, options dockertypes.ImageBuildOptions) (dockertypes.ImageBuildResponse, error)
-	ImagePull(ctx context.Context, ref string, options dockerimagetypes.PullOptions) (io.ReadCloser, error)
-	ImagePush(ctx context.Context, image string, options dockerimagetypes.PushOptions) (io.ReadCloser, error)
-	ImageRemove(ctx context.Context, imageID string, options dockerimagetypes.RemoveOptions) ([]dockerimagetypes.DeleteResponse, error)
-	ImageTag(ctx context.Context, imageID, ref string) error
+	ImageBuild(ctx context.Context, buildContext io.Reader, options client.ImageBuildOptions) (client.ImageBuildResult, error)
+	ImagePull(ctx context.Context, ref string, options client.ImagePullOptions) (client.ImagePullResponse, error)
+	ImagePush(ctx context.Context, image string, options client.ImagePushOptions) (client.ImagePushResponse, error)
+	ImageRemove(ctx context.Context, imageID string, options client.ImageRemoveOptions) (client.ImageRemoveResult, error)
+	ImageTag(ctx context.Context, options client.ImageTagOptions) (client.ImageTagResult, error)
 }

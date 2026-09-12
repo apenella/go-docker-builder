@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	errors "github.com/apenella/go-common-utils/error"
-	dockerregistrytypes "github.com/docker/docker/api/types/registry"
+	dockerregistrytypes "github.com/moby/moby/api/types/registry"
 )
 
 // GenerateUserPasswordAuthConfig return an AuthConfig to identify to docker registry using base64 auth credentials

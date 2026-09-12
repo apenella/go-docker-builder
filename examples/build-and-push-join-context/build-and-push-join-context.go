@@ -16,7 +16,7 @@ import (
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
 	pathcontext "github.com/apenella/go-docker-builder/pkg/build/context/path"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/client"
 )
 
 // go-docker-builder example where is created a ubuntu image

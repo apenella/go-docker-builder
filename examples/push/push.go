@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/apenella/go-docker-builder/pkg/push"
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/client"
 )
 
 func main() {
