@@ -8,6 +8,7 @@ This library not only handles Docker registry authentication but also prepares t
 
 - [go-docker-builder](#go-docker-builder)
   - [Install](#install)
+  - [Breaking changes in v0.13.0](#breaking-changes-in-v0130)
   - [Use cases](#use-cases)
     - [Build](#build)
       - [Context](#context)
@@ -32,8 +33,17 @@ This library not only handles Docker registry authentication but also prepares t
 To install the latest stable version of go-docker-builder, run the following command:
 
 ```sh
-go get -u github.com/apenella/go-docker-builder@v0.12.0
+go get -u github.com/apenella/go-docker-builder@v0.13ß.0
 ```
+
+## Breaking changes in v0.13.0
+
+`v0.13.0` migrates from the deprecated `github.com/docker/docker v28.5.2+incompatible` to `github.com/moby/moby/client v0.6.0` and `github.com/moby/moby/api v1.56.0`. Libraries using `go-docker-builder` are affected:
+
+- Create the client with `github.com/moby/moby/client.NewClientWithOpts(client.FromEnv)` instead of `github.com/docker/docker/client`. A `*docker/docker` client no longer satisfies `types.DockerClienter`.
+- `ImageBuildOptions`, `ImagePushOptions`, `ImagePullOptions` and `ImageRemoveOptions` moved from `github.com/docker/docker/api/types*` to `github.com/moby/moby/client`. `AuthConfig` moved to `github.com/moby/moby/api/types/registry` and `DeleteResponse` to `github.com/moby/moby/api/types/image`.
+- `types.DockerClienter` follows the moby SDK: `ImageBuild` returns `client.ImageBuildResult`, `ImagePull` returns `client.ImagePullResponse`, `ImagePush` returns `client.ImagePushResponse`, `ImageRemove` returns `client.ImageRemoveResult` (iterate over `result.Items`), and `ImageTag` takes `client.ImageTagOptions{Source, Target}` and returns `client.ImageTagResult`.
+- Custom `DockerClienter` implementations or mocks must be updated to the new signatures.
 
 ## Use cases
 
