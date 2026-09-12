@@ -10,7 +10,7 @@ import (
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -190,7 +190,9 @@ func TestRun(t *testing.T) {
 
 	//	var w bytes.Buffer
 	//	writer := io.Writer(&w)
-	reader := ioutil.NopCloser(io.Reader(&bytes.Buffer{}))
+	reader := func() mockclient.ImageResponse {
+		return mockclient.NewImageResponse(ioutil.NopCloser(io.Reader(&bytes.Buffer{})))
+	}
 
 	tests := []struct {
 		desc               string
@@ -229,11 +231,11 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
-				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(nil)
-				mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader, nil)
+				mock.On("ImageTag", ctx, client.ImageTagOptions{Source: cmd.SourceImage, Target: cmd.TargetImage}).Return(client.ImageTagResult{}, nil)
+				mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader(), nil)
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
@@ -246,11 +248,11 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
-				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(errors.New("(test)", "Error tagging"))
-				//		mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader, nil)
+				mock.On("ImageTag", ctx, client.ImageTagOptions{Source: cmd.SourceImage, Target: cmd.TargetImage}).Return(client.ImageTagResult{}, errors.New("(test)", "Error tagging"))
+				//		mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader(), nil)
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
@@ -264,11 +266,11 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
-				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(nil)
-				mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader, errors.New("(test)", "Error pushing image"))
+				mock.On("ImageTag", ctx, client.ImageTagOptions{Source: cmd.SourceImage, Target: cmd.TargetImage}).Return(client.ImageTagResult{}, nil)
+				mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader(), errors.New("(test)", "Error pushing image"))
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
@@ -283,7 +285,7 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 				RemoteSource:     true,
 			},
 			err: errors.New("(copy::Run)", "Image pull options is undefined"),
@@ -293,14 +295,14 @@ func TestRun(t *testing.T) {
 			dockerImageCopyCmd: &DockerImageCopyCmd{
 				SourceImage:      "source",
 				TargetImage:      "target",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
-				ImagePullOptions: &dockerimagetypes.PullOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
+				ImagePullOptions: &client.ImagePullOptions{},
 				RemoteSource:     true,
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerImageCopyCmd) {
-				mock.On("ImagePull", ctx, cmd.SourceImage, *cmd.ImagePullOptions).Return(reader, nil)
-				mock.On("ImageTag", ctx, cmd.SourceImage, cmd.TargetImage).Return(nil)
-				mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader, nil)
+				mock.On("ImagePull", ctx, cmd.SourceImage, *cmd.ImagePullOptions).Return(reader(), nil)
+				mock.On("ImageTag", ctx, client.ImageTagOptions{Source: cmd.SourceImage, Target: cmd.TargetImage}).Return(client.ImageTagResult{}, nil)
+				mock.On("ImagePush", ctx, cmd.TargetImage, *cmd.ImagePushOptions).Return(reader(), nil)
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {

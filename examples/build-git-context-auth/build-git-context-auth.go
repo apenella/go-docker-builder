@@ -16,7 +16,7 @@ import (
 	//auth "github.com/apenella/go-docker-builder/pkg/auth/git/basic"
 	"github.com/apenella/go-docker-builder/pkg/build"
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/client"
 )
 
 func main() {

@@ -12,7 +12,7 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/build"
 	gitcontext "github.com/apenella/go-docker-builder/pkg/build/context/git"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/client"
 )
 
 func main() {

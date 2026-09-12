@@ -11,7 +11,7 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/push"
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
-	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 )
 
 // DockerCopyImageCmd is used to copy images to docker registry. Copy image is understood as tag an existing image and push it to a docker registry
@@ -19,9 +19,9 @@ type DockerImageCopyCmd struct {
 	// Cli is the docker client to use
 	Cli types.DockerClienter
 	// ImagePushOptions from docker sdk
-	ImagePullOptions *dockerimagetypes.PullOptions
+	ImagePullOptions *client.ImagePullOptions
 	// ImagePushOptions from docker sdk
-	ImagePushOptions *dockerimagetypes.PushOptions
+	ImagePushOptions *client.ImagePushOptions
 	// SourceImage is the name of the image to be copied
 	SourceImage string
 	// TargetImage is the name of the copied image
@@ -42,8 +42,8 @@ type DockerImageCopyCmd struct {
 func NewDockerImageCopyCmd(cli types.DockerClienter) *DockerImageCopyCmd {
 	return &DockerImageCopyCmd{
 		Cli:              cli,
-		ImagePullOptions: &dockerimagetypes.PullOptions{},
-		ImagePushOptions: &dockerimagetypes.PushOptions{},
+		ImagePullOptions: &client.ImagePullOptions{},
+		ImagePushOptions: &client.ImagePushOptions{},
 	}
 }
 
@@ -110,7 +110,7 @@ func (c *DockerImageCopyCmd) AddAuth(username, password string) error {
 func (c *DockerImageCopyCmd) AddPullAuth(username, password string) error {
 
 	if c.ImagePullOptions == nil {
-		c.ImagePullOptions = &dockerimagetypes.PullOptions{}
+		c.ImagePullOptions = &client.ImagePullOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -126,7 +126,7 @@ func (c *DockerImageCopyCmd) AddPullAuth(username, password string) error {
 func (c *DockerImageCopyCmd) AddPushAuth(username, password string) error {
 
 	if c.ImagePushOptions == nil {
-		c.ImagePushOptions = &dockerimagetypes.PushOptions{}
+		c.ImagePushOptions = &client.ImagePushOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -192,7 +192,10 @@ func (c *DockerImageCopyCmd) Run(ctx context.Context) error {
 		}
 	}
 
-	err = c.Cli.ImageTag(ctx, c.SourceImage, c.TargetImage)
+	_, err = c.Cli.ImageTag(ctx, client.ImageTagOptions{
+		Source: c.SourceImage,
+		Target: c.TargetImage,
+	})
 	if err != nil {
 		return errors.New("(copy::Run)", fmt.Sprintf("Error tagging image '%s' to '%s'", c.SourceImage, c.TargetImage), err)
 	}

@@ -12,7 +12,7 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
 	"github.com/distribution/reference"
-	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 )
 
 // DockerPushCmd is used to push images to docker registry
@@ -20,7 +20,7 @@ type DockerPushCmd struct {
 	// Cli is the docker client to use
 	Cli types.DockerClienter
 	// ImagePushOptions from docker sdk
-	ImagePushOptions *dockerimagetypes.PushOptions
+	ImagePushOptions *client.ImagePushOptions
 	// ImageName is the name of the image
 	ImageName string
 	// Tags is a list of the images to push
@@ -37,7 +37,7 @@ type DockerPushCmd struct {
 func NewDockerPushCmd(cli types.DockerClienter) *DockerPushCmd {
 	return &DockerPushCmd{
 		Cli:              cli,
-		ImagePushOptions: &dockerimagetypes.PushOptions{},
+		ImagePushOptions: &client.ImagePushOptions{},
 	}
 }
 
@@ -75,7 +75,7 @@ func (p *DockerPushCmd) WithUseNormalizedNamed() *DockerPushCmd {
 func (p *DockerPushCmd) AddAuth(username, password string) error {
 
 	if p.ImagePushOptions == nil {
-		p.ImagePushOptions = &dockerimagetypes.PushOptions{}
+		p.ImagePushOptions = &client.ImagePushOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -150,7 +150,10 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 	for _, image := range p.Tags {
 
 		if image != p.ImageName {
-			err = p.Cli.ImageTag(ctx, p.ImageName, image)
+			_, err = p.Cli.ImageTag(ctx, client.ImageTagOptions{
+				Source: p.ImageName,
+				Target: image,
+			})
 			if err != nil {
 				return errors.New("(push::Run)", fmt.Sprintf("Error tagging image '%s' to '%s'", p.ImageName, image), err)
 			}
@@ -169,7 +172,7 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 
 	if p.RemoveAfterPush {
 		for _, image := range p.Tags {
-			deleteResponseItems, err := p.Cli.ImageRemove(ctx, image, dockerimagetypes.RemoveOptions{
+			deleteResponse, err := p.Cli.ImageRemove(ctx, image, client.ImageRemoveOptions{
 				Force:         true,
 				PruneChildren: true,
 			})
@@ -177,7 +180,7 @@ func (p *DockerPushCmd) Run(ctx context.Context) error {
 				return errors.New("(push::Run)", fmt.Sprintf("Error removing '%s'", image), err)
 			}
 
-			for _, item := range deleteResponseItems {
+			for _, item := range deleteResponse.Items {
 
 				str := ""
 				if item.Deleted != "" {

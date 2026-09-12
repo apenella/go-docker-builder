@@ -3,7 +3,7 @@ package auth
 import (
 	"testing"
 
-	dockerregistrytypes "github.com/docker/docker/api/types/registry"
+	dockerregistrytypes "github.com/moby/moby/api/types/registry"
 	"github.com/stretchr/testify/assert"
 )
 

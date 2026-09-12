@@ -10,7 +10,7 @@ import (
 	errors "github.com/apenella/go-common-utils/error"
 	mockclient "github.com/apenella/go-docker-builder/internal/mock"
 	"github.com/apenella/go-docker-builder/pkg/response"
-	dockerimagetypes "github.com/docker/docker/api/types/image"
+	"github.com/moby/moby/client"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -140,25 +140,27 @@ func TestAddTags(t *testing.T) {
 
 func TestRun(t *testing.T) {
 
-	reader := ioutil.NopCloser(io.Reader(&bytes.Buffer{}))
+	reader := func() mockclient.ImageResponse {
+		return mockclient.NewImageResponse(ioutil.NopCloser(io.Reader(&bytes.Buffer{})))
+	}
 
 	tests := []struct {
 		desc              string
 		dockerPushCmd     *DockerPushCmd
-		pushOptions       dockerimagetypes.PushOptions
+		pushOptions       client.ImagePushOptions
 		prepareAssertFunc func(context.Context, *mockclient.DockerClient, *DockerPushCmd)
 		assertFunc        func(*mockclient.DockerClient) bool
 		err               error
 	}{
 		{
 			desc:          "Testing error when DockerPushCmd is undefined",
-			pushOptions:   dockerimagetypes.PushOptions{},
+			pushOptions:   client.ImagePushOptions{},
 			dockerPushCmd: nil,
 			err:           errors.New("(push::Run)", "DockerPushCmd is undefined"),
 		},
 		{
 			desc:        "Testing error when ImageName is undefined",
-			pushOptions: dockerimagetypes.PushOptions{},
+			pushOptions: client.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImagePushOptions: nil,
 			},
@@ -166,7 +168,7 @@ func TestRun(t *testing.T) {
 		},
 		{
 			desc:        "Testing error when ImagePushOptions is undefined",
-			pushOptions: dockerimagetypes.PushOptions{},
+			pushOptions: client.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImagePushOptions: nil,
 				ImageName:        "name",
@@ -177,10 +179,10 @@ func TestRun(t *testing.T) {
 			desc: "Testing push a single image",
 			dockerPushCmd: &DockerPushCmd{
 				ImageName:        "test_image",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
-				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
+				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader(), nil)
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
@@ -193,15 +195,15 @@ func TestRun(t *testing.T) {
 			desc: "Testing push a single image with remove after push",
 			dockerPushCmd: &DockerPushCmd{
 				ImageName:        "test_image",
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 				RemoveAfterPush:  true,
 			},
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
-				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
-				mock.On("ImageRemove", ctx, cmd.ImageName, dockerimagetypes.RemoveOptions{
+				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader(), nil)
+				mock.On("ImageRemove", ctx, cmd.ImageName, client.ImageRemoveOptions{
 					Force:         true,
 					PruneChildren: true,
-				}).Return([]dockerimagetypes.DeleteResponse{}, nil)
+				}).Return(client.ImageRemoveResult{}, nil)
 				cmd.Cli = mock
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
@@ -212,13 +214,13 @@ func TestRun(t *testing.T) {
 		{
 			desc: "Testing push a single image with auth",
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
-				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
+				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader(), nil)
 				cmd.Cli = mock
 			},
-			pushOptions: dockerimagetypes.PushOptions{},
+			pushOptions: client.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImageName: "test_image",
-				ImagePushOptions: &dockerimagetypes.PushOptions{
+				ImagePushOptions: &client.ImagePushOptions{
 					RegistryAuth: "auth",
 				},
 			},
@@ -230,18 +232,18 @@ func TestRun(t *testing.T) {
 		{
 			desc: "Testing push a single image with tags",
 			prepareAssertFunc: func(ctx context.Context, mock *mockclient.DockerClient, cmd *DockerPushCmd) {
-				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader, nil)
-				mock.On("ImagePush", ctx, "tag1", *cmd.ImagePushOptions).Return(reader, nil)
-				mock.On("ImagePush", ctx, "tag2", *cmd.ImagePushOptions).Return(reader, nil)
-				mock.On("ImageTag", ctx, cmd.ImageName, "tag1").Return(nil)
-				mock.On("ImageTag", ctx, cmd.ImageName, "tag2").Return(nil)
+				mock.On("ImagePush", ctx, cmd.ImageName, *cmd.ImagePushOptions).Return(reader(), nil)
+				mock.On("ImagePush", ctx, "tag1", *cmd.ImagePushOptions).Return(reader(), nil)
+				mock.On("ImagePush", ctx, "tag2", *cmd.ImagePushOptions).Return(reader(), nil)
+				mock.On("ImageTag", ctx, client.ImageTagOptions{Source: cmd.ImageName, Target: "tag1"}).Return(client.ImageTagResult{}, nil)
+				mock.On("ImageTag", ctx, client.ImageTagOptions{Source: cmd.ImageName, Target: "tag2"}).Return(client.ImageTagResult{}, nil)
 				cmd.Cli = mock
 			},
-			pushOptions: dockerimagetypes.PushOptions{},
+			pushOptions: client.ImagePushOptions{},
 			dockerPushCmd: &DockerPushCmd{
 				ImageName:        "test_image",
 				Tags:             []string{"tag1", "tag2"},
-				ImagePushOptions: &dockerimagetypes.PushOptions{},
+				ImagePushOptions: &client.ImagePushOptions{},
 			},
 			assertFunc: func(mock *mockclient.DockerClient) bool {
 				return mock.AssertNumberOfCalls(t, "ImagePush", 3)

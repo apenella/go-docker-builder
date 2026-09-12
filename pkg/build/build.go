@@ -13,9 +13,8 @@ import (
 	"github.com/apenella/go-docker-builder/pkg/response"
 	"github.com/apenella/go-docker-builder/pkg/types"
 	"github.com/distribution/reference"
-	dockertypes "github.com/docker/docker/api/types"
-	dockerimagetypes "github.com/docker/docker/api/types/image"
-	dockerregistrytypes "github.com/docker/docker/api/types/registry"
+	registrytypes "github.com/moby/moby/api/types/registry"
+	"github.com/moby/moby/client"
 	"github.com/spf13/afero"
 )
 
@@ -31,9 +30,9 @@ type DockerBuildCmd struct {
 	// ImageName is the name of the image
 	ImageName string
 	// ImageBuildOptions from docker sdk
-	ImageBuildOptions *dockertypes.ImageBuildOptions
+	ImageBuildOptions *client.ImageBuildOptions
 	// ImagePushOptions from docker sdk
-	ImagePushOptions *dockerimagetypes.PushOptions
+	ImagePushOptions *client.ImagePushOptions
 	// PullParentImage if true pull parent image
 	PullParentImage bool
 	// PushAfterBuild when is true images are automatically pushed to registry after build
@@ -50,15 +49,15 @@ type DockerBuildCmd struct {
 func NewDockerBuildCmd(cli types.DockerClienter) *DockerBuildCmd {
 	return &DockerBuildCmd{
 		Cli:               cli,
-		ImageBuildOptions: &dockertypes.ImageBuildOptions{},
-		ImagePushOptions:  &dockerimagetypes.PushOptions{},
+		ImageBuildOptions: &client.ImageBuildOptions{},
+		ImagePushOptions:  &client.ImagePushOptions{},
 	}
 }
 
 // WithDockerfile set responser attribute to DockerBuildCmd
 func (b *DockerBuildCmd) WithDockerfile(dockerfile string) *DockerBuildCmd {
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	b.ImageBuildOptions.Dockerfile = dockerfile
@@ -75,7 +74,7 @@ func (b *DockerBuildCmd) WithImageName(name string) *DockerBuildCmd {
 // WithPullParentImage set to pull parent image
 func (b *DockerBuildCmd) WithPullParentImage() *DockerBuildCmd {
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	b.ImageBuildOptions.PullParent = true
@@ -110,11 +109,11 @@ func (b *DockerBuildCmd) WithRemoveAfterPush() *DockerBuildCmd {
 func (b *DockerBuildCmd) AddAuth(username, password, registry string) error {
 
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	if b.ImageBuildOptions.AuthConfigs == nil {
-		b.ImageBuildOptions.AuthConfigs = map[string]dockerregistrytypes.AuthConfig{}
+		b.ImageBuildOptions.AuthConfigs = map[string]registrytypes.AuthConfig{}
 	}
 
 	authConfig, err := auth.GenerateUserPasswordAuthConfig(username, password)
@@ -130,7 +129,7 @@ func (b *DockerBuildCmd) AddAuth(username, password, registry string) error {
 func (b *DockerBuildCmd) AddPushAuth(username, password string) error {
 
 	if b.ImagePushOptions == nil {
-		b.ImagePushOptions = &dockerimagetypes.PushOptions{}
+		b.ImagePushOptions = &client.ImagePushOptions{}
 	}
 
 	auth, err := auth.GenerateEncodedUserPasswordAuthConfig(username, password)
@@ -146,7 +145,7 @@ func (b *DockerBuildCmd) AddPushAuth(username, password string) error {
 func (b *DockerBuildCmd) AddBuildArgs(arg string, value string) error {
 
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	if b.ImageBuildOptions.BuildArgs == nil {
@@ -169,7 +168,7 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 	dockercontext := filesystem.NewContextFilesystem(afero.NewMemMapFs())
 
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	for _, dc := range dockercontexts {
@@ -204,7 +203,7 @@ func (b *DockerBuildCmd) AddBuildContext(dockercontexts ...buildcontext.DockerBu
 func (b *DockerBuildCmd) AddLabel(label string, value string) error {
 
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	if b.ImageBuildOptions.Labels == nil {
@@ -225,7 +224,7 @@ func (b *DockerBuildCmd) AddLabel(label string, value string) error {
 func (b *DockerBuildCmd) AddTags(tags ...string) error {
 
 	if b.ImageBuildOptions == nil {
-		b.ImageBuildOptions = &dockertypes.ImageBuildOptions{}
+		b.ImageBuildOptions = &client.ImageBuildOptions{}
 	}
 
 	if b.ImageBuildOptions.Tags == nil {
@@ -342,7 +341,7 @@ func (b *DockerBuildCmd) Run(ctx context.Context) error {
 	return nil
 }
 
-func generateDefaultImagePushOptionsPrivilegeFunc(auth string) dockertypes.RequestPrivilegeFunc {
+func generateDefaultImagePushOptionsPrivilegeFunc(auth string) registrytypes.RequestAuthConfig {
 	return func(context.Context) (string, error) {
 		return auth, nil
 	}
