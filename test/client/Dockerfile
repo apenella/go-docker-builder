@@ -1,5 +1,5 @@
 # Based on https://github.com/timberio/docker-client/blob/master/Dockerfile
-ARG GOLANG_VERSION="1.25"
+ARG GOLANG_VERSION="1.26"
 ARG DOCKER_VERSION="28.5"
 
 FROM golang:${GOLANG_VERSION}-alpine AS golang

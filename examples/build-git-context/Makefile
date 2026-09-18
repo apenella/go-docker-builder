@@ -51,10 +51,10 @@ prepare: start ## Prepares Docker images required to run the example or test
 		|| ( docker pull alpine:3.23 \
 		&& docker tag alpine:3.23 base-registry.go-docker-builder.test:5000/alpine:3.23 \
 		&& docker push base-registry.go-docker-builder.test:5000/alpine:3.23)'
-	@$(DOCKER_COMPOSE_VERSION) --project-name $(EXAMPLE) --file ../../test/docker-compose.yml exec client sh -c 'docker pull base-registry.go-docker-builder.test:5000/golang:1.25-alpine \
-		|| ( docker pull golang:1.25-alpine \
-		&& docker tag golang:1.25-alpine base-registry.go-docker-builder.test:5000/golang:1.25-alpine \
-		&& docker push base-registry.go-docker-builder.test:5000/golang:1.25-alpine)'
+	@$(DOCKER_COMPOSE_VERSION) --project-name $(EXAMPLE) --file ../../test/docker-compose.yml exec client sh -c 'docker pull base-registry.go-docker-builder.test:5000/golang:1.26-alpine \
+		|| ( docker pull golang:1.26-alpine \
+		&& docker tag golang:1.26-alpine base-registry.go-docker-builder.test:5000/golang:1.26-alpine \
+		&& docker push base-registry.go-docker-builder.test:5000/golang:1.26-alpine)'
 
 example: prepare ## Executes the examples
 	@echo

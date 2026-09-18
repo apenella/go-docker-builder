@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [unreleased] (yyyy-mm-dd)
+
+### Changed
+
+- Bumps Golang 1.26
+- Bump Golang version used on examples and testing stacks
+- Run development lifecycle operations (unit tests, build and static analysis) inside a `golang:1.26-alpine` container through the Makefile
+
 ## [v0.13.0] 2026-09-12
 
 ### Changed
