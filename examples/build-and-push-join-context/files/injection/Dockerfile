@@ -1,4 +1,4 @@
-ARG GOLANG_VERSION="1.25"
+ARG GOLANG_VERSION="1.26"
 
 FROM base-registry.go-docker-builder.test:5000/golang:${GOLANG_VERSION}-alpine AS golang
 

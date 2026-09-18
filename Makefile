@@ -1,4 +1,6 @@
 BASE_FUNCTIONAL_FOLDER=examples
+GOLANG_VERSION ?= 1.26
+GOLANG_IMAGE := golang:$(GOLANG_VERSION)-alpine
 
 
 help: ## list allowed targets
@@ -63,8 +65,49 @@ copy-remote-test: ## Execute functional test copy-remote
 	cd -; \
 	exit $$RC;
 
-unit-test: ## Run unitary tests
+unit-test: ## Run unitary tests inside Go container
 	@echo
-	@echo " Run unit test"
+	@echo " Run unit test (golang:$(GOLANG_VERSION)-alpine)"
 	@echo
-	go test ./pkg/... -cover -count=1
+	docker run --rm -v $(CURDIR):/app -w /app $(GOLANG_IMAGE) go test ./pkg/... -cover -count=1
+
+build: ## Build all packages inside Go container
+	@echo
+	@echo " Build (golang:$(GOLANG_VERSION)-alpine)"
+	@echo
+	docker run --rm -v $(CURDIR):/app -w /app $(GOLANG_IMAGE) go build ./...
+
+vet: ## Run go vet inside Go container
+	@echo
+	@echo " Run go vet (golang:$(GOLANG_VERSION)-alpine)"
+	@echo
+	docker run --rm -v $(CURDIR):/app -w /app $(GOLANG_IMAGE) go vet ./...
+
+fmt-check: ## Check gofmt formatting inside Go container
+	@echo
+	@echo " Check formatting (golang:$(GOLANG_VERSION)-alpine)"
+	@echo
+	docker run --rm -v $(CURDIR):/app -w /app $(GOLANG_IMAGE) sh -c 'gofmt -l . | grep . && echo "Formatting issues found" && exit 1 || echo "Formatting OK"'
+
+tidy: ## Run go mod tidy inside Go container
+	@echo
+	@echo " Run go mod tidy (golang:$(GOLANG_VERSION)-alpine)"
+	@echo
+	docker run --rm -v $(CURDIR):/app -w /app $(GOLANG_IMAGE) go mod tidy
+
+tidy-check: ## Verify go.mod/go.sum are tidy inside Go container
+	@echo
+	@echo " Check go mod tidy (golang:$(GOLANG_VERSION)-alpine)"
+	@echo
+	@cp go.mod /tmp/go.mod.before-check && cp go.sum /tmp/go.sum.before-check; \
+	docker run --rm -v $(CURDIR):/app -w /app $(GOLANG_IMAGE) go mod tidy; \
+	if diff -q /tmp/go.mod.before-check go.mod >/dev/null && diff -q /tmp/go.sum.before-check go.sum >/dev/null; then \
+		echo "Tidy OK"; rm -f /tmp/go.mod.before-check /tmp/go.sum.before-check; \
+	else \
+		echo "go.mod/go.sum are not tidy"; diff /tmp/go.mod.before-check go.mod || true; diff /tmp/go.sum.before-check go.sum || true; rm -f /tmp/go.mod.before-check /tmp/go.sum.before-check; exit 1; \
+	fi
+
+static-analysis: vet fmt-check ## Run static analysis (vet + fmt) inside Go container
+
+go-version: ## Show Go version inside container
+	docker run --rm $(GOLANG_IMAGE) go version
